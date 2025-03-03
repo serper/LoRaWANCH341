@@ -1,0 +1,7 @@
+\.vscode
+\.DS_Store
+\.vscode
+\build
+\dist
+config.json
+lorawan_session.json

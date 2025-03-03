@@ -1,0 +1,18 @@
+{
+    "device": {
+        "devEUI": "0000000000000000",
+        "appEUI": "0000000000000000",
+        "appKey": "00000000000000000000000000000000"
+    },
+    "connection": {
+        "spi_type": "ch341",
+        "device_index": 0,
+        "spi_device": "/dev/spidev0.0",
+        "spi_speed": 1000000
+    },
+    "options": {
+        "force_reset": false,
+        "send_interval": 30,
+        "verbose": false
+    }
+}
