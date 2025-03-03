@@ -30,6 +30,28 @@ The project uses a JSON configuration file (`config.json`) to set up device para
     }
 }
 ```
+### Use
+### Implementation Examples
+
+#### CH341 SPI Interface
+```cpp
+// Create SPI interface using CH341
+auto spi_interface = SPIFactory::createCH341SPI(device_index, true);
+LoRaWAN lorawan(std::move(spi_interface));
+```
+or more easy
+```cpp
+LoRaWAN lorawan();
+```
+
+#### Native Linux SPI Interface
+```cpp
+// Create SPI interface using native Linux SPI
+auto spi_interface = SPIFactory::createLinuxSPI(spi_device, spi_speed);
+LoRaWAN lorawan(std::move(spi_interface));
+```
+
+The `SPIFactory` class provides factory methods to create appropriate SPI interfaces based on your hardware configuration. Choose the implementation that matches your setup.
 
 ### Parameters
 
