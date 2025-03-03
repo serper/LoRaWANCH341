@@ -1,6 +1,6 @@
 # LoRaWAN CH341 Project
 
-This project implements a LoRaWAN device communication using CH341 SPI interface.
+This project implements a LoRaWAN device communication using CH341 SPI and native SPI interface to a RFM95 module.
 
 As an example of using this library you can see main.cpp
 
