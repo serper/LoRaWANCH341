@@ -1,8 +1,26 @@
-# LoRaWAN CH341 Project
+# LoRaWAN CH341 Project (ongoing)
 
 This project implements a LoRaWAN device communication using CH341 SPI and native SPI interface to a RFM95 module.
 
 As an example of using this library you can see main.cpp
+## Current Implementation Status
+
+The project currently supports the following LoRaWAN features:
+
+- **Network Activation**
+    - Over-the-Air Activation (OTAA)
+    - Activation By Personalization (ABP)
+
+- **Message Handling**
+    - Uplink and downlink communication
+    - Class A and Class C device operation
+
+- **Network Management**
+    - Regional channel and power restrictions
+    - Adaptive Data Rate (ADR) with performance statistics
+    - Duty cycle management
+
+The implementation adheres to LoRaWAN protocol specifications and continues to evolve with additional features.
 
 ## Configuration
 
