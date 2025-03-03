@@ -1357,6 +1357,42 @@ int LoRaWAN::getChannel() const {
     return pimpl->channel;
 }
 
+int LoRaWAN::getSpreadingFactor() const {
+    return pimpl->rfm->getSpreadingFactor();
+}
+
+void LoRaWAN::setSpreadingFactor(int sf) {
+    pimpl->rfm->setSpreadingFactor(sf);
+}
+
+float LoRaWAN::getBandwidth() const {
+    return pimpl->rfm->getBandwidth();
+}
+
+void LoRaWAN::setBandwidth(float bw_khz) {
+    pimpl->rfm->setBandwidth(bw_khz);
+}
+
+int LoRaWAN::getCodingRate() const {
+    return pimpl->rfm->getCodingRate();
+}
+
+void LoRaWAN::setCodingRate(int denominator) {
+    pimpl->rfm->setCodingRate(denominator);
+}
+
+bool LoRaWAN::testRadio() {
+    return pimpl->rfm->readVersionRegister() == 0x12;
+}
+
+float LoRaWAN::readTemperature() {
+    return pimpl->rfm->readTemperature();
+}
+
+bool LoRaWAN::calibrateTemperature(float actual_temp) {
+    return pimpl->rfm->calibrateTemperature(actual_temp);
+}
+
 void LoRaWAN::onReceive(std::function<void(const Message&)> callback) {
     receiveCallback = callback;
 }
@@ -1379,6 +1415,14 @@ void LoRaWAN::setChannel(uint8_t channel) {
     // No need to set channel for RFM95 directly
 }
 
+int LoRaWAN::getRSSI() const {
+    return pimpl->rfm->getRSSI();
+}
+
+int LoRaWAN::getSNR() const {
+    return pimpl->rfm->getSNR();
+}
+
 uint32_t LoRaWAN::getFrameCounter() const {
     return pimpl->uplinkCounter;
 }
@@ -1396,8 +1440,63 @@ void LoRaWAN::sleep() {
 }
 
 bool LoRaWAN::validateKeys() const {
-    // Implementar validación de keys para ABP
-    return true; // TODO: implementar validación real
+    // Validar DevAddr - no debe ser todo ceros
+    bool validDevAddr = false;
+    for (const auto& byte : pimpl->devAddr) {
+        if (byte != 0) {
+            validDevAddr = true;
+            break;
+        }
+    }
+    
+    if (!validDevAddr) {
+        DEBUG_PRINTLN("ABP validation failed: DevAddr is all zeros");
+        std::cerr << "Error: DevAddr no válida para ABP" << std::endl;
+        return false;
+    }
+    
+    // Validar NwkSKey - no debe ser todo ceros
+    bool validNwkSKey = false;
+    for (const auto& byte : pimpl->nwkSKey) {
+        if (byte != 0) {
+            validNwkSKey = true;
+            break;
+        }
+    }
+    
+    if (!validNwkSKey) {
+        DEBUG_PRINTLN("ABP validation failed: NwkSKey is all zeros");
+        std::cerr << "Error: NwkSKey no válida para ABP" << std::endl;
+        return false;
+    }
+    
+    // Validar AppSKey - no debe ser todo ceros
+    bool validAppSKey = false;
+    for (const auto& byte : pimpl->appSKey) {
+        if (byte != 0) {
+            validAppSKey = true;
+            break;
+        }
+    }
+    
+    if (!validAppSKey) {
+        DEBUG_PRINTLN("ABP validation failed: AppSKey is all zeros");
+        std::cerr << "Error: AppSKey no válida para ABP" << std::endl;
+        return false;
+    }
+    
+    // Opcionalmente, verificar algún formato específico para DevAddr
+    // Por ejemplo, para TTN en EU868, el primer byte suele ser específico
+    
+    DEBUG_PRINTLN("ABP validation successful");
+    DEBUG_PRINT("  DevAddr: ");
+    for (const auto& byte : pimpl->devAddr) {
+        DEBUG_PRINT(std::hex << std::setw(2) << std::setfill('0') 
+                  << static_cast<int>(byte) << " ");
+    }
+    DEBUG_PRINT(std::dec << std::endl);
+    
+    return true;
 }
 
 void LoRaWAN::setupRxWindows() {

@@ -783,21 +783,12 @@ void RFM95::printRegisters()
 
 bool RFM95::testCommunication()
 {
-    // std::cout << "\nTesting communication with RFM95..." << std::endl;
-
     // Write a test value to sync word register
     uint8_t test_value = 0x42;
     writeRegister(REG_SYNC_WORD, test_value);
 
     // Read it back
     uint8_t read_value = readRegister(REG_SYNC_WORD);
-    // std::cout << "Writen Value: 0x" << std::hex << static_cast<int>(test_value)
-    //           << ", Readed value: 0x" << static_cast<int>(read_value) << std::dec << std::endl;
-
-    // if (test_value != read_value)
-    // {
-    //     std::cout << "Test failed: written and read values do not match." << std::endl;
-    // }
 
     return test_value == read_value;
 }

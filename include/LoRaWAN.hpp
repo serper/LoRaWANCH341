@@ -154,7 +154,6 @@ public:
     // Transmisión y recepción
     bool send(const std::vector<uint8_t>& data, uint8_t port = 1, bool confirmed = false, bool force_duty_cycle = false);
     bool receive(Message& message, unsigned long timeout = 5000);
-    float getDutyCycle() const;
     
     // Callbacks
     void onReceive(std::function<void(const Message&)> callback);
@@ -199,8 +198,8 @@ public:
     
     // Métodos para diagnóstico adicional
     bool testRadio();
-    void dumpRegisters();
     float readTemperature();
+    bool calibrateTemperature(float actual_temp);
     
     // Método para reiniciar completamente la sesión
     void resetSession();

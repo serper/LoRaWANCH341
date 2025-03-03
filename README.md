@@ -61,3 +61,11 @@ The project uses a JSON configuration file (`config.json`) to set up device para
 - CH341 compatible hardware or native linux SPI
 - Access to LoRaWAN network
 - Proper device registration with network server
+
+## Dependencies
+
+- libch341-dev (for CH341 communication)
+- libjson-cpp-dev (for JSON configuration parsing)
+- libspi-dev (for SPI communication)
+- C++17 compatible compiler
+- CMake build system (version 3.10 or higher)
