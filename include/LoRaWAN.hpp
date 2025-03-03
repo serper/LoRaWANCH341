@@ -105,6 +105,24 @@ public:
     static constexpr uint8_t LNA_LOW_GAIN = 0x03;
     static constexpr uint8_t LNA_OFF = 0x00;
 
+    // LoRa Max TX Power by region
+    static constexpr int MAX_POWER[REGIONS] = {
+        14, // EU433
+        20, // EU868
+        30, // US915
+        30, // AU915
+        30, // AS923
+        30, // KR920
+        27, // IN865
+        19, // CN470
+        27, // CN779
+        14, // EU433
+        30, // AU915OLD
+        19, // CN470PREQUEL
+        20, // AS923JP
+        20  // AS923KR
+    };
+
     // LoRa Duty Cycle
     static constexpr float DUTY_CYCLE = 1.0 / 3600.0; // 1 hour
 
@@ -163,7 +181,8 @@ public:
     void setDataRate(uint8_t dr);
     void setTxPower(int8_t power);
     void setChannel(uint8_t channel);
-    
+    uint8_t getChannel() const;
+
     // Diagnóstico
     int getRSSI() const;
     int getSNR() const;
@@ -184,22 +203,9 @@ public:
     void setFrequency(float freq_mhz);
     int getChannelFromFrequency(float freq_mhz) const;
     float getFrequencyFromChannel(int channel) const;
-    void setChannel(int channel);
-    int getChannel() const;
-    
-    int getSpreadingFactor() const;
-    void setSpreadingFactor(int sf);
-    
-    float getBandwidth() const;
-    void setBandwidth(float bw_khz);
-    
-    int getCodingRate() const;
-    void setCodingRate(int denominator);
-    
-    // Métodos para diagnóstico adicional
-    bool testRadio();
-    float readTemperature();
-    bool calibrateTemperature(float actual_temp);
+    void setOneChannelGateway(bool enable, float freq_mhz = 868.1); // Soporte para gateway de un solo canal
+    bool getOneChannelGateway() const;
+    float getOneChannelFrequency() const;
     
     // Método para reiniciar completamente la sesión
     void resetSession();
@@ -214,8 +220,12 @@ public:
     static void setVerbose(bool verbose) { isVerbose = verbose; }
     static bool getVerbose() { return isVerbose; }
 
+    // ADR control
+    void enableADR(bool enable = true);
+    bool isADREnabled() const;
+
 private:
-    int lora_region = -1;
+    int lora_region = REGION_EU868;
 
     // Atributos privados para gestión de radio
     int current_channel = 0;
@@ -270,4 +280,36 @@ private:
 
     // Control de verbosidad para mensajes de depuración
     static bool isVerbose;
+
+    // ADR related variables
+    bool adrEnabled = false;
+    int adrAckCounter = 0;
+    static constexpr int ADR_ACK_LIMIT = 64;      // Enviar ADR ACK REQ después de estos paquetes sin respuesta
+    static constexpr int ADR_ACK_DELAY = 32;      // Reducir DR después de estos paquetes adicionales
+    
+    // MAC commands
+    static constexpr uint8_t MAC_LINK_CHECK_REQ = 0x02;
+    static constexpr uint8_t MAC_LINK_CHECK_ANS = 0x02;
+    static constexpr uint8_t MAC_LINK_ADR_REQ = 0x03;
+    static constexpr uint8_t MAC_LINK_ADR_ANS = 0x03;
+    static constexpr uint8_t MAC_DUTY_CYCLE_REQ = 0x04;
+    static constexpr uint8_t MAC_DUTY_CYCLE_ANS = 0x04;
+    static constexpr uint8_t MAC_RX_PARAM_SETUP_REQ = 0x05;
+    static constexpr uint8_t MAC_RX_PARAM_SETUP_ANS = 0x05;
+    static constexpr uint8_t MAC_DEV_STATUS_REQ = 0x06;
+    static constexpr uint8_t MAC_DEV_STATUS_ANS = 0x06;
+    static constexpr uint8_t MAC_NEW_CHANNEL_REQ = 0x07;
+    static constexpr uint8_t MAC_NEW_CHANNEL_ANS = 0x07;
+    static constexpr uint8_t MAC_RX_TIMING_SETUP_REQ = 0x08;
+    static constexpr uint8_t MAC_RX_TIMING_SETUP_ANS = 0x08;
+    static constexpr uint8_t MAC_TX_PARAM_SETUP_REQ = 0x09;
+    static constexpr uint8_t MAC_TX_PARAM_SETUP_ANS = 0x09;
+    
+    // Procesamiento de comandos MAC
+    void processMACCommands(const std::vector<uint8_t>& commands, std::vector<uint8_t>& response);
+    void processLinkADRReq(const std::vector<uint8_t>& cmd, size_t index, std::vector<uint8_t>& response);
+    void updateTxParamsForADR();
+    
+    // Almacenamiento para respuestas MAC pendientes
+    std::vector<uint8_t> pendingMACResponses;
 };

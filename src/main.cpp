@@ -260,6 +260,7 @@ int main(int argc, char* argv[])
     // Pasamos explícitamente a Clase C y configuramos para escuchar en RX2
     std::cout << "Cambiando a modo Class C para recepción continua en 869.525 MHz..." << std::endl;
     lorawan.setDeviceClass(LoRaWAN::DeviceClass::CLASS_C);
+    lorawan.enableADR(true);
 
     // Variable para contar intentos fallidos consecutivos
     int failedAttempts = 0;
