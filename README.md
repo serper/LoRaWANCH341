@@ -89,5 +89,6 @@ The `SPIFactory` class provides factory methods to create appropriate SPI interf
 - libch341-dev (for CH341 communication)
 - libjson-cpp-dev (for JSON configuration parsing)
 - libspi-dev (for SPI communication)
+- libopenssl
 - C++17 compatible compiler
 - CMake build system (version 3.10 or higher)
