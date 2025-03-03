@@ -43,7 +43,7 @@ set(SOURCES
     src/SessionManager.cpp
     src/SPIFactory.cpp
     src/LinuxSPI.cpp
-    src/ConfigManager.cpp  # Añadir esta línea
+    src/ConfigManager.cpp
 )
 
 # Find required packages

@@ -8,6 +8,7 @@
 #include <array>
 #include <chrono>
 #include "SPIInterface.hpp"
+#include <deque>
 
 class LoRaWAN {
 public:
@@ -44,6 +45,24 @@ public:
         470.3,  // CN470PREQUEL
         923.2,  // AS923JP
         920.9   // AS923KR
+    };
+
+    // LoRa Regions RX2 frequency
+    static constexpr float RX2_FREQ[REGIONS] = {
+        434.665, // EU433
+        869.525, // EU868
+        923.3,   // US915
+        923.3,   // AU915
+        923.2,   // AS923
+        921.9,   // KR920
+        866.1,   // IN865
+        505.3,   // CN470
+        786.5,   // CN779
+        434.665, // EU433
+        923.3,   // AU915OLD
+        505.3,   // CN470PREQUEL
+        923.2,   // AS923JP
+        921.9    // AS923KR
     };
 
     // LoRa Regions channel step
@@ -223,6 +242,7 @@ public:
     // ADR control
     void enableADR(bool enable = true);
     bool isADREnabled() const;
+    void applyADRSettings(uint8_t dataRate, uint8_t txPower, const std::vector<uint8_t>& channelMask);
 
 private:
     int lora_region = REGION_EU868;
@@ -312,4 +332,44 @@ private:
     
     // Almacenamiento para respuestas MAC pendientes
     std::vector<uint8_t> pendingMACResponses;
+    
+    // Variables para ADR
+    int current_nbRep = 1; // Repeticiones de transmisión por defecto
+    uint8_t rx1DrOffset = 0; // Offset de data rate para RX1
+    uint8_t rx2DataRate = 0; // Data rate para RX2
+    
+    // Métodos adicionales para ADR
+    void sendADRStatistics();
+    void requestLinkCheck();
+    
+    // Extensión de la implementación de Impl
+    struct ImplStats {
+        // Variables para estadísticas
+        std::deque<float> snrHistory;
+        std::deque<int> rssiHistory;
+        
+        float getAverageSnr() const {
+            if (snrHistory.empty()) return 0;
+            float sum = 0;
+            for (auto snr : snrHistory) sum += snr;
+            return sum / snrHistory.size();
+        }
+        
+        int getAverageRssi() const {
+            if (rssiHistory.empty()) return -120;
+            int sum = 0;
+            for (auto rssi : rssiHistory) sum += rssi;
+            return sum / rssiHistory.size();
+        }
+        
+        void addSnrSample(float snr) {
+            snrHistory.push_back(snr);
+            if (snrHistory.size() > 10) snrHistory.pop_front();
+        }
+        
+        void addRssiSample(int rssi) {
+            rssiHistory.push_back(rssi);
+            if (rssiHistory.size() > 10) rssiHistory.pop_front();
+        }
+    };
 };
