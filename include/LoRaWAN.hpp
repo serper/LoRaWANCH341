@@ -9,6 +9,7 @@
 #include <chrono>
 #include "SPIInterface.hpp"
 #include <deque>
+#include <chrono>
 
 class LoRaWAN {
 public:
@@ -64,6 +65,83 @@ public:
         923.2,   // AS923JP
         921.9    // AS923KR
     };
+
+    // LoRa Regions RX2 Spread Factor
+    static constexpr uint8_t RX2_SF[REGIONS] = {
+        7, // EU433
+        9, // EU868
+        8, // US915
+        8, // AU915
+        8, // AS923
+        8, // KR920
+        8, // IN865
+        7, // CN470
+        7, // CN779
+        7, // EU433
+        8, // AU915OLD
+        7, // CN470PREQUEL
+        8, // AS923JP
+        8  // AS923KR
+    };
+
+    // LoRa Regions RX2 Bandwidth
+    static constexpr float RX2_BW[REGIONS] = {
+        125.0, // EU433
+        125.0, // EU868
+        500.0, // US915
+        500.0, // AU915
+        500.0, // AS923
+        500.0, // KR920
+        500.0, // IN865
+        125.0, // CN470
+        125.0, // CN779
+        125.0, // EU433
+        500.0, // AU915OLD
+        125.0, // CN470PREQUEL
+        500.0, // AS923JP
+        500.0  // AS923KR
+    };
+
+    // LoRa Regions RX2 Coding Rate
+    static constexpr uint8_t RX2_CR[REGIONS] = {
+        1, // EU433
+        1, // EU868
+        4, // US915
+        4, // AU915
+        4, // AS923
+        4, // KR920
+        4, // IN865
+        1, // CN470
+        1, // CN779
+        1, // EU433
+        4, // AU915OLD
+        1, // CN470PREQUEL
+        4, // AS923JP
+        4  // AS923KR
+    };
+
+    // LoRa Regions RX2 preamble length
+    static constexpr uint16_t RX2_PREAMBLE[REGIONS] = {
+        8, // EU433
+        8, // EU868
+        8, // US915
+        8, // AU915
+        8, // AS923
+        8, // KR920
+        8, // IN865
+        8, // CN470
+        8, // CN779
+        8, // EU433
+        8, // AU915OLD
+        8, // CN470PREQUEL
+        8, // AS923JP
+        8  // AS923KR
+    };
+
+    // Constantes para ventanas de recepción (en ms)
+    static constexpr unsigned long RECEIVE_DELAY1 = 1000; // 1 segundo después del final de TX
+    static constexpr unsigned long RECEIVE_DELAY2 = 2000; // 2 segundos después del final de TX
+    static constexpr unsigned long WINDOW_DURATION = 200; // Duración de cada ventana de recepción
 
     // LoRa Regions channel step
     static constexpr float CHANNEL_STEP[REGIONS] = {
@@ -155,6 +233,16 @@ public:
         ABP
     };
 
+    // Estado de las ventanas de recepción
+    enum RxWindowState
+    {
+        RX_IDLE,      // No esperando ninguna ventana
+        RX_WAIT_1,    // Esperando que se abra RX1
+        RX_WINDOW_1,  // En ventana RX1
+        RX_WAIT_2,    // Esperando que se abra RX2
+        RX_WINDOW_2,  // En ventana RX2
+        RX_CONTINUOUS // Escucha continua (solo Clase C)
+    };
     struct Message {
         std::vector<uint8_t> payload;
         uint8_t port;
@@ -222,9 +310,9 @@ public:
     void setFrequency(float freq_mhz);
     int getChannelFromFrequency(float freq_mhz) const;
     float getFrequencyFromChannel(int channel) const;
-    void setOneChannelGateway(bool enable, float freq_mhz = 868.1); // Soporte para gateway de un solo canal
-    bool getOneChannelGateway() const;
-    float getOneChannelFrequency() const;
+    void setSingleChannel(bool enable, float freq_mhz = 868.1, int sf = 9, int bw = 125, int cr = 5, int power = 14, int preamble = 8);
+    bool getSingleChannel() const;
+    float getSingleChannelFrequency() const;
     
     // Método para reiniciar completamente la sesión
     void resetSession();
@@ -261,11 +349,16 @@ private:
     // Support to one channel gateway
     bool one_channel_gateway = false;
     float one_channel_freq = 868.1;
+    int one_channel_sf = 9;
+    int one_channel_bw = 125;
+    int one_channel_cr = 5;
+    int one_channel_power = 14;
+    int one_channel_preamble = 8;
 
     // Atributos privados para gestión de LoRaWAN
     float duty_cycle[CHANNELS] = {0};
-    unsigned long last_tx = 0;
-    unsigned long last_rx = 0;
+    std::chrono::steady_clock::time_point last_tx = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point last_rx = std::chrono::steady_clock::now();
 
     // Atributos privados para gestión interna
     struct Impl;
@@ -300,6 +393,10 @@ private:
 
     // Control de verbosidad para mensajes de depuración
     static bool isVerbose;
+
+    // Métodos para gestión de ventanas de recepción
+    void updateRxWindows();
+    void openRX2Window();
 
     // ADR related variables
     bool adrEnabled = false;

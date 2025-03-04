@@ -55,7 +55,12 @@ struct LoRaWAN::Impl {
     uint8_t dataRate;
     int8_t txPower;
     uint8_t channel;
-    
+
+    // Gestión de ventanas RX
+    RxWindowState rxState = RX_IDLE;
+    std::chrono::steady_clock::time_point rxWindowStart;
+    std::chrono::steady_clock::time_point txEndTime;
+
     std::vector<uint16_t> usedNonces;
 
     std::string sessionFile = "lorawan_session.json";
@@ -965,6 +970,12 @@ bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirme
     // Si es gateway de un canal, usar esa frecuencia
     if (one_channel_gateway) {
         pimpl->rfm->setFrequency(one_channel_freq);
+        pimpl->rfm->setSpreadingFactor(one_channel_sf);
+        pimpl->rfm->setBandwidth(one_channel_bw);
+        pimpl->rfm->setCodingRate(one_channel_cr);
+        pimpl->rfm->setPreambleLength(one_channel_preamble);
+        pimpl->rfm->setInvertIQ(false);
+        pimpl->rfm->setSyncWord(0x34);
     } else {
         // Buscar el canal con menor uso de duty cycle
         for (int i = 0; i < 8; i++) {  // Solo los primeros 8 canales
@@ -975,16 +986,23 @@ bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirme
             }
         }
         pimpl->rfm->setFrequency(channelFrequencies[bestChannel]);
+        pimpl->rfm->setSpreadingFactor(current_sf);
+        pimpl->rfm->setBandwidth(current_bw);
+        pimpl->rfm->setCodingRate(current_cr);
+        pimpl->rfm->setPreambleLength(current_preamble);
+        pimpl->rfm->setInvertIQ(false);
+        pimpl->rfm->setSyncWord(0x34);
+
         DEBUG_PRINTLN("Seleccionado canal " << bestChannel << " con frecuencia " 
                    << channelFrequencies[bestChannel] << " MHz (uso: " << lowestUsage << "%)");
     }
-    
-    pimpl->rfm->setSpreadingFactor(9);
-    pimpl->rfm->setBandwidth(125.0);
-    pimpl->rfm->setCodingRate(5);
-    pimpl->rfm->setPreambleLength(8);
-    pimpl->rfm->setInvertIQ(false);
-    pimpl->rfm->setSyncWord(0x34);
+
+    // Almacenar los parámetros actuales para utilizarlos en la ventana RX1
+    current_channel = getChannelFromFrequency(pimpl->rfm->getFrequency());
+    current_sf = pimpl->rfm->getSpreadingFactor();
+    current_bw = pimpl->rfm->getBandwidth();
+    current_cr = pimpl->rfm->getCodingRate();
+    current_preamble = pimpl->rfm->getPreambleLength();
 
     // Debug de las claves de sesión
     DEBUG_PRINT("Using NwkSKey: ");
@@ -1158,7 +1176,11 @@ bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirme
         pimpl->rfm->standbyMode();
         // Incrementar contador y guardar sesión
         pimpl->uplinkCounter++;
-        
+
+        // Guardar el timestamp del último uplink
+        last_tx = std::chrono::steady_clock::now();
+        setupRxWindows(); // Configurar las ventanas RX1 y RX2
+
         // Incrementar contador ADR si está habilitado
         if (adrEnabled) {
             adrAckCounter++;
@@ -1179,20 +1201,42 @@ bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirme
             DEBUG_PRINTLN("Configurando recepción continua en RX2 (869.525 MHz, Clase C)");
             pimpl->rfm->standbyMode();
             pimpl->rfm->setFrequency(RX2_FREQ[lora_region]);
-            pimpl->rfm->setSpreadingFactor(9);  // SF9 según lo observado
-            pimpl->rfm->setBandwidth(125.0);
+            pimpl->rfm->setSpreadingFactor(RX2_SF[lora_region]);
+            pimpl->rfm->setBandwidth(RX2_BW[lora_region]);
+            pimpl->rfm->setCodingRate(RX2_CR[lora_region]);
+            pimpl->rfm->setPreambleLength(RX2_PREAMBLE[lora_region]);
             pimpl->rfm->setInvertIQ(true);      // IQ invertido para downlink
             pimpl->rfm->setContinuousReceive();
         } else {
             // Para Clase A, configurar RX1 normalmente
+            pimpl->rfm->setFrequency(channelFrequencies[current_channel]);
+            pimpl->rfm->setSpreadingFactor(current_sf);
+            pimpl->rfm->setBandwidth(current_bw);
+            pimpl->rfm->setCodingRate(current_cr);
+            pimpl->rfm->setPreambleLength(current_preamble);
+            pimpl->rfm->setInvertIQ(false);
+            pimpl->rfm->setContinuousReceive();
             DEBUG_PRINTLN("Volviendo a modo standby (Clase A)");
             pimpl->rfm->standbyMode();
         }
     } else {
         DEBUG_PRINTLN("Error al enviar el paquete");
-        
-        // Incluso en caso de error, asegurarse de que volvemos a recepción
-        pimpl->rfm->setContinuousReceive();
+
+        // En caso de error, no configurar ventanas RX
+        pimpl->rxState = RX_IDLE;
+
+        // Para Clase C, volver a escucha continua en RX2
+        if (currentClass == DeviceClass::CLASS_C)
+        {
+            pimpl->rfm->standbyMode();
+            pimpl->rfm->setFrequency(RX2_FREQ[lora_region]);
+            pimpl->rfm->setSpreadingFactor(RX2_SF[lora_region]);
+            pimpl->rfm->setBandwidth(RX2_BW[lora_region]);
+            pimpl->rfm->setCodingRate(RX2_CR[lora_region]);
+            pimpl->rfm->setPreambleLength(RX2_PREAMBLE[lora_region]);
+            pimpl->rfm->setInvertIQ(true);
+            pimpl->rfm->setContinuousReceive();
+        }
     }
     
     return result;
@@ -1201,46 +1245,39 @@ bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirme
 void LoRaWAN::update() {
     if (!joined) return;
 
-    // Asegurarse de que estamos en modo de recepción continua
+    // Gestionar las ventanas de recepción
+    updateRxWindows();
+
+    // Verificar si la clase ha cambiado o necesitamos reiniciar la escucha continua
     uint8_t opMode = pimpl->rfm->readRegister(RFM95::REG_OP_MODE);
-    
+
     // Solo reconfigurar si no estamos ya en modo RX continuo
-    if ((opMode & 0x07) != RFM95::MODE_RX_CONTINUOUS) {
+    if ((opMode & 0x07) != RFM95::MODE_RX_CONTINUOUS &&
+        pimpl->rxState != RX_WINDOW_1 && pimpl->rxState != RX_WINDOW_2) {
         // Si estamos en Clase C, siempre escuchar en RX2
         if (currentClass == DeviceClass::CLASS_C) {
             // Configurar para RX2
             pimpl->rfm->standbyMode();
             pimpl->rfm->setFrequency(RX2_FREQ[lora_region]);
-            pimpl->rfm->setSpreadingFactor(9); // SF9 según lo observado
-            pimpl->rfm->setBandwidth(125.0);
+            pimpl->rfm->setSpreadingFactor(RX2_SF[lora_region]);
+            pimpl->rfm->setBandwidth(RX2_BW[lora_region]);
+            pimpl->rfm->setCodingRate(RX2_CR[lora_region]);
+            pimpl->rfm->setPreambleLength(RX2_PREAMBLE[lora_region]);
             pimpl->rfm->setInvertIQ(true);  // Invertir IQ para downlink
             pimpl->rfm->setContinuousReceive();
-            DEBUG_PRINTLN("Radio reconfigurada para RX2 continuo en " << RX2_FREQ[lora_region] << " MHz (SF9)");
+            pimpl->rxState = RX_CONTINUOUS;
+            DEBUG_PRINTLN("Radio reconfigurada para RX2 continuo en " << RX2_FREQ[lora_region] << " MHz (SF" << RX2_SF[lora_region] << ")");
         } else {
             // Para Clase A, configurar en la frecuencia principal
             pimpl->rfm->standbyMode();
-            if (one_channel_gateway)
-            {
-                pimpl->rfm->setFrequency(one_channel_freq);
-            } else {
-                // Buscar el canal con menor uso de duty cycle
-                float lowestUsage = 100.0f;
-                int bestChannel = 0;
-                for (int i = 0; i < 8; i++) { // Solo los primeros 8 canales
-                    float usage = getDutyCycleUsage(i);
-                    if (usage < lowestUsage && channelFrequencies[i] > 0) {
-                        lowestUsage = usage;
-                        bestChannel = i;
-                    }
-                }
-                pimpl->rfm->setFrequency(channelFrequencies[bestChannel]);
-                DEBUG_PRINTLN("Seleccionado canal " << bestChannel << " con frecuencia "
-                                                    << channelFrequencies[bestChannel] << " MHz (uso: " << lowestUsage << "%)");
-            }
-            pimpl->rfm->setSpreadingFactor(9);
-            pimpl->rfm->setBandwidth(125.0);
+            pimpl->rfm->setFrequency(channelFrequencies[current_channel]);
+            pimpl->rfm->setSpreadingFactor(current_sf);
+            pimpl->rfm->setBandwidth(current_bw);
+            pimpl->rfm->setCodingRate(current_cr);
+            pimpl->rfm->setPreambleLength(current_preamble);
             pimpl->rfm->setInvertIQ(true);
             pimpl->rfm->setContinuousReceive();
+            DEBUG_PRINTLN("Volviendo a modo standby (Clase A)");
         }
     }
 
@@ -1471,16 +1508,23 @@ uint8_t LoRaWAN::getChannel() const {
     return pimpl->channel; // Devolver directamente el canal almacenado
 }
 
-void LoRaWAN::setOneChannelGateway(bool enable, float freq_mhz) {
+void LoRaWAN::setSingleChannel(bool enable, float freq_mhz, int sf, int bw, int cr, int power, int preamble)
+{
     one_channel_gateway = enable;
     one_channel_freq = freq_mhz;
+    one_channel_sf = sf;
+    one_channel_bw = bw;
+    one_channel_cr = cr;
+    one_channel_power = power;
+    one_channel_preamble = preamble;
 }
 
-bool LoRaWAN::getOneChannelGateway() const {
+bool LoRaWAN::getSingleChannel() const
+{
     return one_channel_gateway;
 }
 
-float LoRaWAN::getOneChannelFrequency() const {
+float LoRaWAN::getSingleChannelFrequency() const {
     return one_channel_freq;
 }
 
@@ -2027,4 +2071,133 @@ void LoRaWAN::updateTxParamsForADR()
 
     // Resetear el contador para dar tiempo a la nueva configuración
     adrAckCounter = ADR_ACK_LIMIT;
+}
+
+// Método para configurar ventanas de recepción después de una transmisión
+void LoRaWAN::setupRxWindows() {
+    // Registrar el momento en que terminó la transmisión
+    pimpl->txEndTime = std::chrono::steady_clock::now();
+    
+    // Preparar para ventana RX1
+    pimpl->rxState = RX_WAIT_1;
+    DEBUG_PRINTLN("Esperando ventana RX1 (se abrirá en " << RECEIVE_DELAY1 << " ms)");
+}
+
+// Método para actualizar el estado de las ventanas de recepción
+void LoRaWAN::updateRxWindows() {
+    // Si no estamos unidos o no estamos esperando/en una ventana RX, no hacer nada
+    if (!joined || pimpl->rxState == RX_IDLE) {
+        return;
+    }
+    
+    auto now = std::chrono::steady_clock::now();
+    auto elapsedSinceTx = std::chrono::duration_cast<std::chrono::milliseconds>(
+        now - pimpl->txEndTime).count();
+    
+    // Procesar según el estado actual
+    switch (pimpl->rxState) {
+        case RX_WAIT_1:
+            // Comprobar si es hora de abrir la ventana RX1
+            if (elapsedSinceTx >= RECEIVE_DELAY1) {
+                DEBUG_PRINTLN("Abriendo ventana RX1 en frecuencia " << channelFrequencies[current_channel] << " MHz");
+                
+                // Configurar radio para RX1: misma frecuencia, ajustar SF según rx1DrOffset
+                pimpl->rfm->standbyMode();
+                pimpl->rfm->setFrequency(channelFrequencies[current_channel]);
+                
+                // Calcular SF para RX1 basado en el offset
+                int rx1_sf = current_sf;
+                if (rx1DrOffset > 0) {
+                    rx1_sf = std::min(rx1_sf + rx1DrOffset, 12); // Ajustar SF según offset
+                }
+                
+                pimpl->rfm->setSpreadingFactor(rx1_sf);
+                pimpl->rfm->setBandwidth(current_bw);
+                pimpl->rfm->setCodingRate(current_cr);
+                pimpl->rfm->setPreambleLength(current_preamble);
+                pimpl->rfm->setInvertIQ(true);  // Siempre IQ invertido para downlink
+                pimpl->rfm->setContinuousReceive();
+                
+                // Actualizar estado
+                pimpl->rxState = RX_WINDOW_1;
+                pimpl->rxWindowStart = now;
+                
+                DEBUG_PRINTLN("Ventana RX1 abierta (SF" << rx1_sf << ", " 
+                             << channelFrequencies[current_channel] << " MHz)");
+            }
+            break;
+            
+        case RX_WINDOW_1:
+            // Comprobar si la ventana RX1 ha expirado
+            if (std::chrono::duration_cast<std::chrono::milliseconds>(
+                now - pimpl->rxWindowStart).count() >= WINDOW_DURATION) {
+                
+                // Si no se recibió nada en RX1, preparar para RX2
+                if (elapsedSinceTx < RECEIVE_DELAY2) {
+                    pimpl->rxState = RX_WAIT_2;
+                    DEBUG_PRINTLN("Ventana RX1 cerrada, esperando ventana RX2");
+                } else {
+                    // Si ya pasó el tiempo para RX2, abrir directamente
+                    openRX2Window();
+                }
+            }
+            break;
+            
+        case RX_WAIT_2:
+            // Comprobar si es hora de abrir la ventana RX2
+            if (elapsedSinceTx >= RECEIVE_DELAY2) {
+                openRX2Window();
+            }
+            break;
+            
+        case RX_WINDOW_2:
+            // Comprobar si la ventana RX2 ha expirado
+            if (std::chrono::duration_cast<std::chrono::milliseconds>(
+                now - pimpl->rxWindowStart).count() >= WINDOW_DURATION) {
+                
+                // Ventana RX2 cerrada, volver a modo adecuado según la clase
+                if (currentClass == DeviceClass::CLASS_C) {
+                    // Para Clase C, mantener recepción continua en RX2
+                    pimpl->rxState = RX_CONTINUOUS;
+                    DEBUG_PRINTLN("Ventana RX2 cerrada, volviendo a recepción continua (Clase C)");
+                    
+                    // No cambiar configuración, ya estamos en RX2
+                } else {
+                    // Para Clase A, volver a standby hasta próxima TX
+                    pimpl->rfm->standbyMode();
+                    pimpl->rxState = RX_IDLE;
+                    DEBUG_PRINTLN("Ventana RX2 cerrada, modo standby hasta próxima TX (Clase A)");
+                }
+            }
+            break;
+            
+        case RX_CONTINUOUS:
+            // Para Clase C, asegurarse de que estamos en modo RX continuo con config RX2
+            break;
+            
+        default:
+            break;
+    }
+}
+
+// Método auxiliar para abrir la ventana RX2
+void LoRaWAN::openRX2Window() {
+    DEBUG_PRINTLN("Abriendo ventana RX2 en frecuencia " << RX2_FREQ[lora_region] << " MHz");
+    
+    // Configurar radio para RX2: frecuencia y SF fijos según región
+    pimpl->rfm->standbyMode();
+    pimpl->rfm->setFrequency(RX2_FREQ[lora_region]);
+    pimpl->rfm->setSpreadingFactor(RX2_SF[lora_region]);
+    pimpl->rfm->setBandwidth(RX2_BW[lora_region]);
+    pimpl->rfm->setCodingRate(RX2_CR[lora_region]);
+    pimpl->rfm->setPreambleLength(RX2_PREAMBLE[lora_region]);
+    pimpl->rfm->setInvertIQ(true);  // Siempre IQ invertido para downlink
+    pimpl->rfm->setContinuousReceive();
+    
+    // Actualizar estado
+    pimpl->rxState = RX_WINDOW_2;
+    pimpl->rxWindowStart = std::chrono::steady_clock::now();
+    
+    DEBUG_PRINTLN("Ventana RX2 abierta (SF" << (int)RX2_SF[lora_region] << ", " 
+                 << RX2_FREQ[lora_region] << " MHz)");
 }

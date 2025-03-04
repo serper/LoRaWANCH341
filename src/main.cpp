@@ -45,6 +45,7 @@ void resetAndRejoin(LoRaWAN& lora, const std::string& devEUI, const std::string&
 void showHelp() {
     std::cout << "Uso: LoRaWANCH341 [opciones]" << std::endl;
     std::cout << "Opciones:" << std::endl;
+    std::cout << "  -o, --one-channel  Modo de un solo canal (868.1 MHz, SF9, BW 125 KHz)" << std::endl;
     std::cout << "  -r, --reset         Forzar reinicio de sesión LoRaWAN" << std::endl;
     std::cout << "  -c, --config        Especificar archivo de configuración (por defecto: config.json)" << std::endl;
     std::cout << "  -v, --verbose       Activar mensajes de depuración detallados" << std::endl;
@@ -68,6 +69,7 @@ void receiveCallback(const LoRaWAN::Message& message)
 int main(int argc, char* argv[])
 {
     // Valores iniciales predeterminados
+    bool one_channel = false;
     bool forceReset = false;
     bool verbose = false; // Por defecto, modo silencioso
     std::string configPath = "config.json";
@@ -90,6 +92,9 @@ int main(int argc, char* argv[])
             showHelp();
             return 0;
         } 
+        else if (arg == "-o" || arg == "--one-channel") {
+            one_channel = true;
+        }
         else if (arg == "-r" || arg == "--reset") {
             forceReset = true;
         } 
@@ -192,8 +197,8 @@ int main(int argc, char* argv[])
     verbose = verbose || configVerbose;
     
     // Mostrar la configuración final
-    DEBUG_PRINTLN("Configuración final:" << std::endl);
-    std::cout << "  SPI: " << spi_type;
+    DEBUG_PRINTLN("Configuración final:");
+    DEBUG_PRINT("  SPI: " << spi_type);
     if (spi_type == "ch341") {
         DEBUG_PRINTLN(" (índice: " << device_index << ")");
     } else if (spi_type == "linux") {
@@ -236,6 +241,12 @@ int main(int argc, char* argv[])
     {
         std::cerr << "Failed to initialize" << std::endl;
         return 1;
+    }
+
+    // Configurar modo de un solo canal si se solicitó
+    if (one_channel) {
+        std::cout << "Configurando modo de un solo canal..." << std::endl;
+        lorawan.setSingleChannel(true, 868.1, 9, 125);
     }
 
     // Configurar LoRaWAN
