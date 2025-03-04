@@ -12,7 +12,7 @@
 #include <chrono>
 
 class LoRaWAN {
-public:
+    public:
     // LoRa Regions
     static constexpr uint8_t REGION_EU433 = 0;
     static constexpr uint8_t REGION_EU868 = 1;
@@ -29,7 +29,7 @@ public:
     static constexpr uint8_t REGION_AS923JP = 12;
     static constexpr uint8_t REGION_AS923KR = 13;
     static constexpr uint8_t REGIONS = 14;
-
+    
     // LoRa Regions base frequency
     static constexpr float BASE_FREQ[REGIONS] = {
         433.05, // EU433
@@ -47,7 +47,7 @@ public:
         923.2,  // AS923JP
         920.9   // AS923KR
     };
-
+    
     // LoRa Regions RX2 frequency
     static constexpr float RX2_FREQ[REGIONS] = {
         434.665, // EU433
@@ -65,7 +65,7 @@ public:
         923.2,   // AS923JP
         921.9    // AS923KR
     };
-
+    
     // LoRa Regions RX2 Spread Factor
     static constexpr uint8_t RX2_SF[REGIONS] = {
         7, // EU433
@@ -83,7 +83,7 @@ public:
         8, // AS923JP
         8  // AS923KR
     };
-
+    
     // LoRa Regions RX2 Bandwidth
     static constexpr float RX2_BW[REGIONS] = {
         125.0, // EU433
@@ -101,7 +101,7 @@ public:
         500.0, // AS923JP
         500.0  // AS923KR
     };
-
+    
     // LoRa Regions RX2 Coding Rate
     static constexpr uint8_t RX2_CR[REGIONS] = {
         1, // EU433
@@ -119,7 +119,7 @@ public:
         4, // AS923JP
         4  // AS923KR
     };
-
+    
     // LoRa Regions RX2 preamble length
     static constexpr uint16_t RX2_PREAMBLE[REGIONS] = {
         8, // EU433
@@ -138,10 +138,13 @@ public:
         8  // AS923KR
     };
 
-    // Constantes para ventanas de recepción (en ms)
-    static constexpr unsigned long RECEIVE_DELAY1 = 1000; // 1 segundo después del final de TX
-    static constexpr unsigned long RECEIVE_DELAY2 = 2000; // 2 segundos después del final de TX
-    static constexpr unsigned long WINDOW_DURATION = 200; // Duración de cada ventana de recepción
+    // Constantes ajustadas para sincronizar con los tiempos del gateway
+    // static constexpr unsigned long RECEIVE_DELAY1 = 1000; // 1 segundo exacto
+    // static constexpr unsigned long RECEIVE_DELAY2 = 2000; // 2 segundos exactos
+    // static constexpr unsigned long WINDOW_DURATION = 200; // 200ms por ventana
+    static constexpr unsigned long RECEIVE_DELAY1 = 4000; // 4 segundo exacto
+    static constexpr unsigned long RECEIVE_DELAY2 = 2000; // 2 segundos exactos
+    static constexpr unsigned long WINDOW_DURATION = 2000; // 200ms por ventana
 
     // LoRa Regions channel step
     static constexpr float CHANNEL_STEP[REGIONS] = {
@@ -160,14 +163,14 @@ public:
         0.6, // AS923JP
         0.2  // AS923KR
     };
-
+    
     // LoRa max channels
     static constexpr uint8_t CHANNELS = 8;
     static constexpr int MAX_CHANNELS = 16;  // Soporte hasta 16 canales
-
+    
     // LoRa Bandwidths
     static constexpr float LORA_BW[10] = {7.8, 10.4, 15.6, 20.8, 31.25, 41.7, 62.5, 125.0, 250.0, 500.0};
-
+    
     // LoRa Bandwidths
     static constexpr float BW_7_8_KHZ = 7.8;
     static constexpr float BW_10_4_KHZ = 10.4;
@@ -179,7 +182,7 @@ public:
     static constexpr float BW_125_KHZ = 125.0;
     static constexpr float BW_250_KHZ = 250.0;
     static constexpr float BW_500_KHZ = 500.0;
-
+    
     // LoRa Spreading Factors
     static constexpr int SF_6 = 6;
     static constexpr int SF_7 = 7;
@@ -188,51 +191,51 @@ public:
     static constexpr int SF_10 = 10;
     static constexpr int SF_11 = 11;
     static constexpr int SF_12 = 12;
-
+    
     // LoRa Coding Rates
     static constexpr int CR_5 = 5;
     static constexpr int CR_6 = 6;
     static constexpr int CR_7 = 7;
     static constexpr int CR_8 = 8;
-
+    
     // LNA Gain
     static constexpr uint8_t LNA_MAX_GAIN = 0x23;
     static constexpr uint8_t LNA_HIGH_GAIN = 0x20;
     static constexpr uint8_t LNA_MED_GAIN = 0x13;
     static constexpr uint8_t LNA_LOW_GAIN = 0x03;
     static constexpr uint8_t LNA_OFF = 0x00;
-
-    // LoRa Max TX Power by region
+    
+    // LoRaWAN TTN Max TX Power by region
     static constexpr int MAX_POWER[REGIONS] = {
-        14, // EU433
-        20, // EU868
+        16, // EU433
+        14, // EU868
         30, // US915
         30, // AU915
         30, // AS923
-        30, // KR920
+        27, // KR920
         27, // IN865
-        19, // CN470
-        27, // CN779
-        14, // EU433
+        14, // CN470
+        14, // CN779
+        16, // EU433
         30, // AU915OLD
-        19, // CN470PREQUEL
-        20, // AS923JP
-        20  // AS923KR
+        14, // CN470PREQUEL
+        30, // AS923JP
+        27  // AS923KR
     };
-
+    
     // LoRa Duty Cycle
     static constexpr float DUTY_CYCLE = 1.0 / 3600.0; // 1 hour
-
+    
     enum class DeviceClass {
         CLASS_A,
         CLASS_C
     };
-
+    
     enum class JoinMode {
         OTAA,
         ABP
     };
-
+    
     // Estado de las ventanas de recepción
     enum RxWindowState
     {
@@ -243,12 +246,21 @@ public:
         RX_WINDOW_2,  // En ventana RX2
         RX_CONTINUOUS // Escucha continua (solo Clase C)
     };
+    
+    // Añadir después de las otras enumeraciones
+    enum class ConfirmationState {
+        NONE,           // Sin confirmación pendiente
+        WAITING_ACK,    // Esperando ACK para un mensaje enviado
+        ACK_RECEIVED,   // ACK recibido correctamente
+        ACK_PENDING     // Necesitamos enviar un ACK al servidor
+    };
+    
     struct Message {
         std::vector<uint8_t> payload;
         uint8_t port;
         bool confirmed;
     };
-
+    
     // Constructor estándar (usa CH341SPI por defecto)
     LoRaWAN();
     
@@ -256,7 +268,7 @@ public:
     LoRaWAN(std::unique_ptr<SPIInterface> spi_interface);
     
     ~LoRaWAN();
-
+    
     // Inicialización
     bool init(int deviceIndex = 0);
     void setDeviceClass(DeviceClass deviceClass);
@@ -270,12 +282,12 @@ public:
     void setDevAddr(const std::string& devAddr);
     void setNwkSKey(const std::string& nwkSKey);
     void setAppSKey(const std::string& appSKey);
-
+    
     // Gestión de conexión
     bool join(JoinMode mode = JoinMode::OTAA, unsigned long timeout = 20000);
     bool isJoined() const;
     void disconnect();
-
+    
     // Transmisión y recepción
     bool send(const std::vector<uint8_t>& data, uint8_t port = 1, bool confirmed = false, bool force_duty_cycle = false);
     bool receive(Message& message, unsigned long timeout = 5000);
@@ -289,20 +301,20 @@ public:
     void setTxPower(int8_t power);
     void setChannel(uint8_t channel);
     uint8_t getChannel() const;
-
+    
     // Diagnóstico
     int getRSSI() const;
     int getSNR() const;
     uint32_t getFrameCounter() const;
     void setFrameCounter(uint32_t counter);
-
+    
     // Control de energía
     void sleep();
     void wake();
-
+    
     // Actualización (debe llamarse periódicamente)
     void update();
-
+    
     // Nuevos métodos para gestión de radio
     void setRegion(int region);
     int getRegion() const;
@@ -322,19 +334,19 @@ public:
     bool checkDutyCycle(float frequency, size_t payload_size);
     float getDutyCycleUsage(int channel);
     void resetDutyCycle();
-
+    
     // Control de verbosidad
     static void setVerbose(bool verbose) { isVerbose = verbose; }
     static bool getVerbose() { return isVerbose; }
-
+    
     // ADR control
     void enableADR(bool enable = true);
     bool isADREnabled() const;
     void applyADRSettings(uint8_t dataRate, uint8_t txPower, const std::vector<uint8_t>& channelMask);
-
-private:
+    
+    private:
     int lora_region = REGION_EU868;
-
+    
     // Atributos privados para gestión de radio
     int current_channel = 0;
     int current_sf = 9;
@@ -345,7 +357,7 @@ private:
     int current_sync_word = 0x34;
     int current_preamble = 8;
     int current_iq = 0;
-
+    
     // Support to one channel gateway
     bool one_channel_gateway = false;
     float one_channel_freq = 868.1;
@@ -354,12 +366,10 @@ private:
     int one_channel_cr = 5;
     int one_channel_power = 14;
     int one_channel_preamble = 8;
-
+    
     // Atributos privados para gestión de LoRaWAN
     float duty_cycle[CHANNELS] = {0};
-    std::chrono::steady_clock::time_point last_tx = std::chrono::steady_clock::now();
-    std::chrono::steady_clock::time_point last_rx = std::chrono::steady_clock::now();
-
+    
     // Atributos privados para gestión interna
     struct Impl;
     std::unique_ptr<Impl> pimpl;
@@ -390,14 +400,14 @@ private:
     std::array<std::chrono::steady_clock::time_point, MAX_CHANNELS> lastChannelUse;
     std::array<float, MAX_CHANNELS> channelAirTime;
     std::array<float, MAX_CHANNELS> channelFrequencies;
-
+    
     // Control de verbosidad para mensajes de depuración
     static bool isVerbose;
-
+    
     // Métodos para gestión de ventanas de recepción
     void updateRxWindows();
     void openRX2Window();
-
+    
     // ADR related variables
     bool adrEnabled = false;
     int adrAckCounter = 0;
@@ -469,4 +479,21 @@ private:
             if (rssiHistory.size() > 10) rssiHistory.pop_front();
         }
     };
+    
+    // Variables para gestión de confirmaciones
+    ConfirmationState confirmState = ConfirmationState::NONE;
+    int confirmRetries = 0;
+    static constexpr int MAX_RETRIES = 8;
+    std::chrono::steady_clock::time_point lastConfirmAttempt;
+    std::vector<uint8_t> pendingAck;
+    uint8_t ackPort = 0;
+    bool needsAck = false;
+    uint16_t lastFcntDown = 0;
+    
+    // Métodos para gestión de confirmaciones
+    void handleConfirmation();
+    void sendAck();
+    void resetConfirmationState();
+    
+    void handleReceivedMessage(const std::vector<uint8_t>& payload, Message& msg);
 };

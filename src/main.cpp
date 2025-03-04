@@ -190,7 +190,7 @@ int main(int argc, char* argv[])
     // Leer opciones adicionales
     bool configForceReset = config.getNestedBool("options.force_reset", false);
     bool configVerbose = config.getNestedBool("options.verbose", false);
-    int sendInterval = config.getNestedInt("options.send_interval", 30);
+    int sendInterval = config.getNestedInt("options.send_interval", 60);
     
     // La opción de línea de comandos tiene prioridad
     forceReset = forceReset || configForceReset;
@@ -282,7 +282,7 @@ int main(int argc, char* argv[])
     {
         // Enviar datos
         std::vector<uint8_t> data = {1, 2, 3, 4};
-        if (lorawan.send(data, 1, true)) {
+        if (lorawan.send(data, 1, false)) {
             std::cout << "Message sent successfully" << std::endl;
             failedAttempts = 0; // Reiniciar contador de fallos
         } else {

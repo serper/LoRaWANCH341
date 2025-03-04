@@ -125,3 +125,34 @@ void AESCMAC::aes_encrypt(uint8_t* input, const uint8_t* key, uint8_t* output) {
     
     EVP_CIPHER_CTX_free(ctx);
 }
+
+void AESCMAC::test_encrypt_block(const std::array<uint8_t, 16> &input,
+                                 const std::array<uint8_t, 16> &key,
+                                 std::array<uint8_t, 16> &output)
+{
+    // Mostrar entrada y clave para depuración
+    std::cout << "Test encrypt input: ";
+    for (const auto &b : input)
+    {
+        std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(b) << " ";
+    }
+    std::cout << std::dec << std::endl;
+
+    std::cout << "Test encrypt key: ";
+    for (const auto &b : key)
+    {
+        std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(b) << " ";
+    }
+    std::cout << std::dec << std::endl;
+
+    // Realizar encriptación
+    aes_encrypt(const_cast<uint8_t*>(input.data()), key.data(), output.data());
+
+    // Mostrar resultado
+    std::cout << "Test encrypt output: ";
+    for (const auto &b : output)
+    {
+        std::cout << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(b) << " ";
+    }
+    std::cout << std::dec << std::endl;
+}
