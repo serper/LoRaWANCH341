@@ -373,8 +373,6 @@ std::vector<uint8_t> CH341SPI::transfer(const std::vector<uint8_t> &write_data, 
     }
 }
 
-// En el archivo de implementación CH341SPI.cpp
-
 bool CH341SPI::digitalWrite(uint8_t pin, bool value)
 {
     if (!device)

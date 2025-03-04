@@ -19,7 +19,6 @@
 
 LoRaWAN lora;
 
-// Añadir un método para reiniciar la sesión y forzar un nuevo join
 void resetAndRejoin(LoRaWAN& lora, const std::string& devEUI, const std::string& appEUI, const std::string& appKey) {
     // Borrar el archivo de sesión
     std::remove("lorawan_session.json");
@@ -66,7 +65,6 @@ void receiveCallback(const LoRaWAN::Message& message)
     std::cout << std::dec << std::endl;
 }
 
-// Modificar main para procesar argumentos de línea de comandos y cargar la configuración
 int main(int argc, char* argv[])
 {
     // Valores iniciales predeterminados

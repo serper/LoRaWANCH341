@@ -13,8 +13,8 @@ public:
         std::array<uint8_t, 16> appSKey;
         uint32_t uplinkCounter;
         uint32_t downlinkCounter;
-        uint16_t lastDevNonce;  // Añadir último DevNonce usado
-        std::vector<uint16_t> usedNonces;  // Añadir historial de nonces
+        uint16_t lastDevNonce;
+        std::vector<uint16_t> usedNonces;
         bool joined;
     };
 

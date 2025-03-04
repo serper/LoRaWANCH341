@@ -7,7 +7,6 @@ class AESCMAC {
 public:
     static std::array<uint8_t, 16> calculate(const std::vector<uint8_t>& message, 
                                            const std::array<uint8_t, 16>& key);
-    // Movido a public para que pueda ser usado por LoRaWAN
     static void aes_encrypt(uint8_t* input, const uint8_t* key, uint8_t* output);
 
 private:

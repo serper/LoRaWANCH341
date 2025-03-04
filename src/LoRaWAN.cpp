@@ -1,19 +1,19 @@
 #include <openssl/evp.h>
 #include <iomanip>
-#include <algorithm> // Para std::find
-#include <cmath>     // Añadir para std::pow y std::ceil
+#include <algorithm>
+#include <cmath>
 #include "LoRaWAN.hpp"
 #include "RFM95.hpp"
 #include "AES-CMAC.hpp"
-#include "SessionManager.hpp" // Añadir este include
+#include "SessionManager.hpp"
 #include <iostream>
 #include <thread>
 #include <chrono>
 #include <queue>
 #include <mutex>
 #include <array>
-#include <deque> // Para std::deque usado en estadísticas ADR
-#include <bitset> // Para debug de bits en status
+#include <deque>
+#include <bitset>
 
 #if (defined(RFM_USE_CH341) || !defined(RFM_USE_LINUX_SPI))
 // Con CH341SPI
@@ -27,7 +27,6 @@ auto rfm = RFM95(std::move(linux_spi));
 #endif // defined(RFM_USE_LINUX_SPI)
 #endif // defined(RFM_USE_CH341)
 
-// Inicializar la variable estática de verbosidad
 bool LoRaWAN::isVerbose = false;
 
 // Helper para debug condicional
@@ -57,7 +56,6 @@ struct LoRaWAN::Impl {
     int8_t txPower;
     uint8_t channel;
     
-    // Añadir registro de nonces usados
     std::vector<uint16_t> usedNonces;
 
     std::string sessionFile = "lorawan_session.json";
@@ -69,8 +67,8 @@ struct LoRaWAN::Impl {
         data.appSKey = appSKey;
         data.uplinkCounter = uplinkCounter;
         data.downlinkCounter = downlinkCounter;
-        data.lastDevNonce = lastDevNonce;  // Guardar último nonce
-        data.usedNonces = usedNonces;      // Guardar historial
+        data.lastDevNonce = lastDevNonce;
+        data.usedNonces = usedNonces;
         data.joined = true;
         
         return SessionManager::saveSession(sessionFile, data);
@@ -84,8 +82,8 @@ struct LoRaWAN::Impl {
             appSKey = data.appSKey;
             uplinkCounter = data.uplinkCounter;
             downlinkCounter = data.downlinkCounter;
-            lastDevNonce = data.lastDevNonce;  // Restaurar último nonce
-            usedNonces = data.usedNonces;      // Restaurar historial
+            lastDevNonce = data.lastDevNonce;
+            usedNonces = data.usedNonces;
             return data.joined;
         }
         return false;
@@ -207,13 +205,8 @@ struct LoRaWAN::Impl {
             micData.push_back(0x49); // Block B0
             micData.insert(micData.end(), 4, 0x00); // 0x00^4
             micData.push_back(0x00); // Dir = 0 para uplink
-            
-            // DevAddr (ya está en LE en el paquete)
             micData.insert(micData.end(), packet.begin() + 1, packet.begin() + 5);
-            
-            // FCnt (ya está en LE en el paquete)
             micData.insert(micData.end(), packet.begin() + 6, packet.begin() + 8);
-            
             micData.push_back(0x00); // 0x00
             micData.push_back(static_cast<uint8_t>(packet.size())); // len(Data)
 
@@ -354,7 +347,6 @@ struct LoRaWAN::Impl {
         return true;
     }
 
-    // Añadir variable para almacenar el último DevNonce usado
     uint16_t lastDevNonce;
 
     // Generar nuevo DevNonce único
@@ -362,12 +354,11 @@ struct LoRaWAN::Impl {
         // Si no hay nonces previos, empezar desde un valor base
         uint16_t newNonce;
         if (usedNonces.empty()) {
-            newNonce = 0x0001;  // Empezar desde 256, valor seguro para TTN
+            newNonce = 0x0001;
         } else {
-            // Tomar el último nonce usado y sumar 1
             newNonce = lastDevNonce + 1;
             
-            // Si llegamos al máximo, empezar desde 0x0100 de nuevo
+            // Si llegamos al máximo, empezar desde 0x0001 de nuevo
             if (newNonce == 0) {
                 newNonce = 0x0001;
             }
@@ -418,7 +409,6 @@ struct LoRaWAN::Impl {
     }
 };
 
-// El constructor original (para mantener compatibilidad)
 LoRaWAN::LoRaWAN() : 
     pimpl(new Impl(SPIFactory::createCH341SPI(0))), // Usa CH341SPI por defecto
     joined(false),
@@ -440,7 +430,6 @@ LoRaWAN::LoRaWAN() :
     }
 }
 
-// El nuevo constructor que acepta un SPIInterface específico
 LoRaWAN::LoRaWAN(std::unique_ptr<SPIInterface> spi_interface) : 
     pimpl(new Impl(std::move(spi_interface))), // Usa la interfaz proporcionada
     joined(false),
@@ -465,17 +454,17 @@ LoRaWAN::LoRaWAN(std::unique_ptr<SPIInterface> spi_interface) :
 LoRaWAN::~LoRaWAN() = default;
 
 bool LoRaWAN::init(int deviceIndex) {
-    if (!pimpl->rfm->begin()) {  // Cambiamos . por ->
+    if (!pimpl->rfm->begin()) {
         DEBUG_PRINTLN("Failed to initialize RFM95");
         return false;
     }
     // Realizar prueba de comunicación
-    if (!pimpl->rfm->testCommunication()) {  // Cambiamos . por ->
+    if (!pimpl->rfm->testCommunication()) {
         DEBUG_PRINTLN("RFM95 communication failed");
         return false;
     }
     // Configurar el módulo para LoRaWAN
-    pimpl->rfm->setFrequency(868.1);  // Cambiamos . por ->
+    pimpl->rfm->setFrequency(BASE_FREQ[lora_region]);
     pimpl->rfm->setTxPower(14, true);
     pimpl->rfm->setSpreadingFactor(9);
     pimpl->rfm->setBandwidth(125.0);
@@ -485,7 +474,6 @@ bool LoRaWAN::init(int deviceIndex) {
     return true;
 }
 
-// Modificar el método setDeviceClass para configurar correctamente la recepción continua en la frecuencia RX2
 void LoRaWAN::setDeviceClass(DeviceClass deviceClass) {
     currentClass = deviceClass;
     
@@ -497,7 +485,6 @@ void LoRaWAN::setDeviceClass(DeviceClass deviceClass) {
         pimpl->rfm->standbyMode();
         pimpl->rfm->setFrequency(869.525); // Frecuencia RX2 para EU868
         
-        // Probar primero con SF9 como indica el usuario
         pimpl->rfm->setSpreadingFactor(9);
         pimpl->rfm->setBandwidth(125.0);
         pimpl->rfm->setInvertIQ(true);  // Invertir IQ para downlink
@@ -597,8 +584,8 @@ bool LoRaWAN::join(JoinMode mode, unsigned long timeout) {
         pimpl->rfm->standbyMode();  // Cambiamos . por ->
         pimpl->rfm->setFrequency(868.1);
         pimpl->rfm->setTxPower(14, true);
-        pimpl->rfm->setSpreadingFactor(9);  // SF9 para compatibilidad con el gateway
-        pimpl->rfm->setBandwidth(125.0);    // 125 kHz para compatibilidad con el gateway
+        pimpl->rfm->setSpreadingFactor(9);
+        pimpl->rfm->setBandwidth(125.0);
         pimpl->rfm->setCodingRate(5);
         pimpl->rfm->setPreambleLength(8);
         pimpl->rfm->setInvertIQ(false);
@@ -767,7 +754,6 @@ std::vector<uint8_t> LoRaWAN::encryptPayload(const std::vector<uint8_t>& payload
     return encrypted;
 }
 
-// Reemplazar la función actual de descifrado con esta implementación correcta
 std::vector<uint8_t> LoRaWAN::decryptPayload(const std::vector<uint8_t>& payload, uint8_t port) {
     if (payload.empty()) return payload;
     
@@ -797,7 +783,7 @@ std::vector<uint8_t> LoRaWAN::decryptPayload(const std::vector<uint8_t>& payload
     
     // Debug para ver los parámetros de descifrado
     DEBUG_PRINTLN("Decryption parameters:\n");
-    DEBUG_PRINTLN("  Direction: Downlink (1)\n"); // Actualizado para mostrar el valor correcto
+    DEBUG_PRINTLN("  Direction: Downlink (1)\n");
     DEBUG_PRINT("  DevAddr: ");
     for (int i = 0; i < 4; i++) {
         DEBUG_PRINT(std::hex << std::setw(2) << std::setfill('0') 
@@ -859,7 +845,6 @@ std::vector<uint8_t> LoRaWAN::decryptPayload(const std::vector<uint8_t>& payload
     return decrypted;
 }
 
-// Implementaciones correctas para los métodos de duty cycle
 float LoRaWAN::calculateTimeOnAir(size_t payload_size) {
     // Extraer parámetros actuales
     int sf = pimpl->rfm->getSpreadingFactor();  // Cambiamos . por ->
@@ -958,7 +943,6 @@ void LoRaWAN::resetDutyCycle() {
     }
 }
 
-// Modificar el método send para implementar duty cycle
 bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirmed, bool force_duty_cycle) {
     if (!joined) return false;
 
@@ -1150,20 +1134,6 @@ bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirme
             std::this_thread::sleep_for(std::chrono::milliseconds(wait_ms));
         }
     }
-
-    // Asegurarnos de utilizar ÚNICAMENTE el canal 0 a 868.1 MHz y SF9 para
-    // compatibilidad con one channel gateway
-    DEBUG_PRINTLN("Configurando para gateway one channel (868.1 MHz, SF9)");
-    // Configurar el radio explícitamente para el one channel gateway
-    pimpl->rfm->standbyMode();
-    pimpl->rfm->setFrequency(868.1);  // Canal 0 - ÚNICO canal soportado
-    pimpl->rfm->setTxPower(14, true); // 14 dBm - ÚNICO valor soportado
-    pimpl->rfm->setSpreadingFactor(9);  // SF9 - ÚNICO SF soportado
-    pimpl->rfm->setBandwidth(125.0);   // 125 kHz - ÚNICO BW soportado
-    pimpl->rfm->setCodingRate(5);       // 4/5
-    pimpl->rfm->setPreambleLength(8);
-    pimpl->rfm->setInvertIQ(false);
-    pimpl->rfm->setSyncWord(0x34);      // LoRaWAN sync word
     
     // Debug de los parámetros radio para verificación
     DEBUG_PRINTLN("Radio parameters:");
@@ -1172,8 +1142,6 @@ bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirme
     DEBUG_PRINTLN("  BW: " << pimpl->rfm->getBandwidth() << " kHz");
     DEBUG_PRINTLN("  CR: 4/" << pimpl->rfm->getCodingRate());
     DEBUG_PRINTLN("  Power: " << pimpl->rfm->getTxPower() << " dBm");
-    DEBUG_PRINTLN("Esperando 6 segundos para duty cycle...");
-    // Transmitir con duty cycle para cumplir regulaciones
     DEBUG_PRINTLN("Enviando paquete...");
     
     // Asegurar que el paquete se envía correctamente comprobando estado del radio
@@ -1210,7 +1178,7 @@ bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirme
         if (currentClass == DeviceClass::CLASS_C) {
             DEBUG_PRINTLN("Configurando recepción continua en RX2 (869.525 MHz, Clase C)");
             pimpl->rfm->standbyMode();
-            pimpl->rfm->setFrequency(869.525);
+            pimpl->rfm->setFrequency(RX2_FREQ[lora_region]);
             pimpl->rfm->setSpreadingFactor(9);  // SF9 según lo observado
             pimpl->rfm->setBandwidth(125.0);
             pimpl->rfm->setInvertIQ(true);      // IQ invertido para downlink
@@ -1230,7 +1198,6 @@ bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirme
     return result;
 }
 
-// Modificar el método update para extraer FCnt del paquete recibido
 void LoRaWAN::update() {
     if (!joined) return;
 
@@ -1604,7 +1571,6 @@ bool LoRaWAN::validateKeys() const {
     return true;
 }
 
-// Añadir métodos para control de ADR
 void LoRaWAN::enableADR(bool enable) {
     adrEnabled = enable;
     DEBUG_PRINTLN("ADR " << (enable ? "enabled" : "disabled"));
@@ -1640,9 +1606,7 @@ void LoRaWAN::resetSession()
     DEBUG_PRINTLN("LoRaWAN session reset successfully");
 }
 
-// Método público para aplicar configuraciones ADR - debe estar en LoRaWAN.cpp
 void LoRaWAN::applyADRSettings(uint8_t dataRate, uint8_t txPower, const std::vector<uint8_t>& channelMask) {
-    // Esta función se llama desde LoRaWAN_ADR_Helper para aplicar los cambios de ADR
 
     // Mapear DR a SF/BW según la región
     int sf = 9; // Valor predeterminado
@@ -1706,7 +1670,6 @@ void LoRaWAN::requestLinkCheck()
     }
 }
 
-// Método mejorado para gestionar comandos MAC
 void LoRaWAN::processMACCommands(const std::vector<uint8_t> &commands, std::vector<uint8_t> &response)
 {
     size_t index = 0;
@@ -1771,7 +1734,6 @@ void LoRaWAN::processMACCommands(const std::vector<uint8_t> &commands, std::vect
     }
 }
 
-// Método mejorado para procesar comandos MAC LinkADRReq
 void LoRaWAN::processLinkADRReq(const std::vector<uint8_t> &cmd, size_t index, std::vector<uint8_t> &response)
 {
     if (index + 4 >= cmd.size())
@@ -2013,7 +1975,6 @@ void LoRaWAN::processLinkADRReq(const std::vector<uint8_t> &cmd, size_t index, s
     response.push_back(status);
 }
 
-// Método mejorado para transmitir estadísticas ADR al servidor
 void LoRaWAN::sendADRStatistics()
 {
     if (!pendingMACResponses.empty() || !joined)

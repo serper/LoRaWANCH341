@@ -1,7 +1,5 @@
 #include "LoRaWAN.hpp"
 #include <deque>
-
-// Esta clase debe añadirse a la implementación de LoRaWAN::Impl en el archivo principal
 class ADRStats {
 private:
     std::deque<float> snrHistory;

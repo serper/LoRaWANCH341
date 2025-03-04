@@ -164,7 +164,7 @@ public:
     // Constructor estándar (usa CH341SPI por defecto)
     LoRaWAN();
     
-    // Nuevo constructor que acepta un SPIInterface específico
+    // Constructor que acepta un SPIInterface específico
     LoRaWAN(std::unique_ptr<SPIInterface> spi_interface);
     
     ~LoRaWAN();

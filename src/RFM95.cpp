@@ -82,10 +82,6 @@ void RFM95::end()
 
 void RFM95::setFrequency(float freq_mhz)
 {
-    // La hoja de datos del RFM95W especifica que:
-    // Freg = (FRF * 32 MHz) / 2^19
-    // Por lo tanto, FRF = (Freg * 2^19) / 32 MHz
-
     uint32_t frf = static_cast<uint32_t>((freq_mhz * 524288.0) / 32.0);
 
     // Escribir los tres bytes
@@ -184,7 +180,7 @@ float RFM95::getBandwidth()
     const float bws[] = {7.8, 10.4, 15.6, 20.8, 31.25, 41.7, 62.5, 125, 250, 500};
     uint8_t reg1 = readRegister(REG_MODEM_CONFIG_1);
     uint8_t bw_value = (reg1 >> 4) & 0x0F;
-    return bws[bw_value < 10 ? bw_value : 9]; // Ensure valid index
+    return bws[bw_value < 10 ? bw_value : 9];
 }
 
 void RFM95::setCodingRate(int denominator)
