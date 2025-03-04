@@ -104,7 +104,7 @@ The `SPIFactory` class provides factory methods to create appropriate SPI interf
 
 ## Dependencies
 
-- libch341-dev (for CH341 communication)
+- libusb-dev (for CH341 communication)
 - libjson-cpp-dev (for JSON configuration parsing)
 - libspi-dev (for SPI communication)
 - libopenssl
