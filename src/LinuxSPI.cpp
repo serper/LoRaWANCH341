@@ -4,6 +4,7 @@
 #ifdef __linux__
 #include <linux/spi/spidev.h>
 #include <linux/gpio.h>
+#include <sys/ioctl.h>
 #endif
 #include <fstream>
 #include <iostream>
