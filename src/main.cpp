@@ -277,6 +277,8 @@ int main(int argc, char* argv[])
     // Establecer el callback de recepción
     lorawan.onReceive(receiveCallback);
 
+    lorawan.requestLinkCheck();
+    
     // En el loop principal, muestra información sobre la frecuencia actual
     while (true)
     {

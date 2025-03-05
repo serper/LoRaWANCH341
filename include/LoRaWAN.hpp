@@ -138,12 +138,8 @@ class LoRaWAN {
         8  // AS923KR
     };
 
-    // Constantes ajustadas para sincronizar con los tiempos del gateway
-    // static constexpr unsigned long RECEIVE_DELAY1 = 1000; // 1 segundo exacto
-    // static constexpr unsigned long RECEIVE_DELAY2 = 2000; // 2 segundos exactos
-    // static constexpr unsigned long WINDOW_DURATION = 200; // 200ms por ventana
-    static constexpr unsigned long RECEIVE_DELAY1 = 4000; // 4 segundo exacto
-    static constexpr unsigned long RECEIVE_DELAY2 = 2000; // 2 segundos exactos
+    static constexpr unsigned long RECEIVE_DELAY1 = 4000;  // 5 segundos como está en TTN
+    static constexpr unsigned long RECEIVE_DELAY2 = 6000;  // 6 segundos (RECEIVE_DELAY1 + 1s)
     static constexpr unsigned long WINDOW_DURATION = 2000; // 200ms por ventana
 
     // LoRa Regions channel step
@@ -307,7 +303,8 @@ class LoRaWAN {
     int getSNR() const;
     uint32_t getFrameCounter() const;
     void setFrameCounter(uint32_t counter);
-    
+    void requestLinkCheck();
+
     // Control de energía
     void sleep();
     void wake();
@@ -356,7 +353,7 @@ class LoRaWAN {
     int current_lna = 0x23;
     int current_sync_word = 0x34;
     int current_preamble = 8;
-    int current_iq = 0;
+    int current_dr = 0;
     
     // Support to one channel gateway
     bool one_channel_gateway = false;
@@ -389,7 +386,8 @@ class LoRaWAN {
     bool validateKeys() const;
     void setupRxWindows();
     void switchToClassC();
-    
+    void updateDataRateFromSF(); // Actualiza current_dr basado en SF y BW
+
     // Nuevos métodos privados
     bool processJoinAccept(const std::vector<uint8_t>& data);
     bool verifyMIC(const std::vector<uint8_t>& data);
@@ -406,6 +404,7 @@ class LoRaWAN {
     
     // Métodos para gestión de ventanas de recepción
     void updateRxWindows();
+    void openRX1Window();
     void openRX2Window();
     
     // ADR related variables
@@ -447,7 +446,6 @@ class LoRaWAN {
     
     // Métodos adicionales para ADR
     void sendADRStatistics();
-    void requestLinkCheck();
     
     // Extensión de la implementación de Impl
     struct ImplStats {
@@ -494,6 +492,5 @@ class LoRaWAN {
     void handleConfirmation();
     void sendAck();
     void resetConfirmationState();
-    
     void handleReceivedMessage(const std::vector<uint8_t>& payload, Message& msg);
 };
