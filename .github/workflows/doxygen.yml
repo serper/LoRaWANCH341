@@ -24,7 +24,7 @@ jobs:
       run: |
         # Generate default Doxyfile if you don't have one
         doxygen -g
-        
+
         # Configure Doxygen options
         sed -i 's/PROJECT_NAME           = "My Project"/PROJECT_NAME           = "LoRaWANCH341 Library"/' Doxyfile
         sed -i 's/OUTPUT_DIRECTORY       =/OUTPUT_DIRECTORY       = docs/' Doxyfile
@@ -55,23 +55,12 @@ jobs:
     - name: Generate Documentation
       run: doxygen Doxyfile
 
-    - name: Ensure gh-pages branch
-      run: |
-        git config --global user.name "GitHub Action"
-        git config --global user.email "action@github.com"
-        git fetch origin
-        if ! git branch -r | grep -q 'origin/gh-pages'; then
-          git checkout --orphan gh-pages
-          git reset --hard
-          git commit --allow-empty -m "Initializing gh-pages branch"
-          git push https://$GH_PAT@github.com/serper/LoRaWANCH341.git gh-pages
-        fi
-      env:
-        GH_PAT: ${{ secrets.GH_PAT }}
+    - name: Create .nojekyll file
+      run: touch docs/html/.nojekyll
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       if: github.event_name != 'pull_request'
       with:
-        personal_token: ${{ secrets.GH_PAT }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./docs/html
