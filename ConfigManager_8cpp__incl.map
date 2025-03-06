@@ -1,6 +1,6 @@
 <map id="src/ConfigManager.cpp" name="src/ConfigManager.cpp">
 <area shape="rect" id="Node000001" title=" " alt="" coords="325,5,494,31"/>
-<area shape="rect" id="Node000002" href="$ConfigManager_8hpp.html" title=" " alt="" coords="145,79,292,104"/>
+<area shape="rect" id="Node000002" href="$ConfigManager_8hpp.html" title="Header file for the ConfigManager class." alt="" coords="145,79,292,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="380,33,264,76,262,71,378,28"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="298,152,371,177"/>
 <area shape="poly" id="edge7_Node000001_Node000005" title=" " alt="" coords="398,33,378,54,360,80,348,110,341,139,336,138,343,108,355,77,374,50,394,29"/>

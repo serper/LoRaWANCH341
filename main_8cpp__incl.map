@@ -14,7 +14,7 @@
 <area shape="poly" id="edge23_Node000001_Node000009" title=" " alt="" coords="728,32,679,141,674,138,724,30"/>
 <area shape="rect" id="Node000010" href="$SPIInterface_8hpp.html" title=" " alt="" coords="161,152,289,177"/>
 <area shape="poly" id="edge31_Node000001_Node000010" title=" " alt="" coords="678,23,610,26,525,36,434,53,346,81,292,111,249,144,246,140,289,107,344,76,433,48,525,30,609,21,678,17"/>
-<area shape="rect" id="Node000012" href="$ConfigManager_8hpp.html" title=" " alt="" coords="769,79,915,104"/>
+<area shape="rect" id="Node000012" href="$ConfigManager_8hpp.html" title="Header file for the ConfigManager class." alt="" coords="769,79,915,104"/>
 <area shape="poly" id="edge16_Node000001_Node000012" title=" " alt="" coords="751,28,814,69,811,73,748,33"/>
 <area shape="rect" id="Node000016" title=" " alt="" coords="939,79,1019,104"/>
 <area shape="poly" id="edge21_Node000001_Node000016" title=" " alt="" coords="772,28,927,72,925,77,770,33"/>

@@ -1,3 +1,3 @@
 <map id="ConfigManager" name="ConfigManager">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,153,371"/>
+<area shape="rect" id="Node000001" title="Manages configuration settings stored in a JSON file." alt="" coords="5,5,153,371"/>
 </map>

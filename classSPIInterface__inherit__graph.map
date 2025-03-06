@@ -1,7 +1,7 @@
 <map id="SPIInterface" name="SPIInterface">
-<area shape="rect" id="Node000001" title="Interfaz abstracta para comunicación SPI." alt="" coords="131,5,302,271"/>
-<area shape="rect" id="Node000002" href="$classCH341SPI.html" title="A class to interface with the CH341 USB to SPI adapter." alt="" coords="5,319,215,944"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,285,180,319,175,318,183,284"/>
-<area shape="rect" id="Node000003" href="$classLinuxSPI.html" title="Implementation of SPIInterface using Linux spidev." alt="" coords="239,349,410,914"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="251,284,265,348,260,349,246,285"/>
+<area shape="rect" id="Node000001" title="Abstract interface for SPI communication." alt="" coords="131,5,302,311"/>
+<area shape="rect" id="Node000002" href="$classCH341SPI.html" title="A class to interface with the CH341 USB to SPI adapter." alt="" coords="5,359,215,984"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,325,178,359,173,358,180,324"/>
+<area shape="rect" id="Node000003" href="$classLinuxSPI.html" title="Implementation of SPIInterface using Linux spidev." alt="" coords="239,389,410,954"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="254,324,268,388,263,389,249,325"/>
 </map>

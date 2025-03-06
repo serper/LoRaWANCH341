@@ -78,7 +78,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Interfaz abstracta para comunicación SPI.  
+<p>Abstract interface for SPI communication.  
  <a href="classSPIInterface.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="SPIInterface_8hpp_source.html">SPIInterface.hpp</a>&gt;</code></p>
@@ -87,11 +87,11 @@ Inheritance diagram for SPIInterface:</div>
 <div class="dyncontent">
 <div class="center"><img src="classSPIInterface__inherit__graph.png" border="0" usemap="#aSPIInterface_inherit__map" alt="Inheritance graph"/></div>
 <map name="aSPIInterface_inherit__map" id="aSPIInterface_inherit__map">
-<area shape="rect" title="Interfaz abstracta para comunicación SPI." alt="" coords="131,5,302,271"/>
-<area shape="rect" href="classCH341SPI.html" title="A class to interface with the CH341 USB to SPI adapter." alt="" coords="5,319,215,944"/>
-<area shape="poly" title=" " alt="" coords="188,285,180,319,175,318,183,284"/>
-<area shape="rect" href="classLinuxSPI.html" title="Implementation of SPIInterface using Linux spidev." alt="" coords="239,349,410,914"/>
-<area shape="poly" title=" " alt="" coords="251,284,265,348,260,349,246,285"/>
+<area shape="rect" title="Abstract interface for SPI communication." alt="" coords="131,5,302,311"/>
+<area shape="rect" href="classCH341SPI.html" title="A class to interface with the CH341 USB to SPI adapter." alt="" coords="5,359,215,984"/>
+<area shape="poly" title=" " alt="" coords="185,325,178,359,173,358,180,324"/>
+<area shape="rect" href="classLinuxSPI.html" title="Implementation of SPIInterface using Linux spidev." alt="" coords="239,389,410,954"/>
+<area shape="poly" title=" " alt="" coords="254,324,268,388,263,389,249,325"/>
 </map>
 </div>
 <div class="dynheader">
@@ -99,7 +99,7 @@ Collaboration diagram for SPIInterface:</div>
 <div class="dyncontent">
 <div class="center"><img src="classSPIInterface__coll__graph.png" border="0" usemap="#aSPIInterface_coll__map" alt="Collaboration graph"/></div>
 <map name="aSPIInterface_coll__map" id="aSPIInterface_coll__map">
-<area shape="rect" title="Interfaz abstracta para comunicación SPI." alt="" coords="5,5,176,271"/>
+<area shape="rect" title="Abstract interface for SPI communication." alt="" coords="5,5,176,311"/>
 </map>
 </div>
 <table class="memberdecls">
@@ -124,10 +124,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a97ce53ce67c8767a9a726b3f5bbf7088"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8dc470a3bb0b73525c61e2e1dcbeebcd" id="r_a8dc470a3bb0b73525c61e2e1dcbeebcd"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSPIInterface.html#a8dc470a3bb0b73525c61e2e1dcbeebcd">pinMode</a> (uint8_t pin, uint8_t mode)=0</td></tr>
 <tr class="separator:a8dc470a3bb0b73525c61e2e1dcbeebcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fd933e0e3e36e4f13941f0dde85caa4" id="r_a3fd933e0e3e36e4f13941f0dde85caa4"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSPIInterface.html#a3fd933e0e3e36e4f13941f0dde85caa4">configureInterrupt</a> (uint8_t pin, bool enable)=0</td></tr>
+<tr class="separator:a3fd933e0e3e36e4f13941f0dde85caa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36a4155357fbfa843753eef1c6c74a61" id="r_a36a4155357fbfa843753eef1c6c74a61"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSPIInterface.html#a36a4155357fbfa843753eef1c6c74a61">setInterruptCallback</a> (<a class="el" href="classSPIInterface.html#a8f87e37243f3345f1c1383439ada4554">InterruptCallback</a> callback)=0</td></tr>
 <tr class="separator:a36a4155357fbfa843753eef1c6c74a61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a303f8577d1368e59302c6d5542a970" id="r_a2a303f8577d1368e59302c6d5542a970"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSPIInterface.html#a2a303f8577d1368e59302c6d5542a970">enableInterrupt</a> (bool enable)=0</td></tr>
 <tr class="separator:a2a303f8577d1368e59302c6d5542a970"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c067c36e1b1e77894057d5db261f64f" id="r_a0c067c36e1b1e77894057d5db261f64f"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSPIInterface.html#a0c067c36e1b1e77894057d5db261f64f">isActive</a> () const =0</td></tr>
+<tr class="separator:a0c067c36e1b1e77894057d5db261f64f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -139,7 +143,8 @@ Static Public Attributes</h2></td></tr>
 <tr class="separator:a07d43fe12f31ac449f5d19797709187b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Interfaz abstracta para comunicación SPI. </p>
+<div class="textblock"><p>Abstract interface for SPI communication. </p>
+<p>This class defines an abstract interface for SPI communication, including basic methods for managing SPI communication and GPIO controls. </p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a8f87e37243f3345f1c1383439ada4554" name="a8f87e37243f3345f1c1383439ada4554"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8f87e37243f3345f1c1383439ada4554">&#9670;&#160;</a></span>InterruptCallback</h2>
@@ -206,6 +211,42 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="classCH341SPI.html#a0d9b9a35f501d451d2900c9830cf0463">CH341SPI</a>, and <a class="el" href="classLinuxSPI.html#a29e7826b096e43aa70db5c33ec40b1db">LinuxSPI</a>.</p>
+
+</div>
+</div>
+<a id="a3fd933e0e3e36e4f13941f0dde85caa4" name="a3fd933e0e3e36e4f13941f0dde85caa4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3fd933e0e3e36e4f13941f0dde85caa4">&#9670;&#160;</a></span>configureInterrupt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool SPIInterface::configureInterrupt </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>pin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -300,6 +341,31 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="classCH341SPI.html#aaa89c6ca4c411269f2ae36d3cdeb134d">CH341SPI</a>, and <a class="el" href="classLinuxSPI.html#a47b09d18147f2d9c96d72daee7e94013">LinuxSPI</a>.</p>
+
+</div>
+</div>
+<a id="a0c067c36e1b1e77894057d5db261f64f" name="a0c067c36e1b1e77894057d5db261f64f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c067c36e1b1e77894057d5db261f64f">&#9670;&#160;</a></span>isActive()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool SPIInterface::isActive </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

@@ -24,7 +24,8 @@ var searchData=
   ['irq_5ftx_5fdone_5fmask_21',['IRQ_TX_DONE_MASK',['../classRFM95.html#ae05fe1ee027fb9573b9c1b270638ca54',1,'RFM95']]],
   ['irq_5ftx_5ftimeout_5fmask_22',['IRQ_TX_TIMEOUT_MASK',['../classRFM95.html#adb77ce8f1c4f044ad72cee8620325d20',1,'RFM95']]],
   ['irq_5fvalid_5fheader_5fmask_23',['IRQ_VALID_HEADER_MASK',['../classRFM95.html#ab133fcfadd3ecd60ae741b1d1822401b',1,'RFM95']]],
-  ['isadrenabled_24',['isADREnabled',['../classLoRaWAN.html#a1d238515892563864cde31056f01133e',1,'LoRaWAN']]],
-  ['isjoined_25',['isJoined',['../classLoRaWAN.html#add9bc98afebd849044eb9f6b4d5123ef',1,'LoRaWAN']]],
-  ['isverbose_26',['isVerbose',['../classLoRaWAN.html#abfba6a1ace0618f987437b2fd9359554',1,'LoRaWAN']]]
+  ['isactive_24',['isActive',['../classSPIInterface.html#a0c067c36e1b1e77894057d5db261f64f',1,'SPIInterface']]],
+  ['isadrenabled_25',['isADREnabled',['../classLoRaWAN.html#a1d238515892563864cde31056f01133e',1,'LoRaWAN']]],
+  ['isjoined_26',['isJoined',['../classLoRaWAN.html#add9bc98afebd849044eb9f6b4d5123ef',1,'LoRaWAN']]],
+  ['isverbose_27',['isVerbose',['../classLoRaWAN.html#abfba6a1ace0618f987437b2fd9359554',1,'LoRaWAN']]]
 ];

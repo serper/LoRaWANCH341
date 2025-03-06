@@ -70,13 +70,14 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="classSPIFactory-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">SPIFactory Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Factory para crear instancias específicas de SPI.  
+<p>Factory class for creating SPI interfaces.  
  <a href="classSPIFactory.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="SPIInterface_8hpp_source.html">SPIInterface.hpp</a>&gt;</code></p>
@@ -85,20 +86,81 @@ Collaboration diagram for SPIFactory:</div>
 <div class="dyncontent">
 <div class="center"><img src="classSPIFactory__coll__graph.png" border="0" usemap="#aSPIFactory_coll__map" alt="Collaboration graph"/></div>
 <map name="aSPIFactory_coll__map" id="aSPIFactory_coll__map">
-<area shape="rect" title="Factory para crear instancias específicas de SPI." alt="" coords="5,5,148,91"/>
+<area shape="rect" title="Factory class for creating SPI interfaces." alt="" coords="5,5,163,151"/>
 </map>
 </div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a575e02212971f81d6aab0339e244a083" id="r_a575e02212971f81d6aab0339e244a083"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSPIFactory.html#a575e02212971f81d6aab0339e244a083">~SPIFactory</a> ()=default</td></tr>
+<tr class="separator:a575e02212971f81d6aab0339e244a083"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a135a7cbc8771df59615672d0e1b097b4" id="r_a135a7cbc8771df59615672d0e1b097b4"><td class="memItemLeft" align="right" valign="top">static std::unique_ptr&lt; <a class="el" href="classSPIInterface.html">SPIInterface</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSPIFactory.html#a135a7cbc8771df59615672d0e1b097b4">createCH341SPI</a> (int device_index=0, bool lsb_first=false)</td></tr>
 <tr class="separator:a135a7cbc8771df59615672d0e1b097b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a468e0f1ca079388de1315fba7cdebd5b" id="r_a468e0f1ca079388de1315fba7cdebd5b"><td class="memItemLeft" align="right" valign="top">static std::unique_ptr&lt; <a class="el" href="classSPIInterface.html">SPIInterface</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSPIFactory.html#a468e0f1ca079388de1315fba7cdebd5b">createLinuxSPI</a> (const std::string &amp;device=std::string(&quot;/dev/spidev0.0&quot;), uint32_t speed=1000000, uint8_t mode=0)</td></tr>
 <tr class="separator:a468e0f1ca079388de1315fba7cdebd5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3314232a2f9a7dc636a8060cd87a77dc" id="r_a3314232a2f9a7dc636a8060cd87a77dc"><td class="memItemLeft" align="right" valign="top">static std::unique_ptr&lt; <a class="el" href="classSPIInterface.html">SPIInterface</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSPIFactory.html#a3314232a2f9a7dc636a8060cd87a77dc">createSPIInterface</a> (const std::string &amp;device_type, int device_index=0, bool lsb_first=false)</td></tr>
+<tr class="separator:a3314232a2f9a7dc636a8060cd87a77dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abeb4c1a462da0454e1ce4abeb4ba95d7" id="r_abeb4c1a462da0454e1ce4abeb4ba95d7"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSPIFactory.html#abeb4c1a462da0454e1ce4abeb4ba95d7">cleanupResources</a> ()</td></tr>
+<tr class="separator:abeb4c1a462da0454e1ce4abeb4ba95d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Factory para crear instancias específicas de SPI. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+<div class="textblock"><p>Factory class for creating SPI interfaces. </p>
+<p>This class provides factory methods for creating SPI interfaces, allowing the user to select the desired SPI implementation. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a575e02212971f81d6aab0339e244a083" name="a575e02212971f81d6aab0339e244a083"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a575e02212971f81d6aab0339e244a083">&#9670;&#160;</a></span>~SPIFactory()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SPIFactory::~SPIFactory </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="abeb4c1a462da0454e1ce4abeb4ba95d7" name="abeb4c1a462da0454e1ce4abeb4ba95d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abeb4c1a462da0454e1ce4abeb4ba95d7">&#9670;&#160;</a></span>cleanupResources()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void SPIFactory::cleanupResources </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a135a7cbc8771df59615672d0e1b097b4" name="a135a7cbc8771df59615672d0e1b097b4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a135a7cbc8771df59615672d0e1b097b4">&#9670;&#160;</a></span>createCH341SPI()</h2>
 
@@ -194,6 +256,48 @@ Here is the caller graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="95,21,60,21,60,15,95,15"/>
 </map>
 </div>
+
+</div>
+</div>
+<a id="a3314232a2f9a7dc636a8060cd87a77dc" name="a3314232a2f9a7dc636a8060cd87a77dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3314232a2f9a7dc636a8060cd87a77dc">&#9670;&#160;</a></span>createSPIInterface()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static std::unique_ptr&lt; <a class="el" href="classSPIInterface.html">SPIInterface</a> &gt; SPIFactory::createSPIInterface </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>device_type</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>device_index</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>lsb_first</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

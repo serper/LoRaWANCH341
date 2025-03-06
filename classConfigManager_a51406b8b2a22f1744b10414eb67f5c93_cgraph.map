@@ -1,5 +1,5 @@
 <map id="ConfigManager::loadConfig" name="ConfigManager::loadConfig">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,203,31"/>
-<area shape="rect" id="Node000002" href="$classConfigManager.html#aefb585feb58ce8e05281290bf6b07b4c" title=" " alt="" coords="251,5,461,31"/>
+<area shape="rect" id="Node000001" title="Loads the configuration from the JSON file." alt="" coords="5,5,203,31"/>
+<area shape="rect" id="Node000002" href="$classConfigManager.html#aefb585feb58ce8e05281290bf6b07b4c" title="Cleans up the JSON object." alt="" coords="251,5,461,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,15,237,15,237,21,203,21"/>
 </map>
