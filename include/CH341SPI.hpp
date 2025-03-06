@@ -1,3 +1,9 @@
+
+/**
+ * @file CH341SPI.hpp
+ * @brief Header file for the CH341SPI class, which implements the SPIInterface for the CH341 USB to SPI adapter.
+ */
+
 #pragma once
 
 #include "SPIInterface.hpp"
@@ -7,49 +13,121 @@
 #include <thread>
 
 /**
- * Implementación de SPIInterface usando CH341
+ * @class CH341SPI
+ * @brief A class to interface with the CH341 USB to SPI adapter.
  */
 class CH341SPI : public SPIInterface {
 public:
-    // Constructor específico para CH341
+    /**
+     * @brief Constructor for CH341SPI.
+     * @param device_index Index of the CH341 device to use (default is 0).
+     * @param lsb_first Set to true if least significant bit should be sent first (default is false).
+     */
     CH341SPI(int device_index = 0, bool lsb_first = false);
-    ~CH341SPI() override;
 
-    // Implementación de SPIInterface
-    bool open() override;
-    void close() override;
-    std::vector<uint8_t> transfer(const std::vector<uint8_t>& write_data, size_t read_length = 0) override;
-    bool digitalWrite(uint8_t pin, bool value) override;
-    bool digitalRead(uint8_t pin) override;
-    bool pinMode(uint8_t pin, uint8_t mode) override;
-    bool setInterruptCallback(InterruptCallback callback) override;
-    bool enableInterrupt(bool enable) override;
-    
-    // Métodos específicos de CH341
-    // Constantes para los pines del CH341
+    /**
+     * @brief Destructor for CH341SPI.
+     */
+    ~CH341SPI();
+
+    /**
+     * @brief Opens the SPI connection.
+     * @return True if the connection was successfully opened, false otherwise.
+     */
+    bool open();
+
+    /**
+     * @brief Closes the SPI connection.
+     */
+    void close();
+
+    /**
+     * @brief Transfers data over SPI.
+     * @param write_data Data to be written to the SPI bus.
+     * @param read_length Number of bytes to read from the SPI bus (default is 0).
+     * @return A vector containing the data read from the SPI bus.
+     */
+    std::vector<uint8_t> transfer(const std::vector<uint8_t>& write_data, size_t read_length = 0);
+
+    /**
+     * @brief Writes a digital value to a specified pin.
+     * @param pin The pin number.
+     * @param value The value to write (true for high, false for low).
+     * @return True if the operation was successful, false otherwise.
+     */
+    bool digitalWrite(uint8_t pin, bool value);
+
+    /**
+     * @brief Reads a digital value from a specified pin.
+     * @param pin The pin number.
+     * @return The value read from the pin (true for high, false for low).
+     */
+    bool digitalRead(uint8_t pin);
+
+    /**
+     * @brief Sets the mode of a specified pin.
+     * @param pin The pin number.
+     * @param mode The mode to set (e.g., input, output).
+     * @return True if the operation was successful, false otherwise.
+     */
+    bool pinMode(uint8_t pin, uint8_t mode);
+
+    /**
+     * @brief Sets the callback function for interrupts.
+     * @param callback The callback function to be called on an interrupt.
+     * @return True if the operation was successful, false otherwise.
+     */
+    bool setInterruptCallback(InterruptCallback callback);
+
+    /**
+     * @brief Enables or disables interrupts.
+     * @param enable Set to true to enable interrupts, false to disable.
+     * @return True if the operation was successful, false otherwise.
+     */
+    bool enableInterrupt(bool enable);
+
+    // Constants for CH341 pins
     static const uint8_t PIN_D0 = 0x01;
     static const uint8_t PIN_D1 = 0x02;
     static const uint8_t PIN_D2 = 0x04;
     static const uint8_t PIN_D3 = 0x08;
     static const uint8_t PIN_D4 = 0x10;
     static const uint8_t PIN_D5 = 0x20;
-    
+
 private:
-    // Atributos específicos de CH341
-    libusb_device_handle *device;
-    libusb_context *context;
-    int device_index;
-    bool lsb_first;
-    uint8_t _gpio_direction;
-    uint8_t _gpio_output;
-    InterruptCallback interruptCallback;
-    bool interruptEnabled;
-    std::thread interruptThread;
-    bool threadRunning;
-    
-    // Métodos privados
+    libusb_device_handle *device; ///< Handle to the libusb device.
+    libusb_context *context; ///< Context for libusb.
+    int device_index; ///< Index of the CH341 device.
+    bool lsb_first; ///< Flag to indicate if LSB should be sent first.
+    uint8_t _gpio_direction; ///< Direction of GPIO pins.
+    uint8_t _gpio_output; ///< Output state of GPIO pins.
+    InterruptCallback interruptCallback; ///< Callback function for interrupts.
+    bool interruptEnabled; ///< Flag to indicate if interrupts are enabled.
+    std::thread interruptThread; ///< Thread for monitoring interrupts.
+    bool threadRunning; ///< Flag to indicate if the interrupt monitoring thread is running.
+
+    /**
+     * @brief Configures the SPI stream.
+     * @return True if the configuration was successful, false otherwise.
+     */
     bool configStream();
+
+    /**
+     * @brief Enables or disables the pins.
+     * @param enable Set to true to enable pins, false to disable.
+     * @return True if the operation was successful, false otherwise.
+     */
     bool enablePins(bool enable);
+
+    /**
+     * @brief Swaps the bits of a byte.
+     * @param byte The byte whose bits are to be swapped.
+     * @return The byte with swapped bits.
+     */
     uint8_t swapBits(uint8_t byte);
+
+    /**
+     * @brief Thread function for monitoring interrupts.
+     */
     void interruptMonitoringThread();
 };

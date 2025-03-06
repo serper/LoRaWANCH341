@@ -1,3 +1,16 @@
+
+/**
+ * @file CH341SPI.cpp
+ * @brief Implementation of the CH341SPI class for SPI communication using the CH341 USB-SPI adapter.
+ * 
+ * This file contains the implementation of the CH341SPI class, which provides methods for
+ * initializing, configuring, and communicating with SPI devices using the CH341 USB-SPI adapter.
+ * It uses the libusb library for USB communication.
+ * 
+ * @author Sergio Pérez
+ * @date 2025
+ */
+
 #include "CH341SPI.hpp"
 #include "CH341Config.hpp"
 #include <iostream>

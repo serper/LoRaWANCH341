@@ -1,3 +1,15 @@
+
+/**
+ * @file RFM95.hpp
+ * @brief Header file for RFM95 LoRa Module Handler
+ * 
+ * This file contains the class definition for the RFM95 LoRa module handler.
+ * It provides methods for configuring and using the RFM95 module for LoRa communication.
+ * 
+ * @author Sergio Pérez
+ * @date 2025
+ */
+
 #ifndef RFM95_HPP
 #define RFM95_HPP
 
@@ -11,7 +23,13 @@
 #include <memory>
 
 /**
- * RFM95 LoRa Module Handler
+ * @class RFM95
+ * @brief Class for handling RFM95 LoRa module
+ * 
+ * This class provides methods to configure and use the RFM95 LoRa module.
+ * It includes methods for setting frequency, transmit power, spreading factor,
+ * bandwidth, coding rate, preamble length, and other parameters. It also provides
+ * methods for sending and receiving data packets, as well as handling IRQ flags.
  */
 class RFM95
 {
@@ -85,259 +103,259 @@ public:
     static constexpr uint8_t DIO_RX_PIN = 0x04;
 
     /**
-     * Constructor
-     *
+     * @brief Constructor
+     * 
      * @param device_index Index of CH341 device to use (default: 0)
      */
     RFM95(int device_index = 0);
 
     /**
-     * Constructor
-     *
+     * @brief Constructor
+     * 
      * @param spi_interface Unique pointer to SPI interface implementation
      */
     RFM95(std::unique_ptr<SPIInterface> spi_interface);
 
     /**
-     * Destructor
+     * @brief Destructor
      */
     ~RFM95();
 
     /**
-     * Initialize RFM95 module
-     *
+     * @brief Initialize RFM95 module
+     * 
      * @return true if successful, false otherwise
      */
     bool begin();
 
     /**
-     * Close the connection
+     * @brief Close the connection
      */
     void end();
 
     /**
-     * Set frequency in MHz
-     *
+     * @brief Set frequency in MHz
+     * 
      * @param freq_mhz Frequency in MHz
      */
     void setFrequency(float freq_mhz);
 
     /**
-     * Get current frequency in MHz
-     *
+     * @brief Get current frequency in MHz
+     * 
      * @return Frequency in MHz
      */
     float getFrequency();
 
     /**
-     * Set transmit power level
-     *
+     * @brief Set transmit power level
+     * 
      * @param level Power level in dBm (2-20 for PA_BOOST, 0-15 for RFO)
      * @param use_pa_boost Use PA_BOOST output pin
      */
     void setTxPower(int level, bool use_pa_boost = true);
 
     /**
-     * Get current transmit power level
-     *
+     * @brief Get current transmit power level
+     * 
      * @return Power level
      */
     int getTxPower();
 
     /**
-     * Set spreading factor (6-12)
-     *
+     * @brief Set spreading factor (6-12)
+     * 
      * @param sf Spreading factor
      */
     void setSpreadingFactor(int sf);
 
     /**
-     * Get current spreading factor
-     *
+     * @brief Get current spreading factor
+     * 
      * @return Spreading factor
      */
     int getSpreadingFactor();
 
     /**
-     * Set bandwidth in kHz (7.8, 10.4, 15.6, 20.8, 31.25, 41.7, 62.5, 125, 250, 500)
-     *
+     * @brief Set bandwidth in kHz (7.8, 10.4, 15.6, 20.8, 31.25, 41.7, 62.5, 125, 250, 500)
+     * 
      * @param bw_khz Bandwidth in kHz
      */
     void setBandwidth(float bw_khz);
 
     /**
-     * Get current bandwidth in kHz
-     *
+     * @brief Get current bandwidth in kHz
+     * 
      * @return Bandwidth in kHz
      */
     float getBandwidth();
 
     /**
-     * Set coding rate denominator (5-8, giving rates of 4/5, 4/6, 4/7, 4/8)
-     *
+     * @brief Set coding rate denominator (5-8, giving rates of 4/5, 4/6, 4/7, 4/8)
+     * 
      * @param denominator Coding rate denominator
      */
     void setCodingRate(int denominator);
 
     /**
-     * Get current coding rate denominator
-     *
+     * @brief Get current coding rate denominator
+     * 
      * @return Coding rate denominator
      */
     int getCodingRate();
 
     /**
-     * Set preamble length (6-65535)
-     *
+     * @brief Set preamble length (6-65535)
+     * 
      * @param length Preamble length
      */
     void setPreambleLength(int length);
 
     /**
-     * Get current preamble length
-     *
+     * @brief Get current preamble length
+     * 
      * @return Preamble length
      */
     int getPreambleLength();
 
     /**
-     * Set IQ inversion (used for LoRaWAN downlinks)
-     *
+     * @brief Set IQ inversion (used for LoRaWAN downlinks)
+     * 
      * @param invert True to invert IQ, False for normal operation
      */
     void setInvertIQ(bool invert = false);
 
     /**
-     * Check if IQ inversion is enabled
-     *
+     * @brief Check if IQ inversion is enabled
+     * 
      * @return True if IQ inversion is enabled
      */
     bool getInvertIQ();
 
     /**
-     * Set sync word
-     *
+     * @brief Set sync word
+     * 
      * @param sync_word Sync word
      */
     void setSyncWord(uint8_t sync_word);
 
     /**
-     * Get current sync word
-     *
+     * @brief Get current sync word
+     * 
      * @return Sync word
      */
     uint8_t getSyncWord();
 
     /**
-     * Set LNA gain and boost
-     *
+     * @brief Set LNA gain and boost
+     * 
      * @param lna_gain LNA gain
      * @param lna_boost LNA boost
      */
     void setLNA(int lna_gain = -1, bool lna_boost = true);
 
     /**
-     * Get current LNA settings
-     *
+     * @brief Get current LNA settings
+     * 
      * @return LNA settings
      */
     uint8_t getLNA();
 
     /**
-     * Enable or disable automatic gain control
-     *
+     * @brief Enable or disable automatic gain control
+     * 
      * @param enable True to enable, False to disable
      */
     void setAutoAGC(bool enable);
 
     /**
-     * Check if automatic gain control is enabled
-     *
+     * @brief Check if automatic gain control is enabled
+     * 
      * @return True if AGC is enabled
      */
     bool getAutoAGC();
 
     /**
-     * Clear all IRQ flags
+     * @brief Clear all IRQ flags
      */
     void clearIRQFlags();
 
     /**
-     * Get current IRQ flags
-     *
+     * @brief Get current IRQ flags
+     * 
      * @return IRQ flags
      */
     uint8_t getIRQFlags();
 
     /**
-     * Clear TX done flag
+     * @brief Clear TX done flag
      */
     void clearIRQFlagTxDone();
 
     /**
-     * Clear RX done flag
+     * @brief Clear RX done flag
      */
     void clearIRQFlagRxDone();
 
     /**
-     * Check if RX done flag is set
-     *
+     * @brief Check if RX done flag is set
+     * 
      * @return True if RX done
      */
     bool getRxDone();
 
     /**
-     * Check if TX done flag is set
-     *
+     * @brief Check if TX done flag is set
+     * 
      * @return True if TX done
      */
     bool getTxDone();
 
     /**
-     * Check if RX error flag is set
-     *
+     * @brief Check if RX error flag is set
+     * 
      * @return True if RX error
      */
     bool getRxError();
 
     /**
-     * Check if valid header flag is set
-     *
+     * @brief Check if valid header flag is set
+     * 
      * @return True if valid header
      */
     bool getValidHeader();
 
     /**
-     * Check if CAD done flag is set
-     *
+     * @brief Check if CAD done flag is set
+     * 
      * @return True if CAD done
      */
     bool getCADDone();
 
     /**
-     * Check if CAD detected flag is set
-     *
+     * @brief Check if CAD detected flag is set
+     * 
      * @return True if CAD detected
      */
     bool getCADDetected();
 
     /**
-     * Check if payload CRC error flag is set
-     *
+     * @brief Check if payload CRC error flag is set
+     * 
      * @return True if payload CRC error
      */
     bool getPayloadCRCError();
 
     /**
-     * Enable or disable LoRa mode
-     *
+     * @brief Enable or disable LoRa mode
+     * 
      * @param enable True to enable, False to disable
      */
     void setLoRaMode(bool enable = true);
 
     /**
-     * Send data packet
-     *
+     * @brief Send data packet
+     * 
      * @param data Data to send (max 255 bytes)
      * @param invert_iq True to send with inverted IQ (LoRaWAN downlinks)
      * @return True if send successful
@@ -345,8 +363,8 @@ public:
     bool send(const std::vector<uint8_t> &data, bool invert_iq = false);
 
     /**
-     * Receive data packet
-     *
+     * @brief Receive data packet
+     * 
      * @param timeout Maximum time to wait for packet in seconds
      * @param invert_iq True to receive with inverted IQ
      * @return Received data or null vector if timeout or error
@@ -354,107 +372,107 @@ public:
     std::vector<uint8_t> receive(float timeout = 5.0, bool invert_iq = false);
 
     /**
-     * Set continuous receive mode
+     * @brief Set continuous receive mode
      */
     void setContinuousReceive();
 
     /**
-     * Set standby mode
+     * @brief Set standby mode
      */
     void standbyMode();
 
     /**
-     * Set sleep mode
+     * @brief Set sleep mode
      */
     void sleepMode();
 
     /**
-     * Reset RX pointer
+     * @brief Reset RX pointer
      */
     void resetPtrRx();
 
     /**
-     * Get current RX FIFO address
-     *
+     * @brief Get current RX FIFO address
+     * 
      * @return RX FIFO address
      */
     uint8_t getFifoRxCurrentAddr();
 
     /**
-     * Get number of received bytes
-     *
+     * @brief Get number of received bytes
+     * 
      * @return Number of bytes
      */
     uint8_t getRxNbBytes();
 
     /**
-     * Read received data packet
-     *
+     * @brief Read received data packet
+     * 
      * @return Received data
      */
     std::vector<uint8_t> readPayload();
 
     /**
-     * Get current RSSI in dBm
-     *
+     * @brief Get current RSSI in dBm
+     * 
      * @return RSSI in dBm
      */
     float getRSSI();
 
     /**
-     * Get last packet SNR in dB
-     *
+     * @brief Get last packet SNR in dB
+     * 
      * @return SNR in dB
      */
     float getSNR();
 
     /**
-     * Read a register value
-     *
+     * @brief Read a register value
+     * 
      * @param address Register address
      * @return Register value
      */
     uint8_t readRegister(uint8_t address);
 
     /**
-     * Write a register value
-     *
+     * @brief Write a register value
+     * 
      * @param address Register address
      * @param value Value to write
      */
     void writeRegister(uint8_t address, uint8_t value);
 
     /**
-     * Put the module in continuous receive mode
+     * @brief Put the module in continuous receive mode
      */
     void receiveMode();
 
     /**
-     * Configure DIO pins for TX/RX indication
-     *
+     * @brief Configure DIO pins for TX/RX indication
+     * 
      * @param _dio3 DIO3 mapping
      * @param _dio4 DIO4 mapping
      */
     void setDIOMapping(uint8_t _dio3 = 0x40, uint8_t _dio4 = 0x00);
 
     /**
-     * Calibrate temperature sensor with a reference temperature
-     *
+     * @brief Calibrate temperature sensor with a reference temperature
+     * 
      * @param actual_temp Actual temperature measured with external sensor in Celsius
      * @return True if calibration successful
      */
     bool calibrateTemperature(float actual_temp);
 
     /**
-     * Read calibrated temperature
-     *
+     * @brief Read calibrated temperature
+     * 
      * @return Temperature in Celsius
      */
     float readTemperature();
 
     /**
-     * Configure beacon mode with automatic periodic transmission
-     *
+     * @brief Configure beacon mode with automatic periodic transmission
+     * 
      * @param interval_ms Interval between transmissions in milliseconds
      * @param payload Data to transmit in each beacon
      * @return True if successful
@@ -462,41 +480,41 @@ public:
     bool setBeaconMode(int interval_ms, const std::vector<uint8_t> &payload);
 
     /**
-     * Stop beacon mode
+     * @brief Stop beacon mode
      */
     void stopBeaconMode();
 
     /**
-     * Check and print current operating mode
+     * @brief Check and print current operating mode
      */
     void checkOperatingMode();
 
     /**
-     * Check and print IRQ flags
+     * @brief Check and print IRQ flags
      */
     void checkIRQFlags();
 
     /**
-     * Print key registers for debugging
+     * @brief Print key registers for debugging
      */
     void printRegisters();
 
     /**
-     * Test basic SPI communication
-     *
+     * @brief Test basic SPI communication
+     * 
      * @return True if test successful
      */
     bool testCommunication();
 
     /**
-     * Read VERSION register (0x42) directly
-     *
+     * @brief Read VERSION register (0x42) directly
+     * 
      * @return VERSION register value
      */
     uint8_t readVersionRegister();
 
 private:
-    std::unique_ptr<SPIInterface> spi; // Usar la interfaz abstracta
+    std::unique_ptr<SPIInterface> spi; ///< Unique pointer to SPI interface implementation
 };
 
 #endif // RFM95_HPP

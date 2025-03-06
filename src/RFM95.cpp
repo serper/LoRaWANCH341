@@ -1,3 +1,23 @@
+
+/**
+ * @file RFM95.cpp
+ * @brief Implementation of the RFM95 LoRa module interface.
+ * 
+ * This file contains the implementation of the RFM95 class, which provides an interface
+ * to interact with the RFM95 LoRa module using an SPI interface. The class supports
+ * various functionalities such as setting frequency, transmit power, spreading factor,
+ * bandwidth, coding rate, preamble length, and more.
+ * 
+ * The class also provides methods for sending and receiving data, configuring interrupt
+ * flags, and reading various status registers.
+ * 
+ * @note This implementation assumes the use of a specific SPI interface, which is
+ * provided as a unique pointer to an SPIInterface object.
+ * 
+ * @author Sergio Pérez
+ * @date 2025
+ */
+
 #include "RFM95.hpp"
 #include "SPIInterface.hpp"
 #include <iostream>

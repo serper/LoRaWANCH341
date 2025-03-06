@@ -1,8 +1,35 @@
-# LoRaWAN CH341 Project (ongoing)
+# LoRaWAN CH341 Implementation
 
-This project implements a LoRaWAN device communication using CH341 SPI and native SPI interface to a RFM95 module.
+This project provides a C++ implementation of the LoRaWAN protocol using the CH341 USB-to-SPI converter to interface with a RFM95/SX1276 LoRa radio module.
 
-As an example of using this library you can see main.cpp
+## Features
+
+- Full LoRaWAN 1.0.3 protocol implementation
+- Support for Class A and Class C devices
+- OTAA and ABP activation methods
+- Support for multiple regions (EU868, US915, etc.)
+- MAC commands implementation
+- Adaptive Data Rate (ADR) support
+- Channel management
+- Duty cycle management
+- Confirmed/unconfirmed messages
+- Linux and Windows support via CH341 USB interface
+
+## Hardware Requirements
+
+- CH341A/CH341F USB adapter
+- RFM95W, SX1276, or compatible LoRa module
+- Any USB-capable device running Linux or Windows
+
+## Dependencies
+
+- libusb-1.0
+- OpenSSL (for AES encryption)
+- cJSON (for configuration and session management)
+- C++17 compatible compiler
+
+## Building
+
 ## Current Implementation Status
 
 The project currently supports the following LoRaWAN features:

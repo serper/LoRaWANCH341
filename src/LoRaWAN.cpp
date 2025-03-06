@@ -1,3 +1,136 @@
+/**
+ * @file LoRaWAN.cpp
+ * @brief Implementation of the LoRaWAN protocol for communication with LoRaWAN networks.
+ * 
+ * This file contains the implementation of the LoRaWAN class, which provides methods for
+ * initializing the LoRaWAN stack, joining a network, sending and receiving messages, and
+ * handling various LoRaWAN protocol features such as ADR (Adaptive Data Rate) and MAC commands.
+ * 
+ * The implementation uses the RFM95 radio module and supports both CH341SPI and Linux SPI interfaces.
+ * 
+ * @note This implementation is designed for use with the RFM95 radio module and may require
+ * modifications to work with other radio modules.
+ * 
+ * @dependencies
+ * - OpenSSL (for AES encryption)
+ * - Standard C++ libraries (iostream, thread, chrono, queue, mutex, array, deque, bitset)
+ * - Project-specific headers (LoRaWAN.hpp, RFM95.hpp, AES-CMAC.hpp, SessionManager.hpp)
+ * 
+ * @section Usage
+ * 
+ * To use this implementation, create an instance of the LoRaWAN class and call its methods
+ * to initialize the radio, join a network, and send/receive messages. The class provides
+ * methods for setting device parameters (DevEUI, AppEUI, AppKey, etc.), configuring the
+ * radio, and handling protocol-specific tasks such as calculating MICs and processing
+ * MAC commands.
+ * 
+ * Example:
+ * @code
+ * LoRaWAN lorawan;
+ * lorawan.setDevEUI("0004A30B001C0530");
+ * lorawan.setAppEUI("70B3D57ED00201A6");
+ * lorawan.setAppKey("8D7F3B4C5A6B7C8D9E0F1A2B3C4D5E6F");
+ * if (lorawan.join(LoRaWAN::JoinMode::OTAA)) {
+ *     std::vector<uint8_t> data = {0x01, 0x02, 0x03};
+ *     lorawan.send(data, 1, false);
+ * }
+ * @endcode
+ * 
+ * @section Classes
+ * - LoRaWAN: Main class for LoRaWAN protocol handling.
+ * - LoRaWAN::Impl: Internal implementation details for the LoRaWAN class.
+ * 
+ * @section Methods
+ * - LoRaWAN::LoRaWAN(): Constructor to initialize the LoRaWAN instance.
+ * - LoRaWAN::~LoRaWAN(): Destructor to clean up resources.
+ * - bool LoRaWAN::init(int deviceIndex): Initialize the radio module.
+ * - void LoRaWAN::setDeviceClass(DeviceClass deviceClass): Set the device class (A, B, or C).
+ * - void LoRaWAN::setDevEUI(const std::string& devEUI): Set the device EUI.
+ * - void LoRaWAN::setAppEUI(const std::string& appEUI): Set the application EUI.
+ * - void LoRaWAN::setAppKey(const std::string& appKey): Set the application key.
+ * - void LoRaWAN::setDevAddr(const std::string& devAddr): Set the device address.
+ * - void LoRaWAN::setNwkSKey(const std::string& nwkSKey): Set the network session key.
+ * - void LoRaWAN::setAppSKey(const std::string& appSKey): Set the application session key.
+ * - bool LoRaWAN::join(JoinMode mode, unsigned long timeout): Join a LoRaWAN network.
+ * - std::vector<uint8_t> LoRaWAN::encryptPayload(const std::vector<uint8_t>& payload, uint8_t port): Encrypt the payload.
+ * - std::vector<uint8_t> LoRaWAN::decryptPayload(const std::vector<uint8_t>& payload, uint8_t port): Decrypt the payload.
+ * - float LoRaWAN::calculateTimeOnAir(size_t payload_size): Calculate the time on air for a given payload size.
+ * - bool LoRaWAN::checkDutyCycle(float frequency, size_t payload_size): Check if the duty cycle allows transmission.
+ * - float LoRaWAN::getDutyCycleUsage(int channel): Get the duty cycle usage for a specific channel.
+ * - void LoRaWAN::resetDutyCycle(): Reset the duty cycle usage.
+ * - bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirmed, bool force_duty_cycle): Send a message.
+ * - void LoRaWAN::update(): Update the LoRaWAN state and handle received messages.
+ * - bool LoRaWAN::receive(Message& message, unsigned long timeout): Receive a message.
+ * - void LoRaWAN::onReceive(std::function<void(const Message&)> callback): Set a callback for received messages.
+ * - void LoRaWAN::onJoin(std::function<void(bool)> callback): Set a callback for join events.
+ * - void LoRaWAN::setRegion(int region): Set the LoRaWAN region.
+ * - int LoRaWAN::getRegion() const: Get the current LoRaWAN region.
+ * - float LoRaWAN::getFrequency() const: Get the current frequency.
+ * - void LoRaWAN::setFrequency(float freq_mhz): Set the frequency.
+ * - int LoRaWAN::getChannelFromFrequency(float freq_mhz) const: Get the channel index from a frequency.
+ * - float LoRaWAN::getFrequencyFromChannel(int channel) const: Get the frequency from a channel index.
+ * - void LoRaWAN::setChannel(uint8_t channel): Set the current channel.
+ * - uint8_t LoRaWAN::getChannel() const: Get the current channel.
+ * - void LoRaWAN::setSingleChannel(bool enable, float freq_mhz, int sf, int bw, int cr, int power, int preamble): Enable or disable single channel mode.
+ * - bool LoRaWAN::getSingleChannel() const: Check if single channel mode is enabled.
+ * - float LoRaWAN::getSingleChannelFrequency() const: Get the frequency for single channel mode.
+ * - void LoRaWAN::setTxPower(int8_t power): Set the transmission power.
+ * - int LoRaWAN::getRSSI() const: Get the RSSI (Received Signal Strength Indicator).
+ * - int LoRaWAN::getSNR() const: Get the SNR (Signal-to-Noise Ratio).
+ * - uint32_t LoRaWAN::getFrameCounter() const: Get the frame counter.
+ * - void LoRaWAN::setFrameCounter(uint32_t counter): Set the frame counter.
+ * - void LoRaWAN::wake(): Wake up the radio module.
+ * - void LoRaWAN::sleep(): Put the radio module to sleep.
+ * - bool LoRaWAN::validateKeys() const: Validate the session keys.
+ * - void LoRaWAN::enableADR(bool enable): Enable or disable ADR (Adaptive Data Rate).
+ * - bool LoRaWAN::isADREnabled() const: Check if ADR is enabled.
+ * - void LoRaWAN::resetSession(): Reset the LoRaWAN session.
+ * - void LoRaWAN::applyADRSettings(uint8_t dataRate, uint8_t txPower, const std::vector<uint8_t>& channelMask): Apply ADR settings.
+ * - void LoRaWAN::processMACCommands(const std::vector<uint8_t>& commands, std::vector<uint8_t>& response): Process MAC commands.
+ * - void LoRaWAN::processLinkADRReq(const std::vector<uint8_t>& cmd, size_t index, std::vector<uint8_t>& response): Process LinkADRReq command.
+ * 
+ * @section Debugging
+ * The implementation includes several debug macros for conditional printing:
+ * - DEBUG_PRINT(x): Print a message if verbose mode is enabled.
+ * - DEBUG_PRINTLN(x): Print a message with a newline if verbose mode is enabled.
+ * - DEBUG_HEX(x): Print a value in hexadecimal format if verbose mode is enabled.
+ * 
+ * @section Internal Structures
+ * - struct LoRaWAN::Impl: Internal implementation details, including radio configuration, session keys, counters, and state management.
+ * 
+ * @section Constants
+ * - BASE_FREQ: Base frequencies for different regions.
+ * - CHANNEL_STEP: Channel step sizes for different regions.
+ * - MAX_POWER: Maximum transmission power for different regions.
+ * - RX2_FREQ: RX2 frequencies for different regions.
+ * - RX2_SF: RX2 spreading factors for different regions.
+ * - RX2_BW: RX2 bandwidths for different regions.
+ * - RX2_CR: RX2 coding rates for different regions.
+ * - RX2_PREAMBLE: RX2 preamble lengths for different regions.
+ * - ADR_ACK_LIMIT: ADR acknowledgment limit.
+ * - ADR_ACK_DELAY: ADR acknowledgment delay.
+ * - MAX_CHANNELS: Maximum number of channels.
+ * - REGIONS: Number of supported regions.
+ * 
+ * @section Enums
+ * - enum DeviceClass: Device classes (A, B, C).
+ * - enum JoinMode: Join modes (OTAA, ABP).
+ * - enum ConfirmationState: Confirmation states (NONE, WAITING_ACK, ACK_PENDING).
+ * - enum RxWindowState: RX window states (RX_IDLE, RX_WINDOW_1, RX_WINDOW_2, RX_CONTINUOUS).
+ * 
+ * @section Typedefs
+ * - typedef std::function<void(const Message&)> ReceiveCallback: Callback type for received messages.
+ * - typedef std::function<void(bool)> JoinCallback: Callback type for join events.
+ * 
+ * @section Structs
+ * - struct Message: Structure representing a LoRaWAN message.
+ * 
+ * @section Authors
+ * - Sergio Pérez (Original Author)
+ * 
+ * @section License
+ * This code is provided under the MIT License.
+ */
 #include <openssl/evp.h>
 #include <iomanip>
 #include <algorithm>
@@ -16,12 +149,12 @@
 #include <bitset>
 
 #if (defined(RFM_USE_CH341) || !defined(RFM_USE_LINUX_SPI))
-// Con CH341SPI
+// With CH341SPI
 auto ch341_spi = SPIFactory::createCH341SPI(0, true);
 auto rfm = RFM95(std::move(ch341_spi));
 #else
 #if defined(RFM_USE_LINUX_SPI)
-// Con SPI de Linux
+// With Linux SPI
 auto linux_spi = SPIFactory::createLinuxSPI("/dev/spidev0.0", 1000000);
 auto rfm = RFM95(std::move(linux_spi));
 #endif // defined(RFM_USE_LINUX_SPI)
@@ -29,7 +162,7 @@ auto rfm = RFM95(std::move(linux_spi));
 
 bool LoRaWAN::isVerbose = false;
 
-// Helper para debug condicional
+// Debug helper for conditional output
 #define DEBUG_PRINT(x) do { if(LoRaWAN::getVerbose()) { std::cout << x; } } while(0)
 #define DEBUG_PRINTLN(x) do { if(LoRaWAN::getVerbose()) { std::cout << x << std::endl; } } while(0)
 #define DEBUG_HEX(x) do { if(LoRaWAN::getVerbose()) { std::cout << std::hex << (x) << std::dec; } } while(0)
@@ -39,7 +172,7 @@ struct LoRaWAN::Impl {
     std::queue<Message> rxQueue;
     std::mutex queueMutex;
     
-    // Claves y direcciones
+    // Keys & Addresses
     std::array<uint8_t, 8> devEUI;
     std::array<uint8_t, 8> appEUI;
     std::array<uint8_t, 16> appKey;
@@ -47,16 +180,16 @@ struct LoRaWAN::Impl {
     std::array<uint8_t, 16> nwkSKey;
     std::array<uint8_t, 16> appSKey;
     
-    // Contadores
+    // Counters
     uint32_t uplinkCounter;
     uint32_t downlinkCounter;
     
-    // Configuración
+    // Configuration
     uint8_t dataRate;
     int8_t txPower;
     uint8_t channel;
 
-    // Gestión de ventanas RX
+    // RX Window Management
     RxWindowState rxState = RX_IDLE;
     std::chrono::steady_clock::time_point rxWindowStart;
     std::chrono::steady_clock::time_point txEndTime;
@@ -109,7 +242,7 @@ struct LoRaWAN::Impl {
         appSKey.fill(0);
     }
 
-    // Función para construir paquete Join Request
+    // Function to build Join Request packet
     std::vector<uint8_t> buildJoinRequest()
     {
         std::vector<uint8_t> packet;
@@ -118,13 +251,13 @@ struct LoRaWAN::Impl {
         // MHDR (Join-request = 0x00)
         packet.push_back(0x00);
 
-        // AppEUI - enviar en little-endian
+        // AppEUI - send in little-endian
         for (int i = 7; i >= 0; i--)
         {
             packet.push_back(appEUI[i]);
         }
 
-        // DevEUI - enviar en little-endian
+        // DevEUI - send in little-endian
         for (int i = 7; i >= 0; i--)
         {
             packet.push_back(devEUI[i]);
@@ -138,10 +271,10 @@ struct LoRaWAN::Impl {
         packet.push_back(nonce & 0xFF);        // LSB
         packet.push_back((nonce >> 8) & 0xFF); // MSB
 
-        // Calcular y añadir MIC
+        // Calculate and add MIC
         calculateMIC(packet);
 
-        // Debug detallado del paquete
+        // Detailed debug of the packet
         DEBUG_PRINTLN("Join Request details (all in LE):");
         DEBUG_PRINT("MHDR: 0x" << std::hex << std::setw(2) << std::setfill('0')
                                << static_cast<int>(packet[0]) << "\n");
@@ -178,9 +311,9 @@ struct LoRaWAN::Impl {
         return packet;
     }
 
-    // Función para calcular MIC (Message Integrity Code)
+    // Function to calculate MIC (Message Integrity Code)
     void calculateMIC(std::vector<uint8_t>& packet) {
-        // Debug los datos antes de calcular el MIC
+        // Debug the data before calculating the MIC
         DEBUG_PRINT("Calculating MIC for data: ");
         for(size_t i = 0; i < packet.size(); i++) {
             DEBUG_PRINT(std::hex << std::setw(2) << std::setfill('0') 
@@ -189,7 +322,7 @@ struct LoRaWAN::Impl {
         DEBUG_PRINT(std::dec << std::endl);
 
         DEBUG_PRINT("Using Key: ");
-        // Para Join Request usamos AppKey, para data usamos NwkSKey
+        // For Join Request we use AppKey, for data we use NwkSKey
         bool isJoinRequest = (packet[0] & 0xE0) == 0x00;
         const auto& key = isJoinRequest ? appKey : nwkSKey;
         
@@ -199,40 +332,40 @@ struct LoRaWAN::Impl {
         }
         DEBUG_PRINT(std::dec << std::endl);
 
-        // No verificar tamaño para paquetes de datos
+        // Do not check size for data packets
         if (isJoinRequest && packet.size() != 19)
         {
-            DEBUG_PRINTLN("Error: Join Request debe tener exactamente 19 bytes antes del MIC");
+            DEBUG_PRINTLN("Error: Join Request must have exactly 19 bytes before the MIC");
             return;
         }
 
-        // Si es un paquete de datos, usar el algoritmo de MIC específico para datos
+        // If it's a data packet, use the specific MIC algorithm for data
         std::array<uint8_t, 16> cmac;
         if (isJoinRequest)
         {
-            // Para Join Request, el MIC es CMAC(AppKey, MHDR | AppEUI | DevEUI | DevNonce)
+            // For Join Request, the MIC is CMAC(AppKey, MHDR | AppEUI | DevEUI | DevNonce)
             cmac = AESCMAC::calculate(packet, key);
         }
         else
         {
-            // Para paquetes de datos, el MIC se calcula sobre:
+            // For data packets, the MIC is calculated over the following data:
             // B0 | MHDR | FHDR | FPort | FRMPayload
             std::vector<uint8_t> micData;
-            micData.reserve(1 + 16 + packet.size()); // B0 + mensaje
+            micData.reserve(1 + 16 + packet.size()); // B0 + message
 
             // Block B0
             micData.push_back(0x49); // Block B0
             micData.insert(micData.end(), 4, 0x00); // 0x00^4
-            micData.push_back(0x00); // Dir = 0 para uplink
+            micData.push_back(0x00); // Dir = 0 for uplink
             micData.insert(micData.end(), packet.begin() + 1, packet.begin() + 5);
             micData.insert(micData.end(), packet.begin() + 6, packet.begin() + 8);
             micData.push_back(0x00); // 0x00
             micData.push_back(static_cast<uint8_t>(packet.size())); // len(Data)
 
-            // Añadir el mensaje completo después del bloque B0
+            // Add the full message after Block B0
             micData.insert(micData.end(), packet.begin(), packet.end());
 
-            // Debug del bloque de datos para MIC
+            // Debug the data block for MIC
             DEBUG_PRINT("MIC calculation data block: ");
             for(const auto& byte : micData) {
                 DEBUG_PRINT(std::hex << std::setw(2) << std::setfill('0') 
@@ -243,7 +376,7 @@ struct LoRaWAN::Impl {
             cmac = AESCMAC::calculate(micData, key);
         }
 
-        // Debug el CMAC calculado
+        // Debug the calculated CMAC
         DEBUG_PRINT("Full CMAC: ");
         for (const auto &byte : cmac)
         {
@@ -252,7 +385,7 @@ struct LoRaWAN::Impl {
         }
         DEBUG_PRINTLN(std::dec);
 
-        // Los primeros 4 bytes del CMAC son el MIC
+        // The first 4 bytes of CMAC are the MIC
         packet.insert(packet.end(), cmac.begin(), cmac.begin() + 4);
     }
 
@@ -262,11 +395,11 @@ struct LoRaWAN::Impl {
             return false;
         }
 
-        // 1. Descifrar el Join Accept usando AppKey
+        // 1. Decrypt the Join Accept using AppKey
         std::vector<uint8_t> decrypted(response.size());
-        decrypted[0] = response[0]; // MHDR no se cifra
+        decrypted[0] = response[0]; // MHDR is not encrypted
         
-        // Descifrar el resto en bloques de 16 bytes
+        // Decrypt the rest in 16-byte blocks
         for (size_t i = 1; i < response.size(); i += 16) {
             size_t block_size = std::min(size_t(16), response.size() - i);
             std::array<uint8_t, 16> block, out;
@@ -275,7 +408,7 @@ struct LoRaWAN::Impl {
             std::copy(out.begin(), out.begin() + block_size, decrypted.begin() + i);
         }
 
-        // 2. Verificar MIC
+        // 2. Verify MIC
         std::vector<uint8_t> mic_data(decrypted.begin(), decrypted.end() - 4);
         std::array<uint8_t, 16> calculated_mic = AESCMAC::calculate(mic_data, appKey);
         
@@ -286,11 +419,11 @@ struct LoRaWAN::Impl {
             }
         }
 
-        // 3. Extraer parámetros en orden correcto
+        // 3. Extract parameters in correct order
         [[maybe_unused]] uint32_t appNonce = (decrypted[3] << 16) | (decrypted[2] << 8) | decrypted[1];
         [[maybe_unused]] uint32_t netId = (decrypted[6] << 16) | (decrypted[5] << 8) | decrypted[4];
         
-        // DevAddr (little-endian como viene en el mensaje)
+        // DevAddr (little-endian as it comes in the message)
         devAddr[0] = decrypted[7];
         devAddr[1] = decrypted[8];
         devAddr[2] = decrypted[9];
@@ -299,7 +432,7 @@ struct LoRaWAN::Impl {
         uint8_t dlSettings = decrypted[11];
         [[maybe_unused]] uint8_t rxDelay = decrypted[12];
 
-        // 4. Derivar claves de sesión
+        // 4. Derive session keys
         std::array<uint8_t, 16> keyInput;
         keyInput.fill(0x00);
 
@@ -317,7 +450,7 @@ struct LoRaWAN::Impl {
         keyInput[7] = lastDevNonce & 0xFF;
         keyInput[8] = (lastDevNonce >> 8) & 0xFF;
 
-        // Debug de la entrada para NwkSKey
+        // Debug the input for NwkSKey
         DEBUG_PRINT("NwkSKey Input: ");
         for(const auto& byte : keyInput) {
             DEBUG_PRINT(std::hex << std::setw(2) << std::setfill('0') 
@@ -325,10 +458,10 @@ struct LoRaWAN::Impl {
         }
         DEBUG_PRINT(std::dec << std::endl);
 
-        // Generar NwkSKey
+        // Generate NwkSKey
         AESCMAC::aes_encrypt(keyInput.data(), appKey.data(), nwkSKey.data());
 
-        // Debug NwkSKey resultante
+        // Debug NwkSKey result
         DEBUG_PRINT("NwkSKey: ");
         for(const auto& byte : nwkSKey) {
             DEBUG_PRINT(std::hex << std::setw(2) << std::setfill('0') 
@@ -337,10 +470,10 @@ struct LoRaWAN::Impl {
         DEBUG_PRINT(std::dec << std::endl);
 
         // AppSKey = aes128_encrypt(AppKey, 0x02|AppNonce|NetID|DevNonce|pad16)
-        keyInput[0] = 0x02; // Solo cambia el primer byte
+        keyInput[0] = 0x02; // Only change the first byte
         AESCMAC::aes_encrypt(keyInput.data(), appKey.data(), appSKey.data());
 
-        // Debug AppSKey resultante
+        // Debug AppSKey result
         DEBUG_PRINT("AppSKey: ");
         for(const auto& byte : appSKey) {
             DEBUG_PRINT(std::hex << std::setw(2) << std::setfill('0') 
@@ -348,11 +481,11 @@ struct LoRaWAN::Impl {
         }
         DEBUG_PRINT(std::dec << std::endl);
 
-        // 5. Configurar parámetros
+        // 5. Configure parameters
         dataRate = (dlSettings >> 4) & 0x0F;
         txPower = dlSettings & 0x0F;
         
-        // Reset contadores
+        // Reset counters
         uplinkCounter = 0;
         downlinkCounter = 0;
 
@@ -399,16 +532,16 @@ struct LoRaWAN::Impl {
 
         while (!isUnique)
         {
-            // Generar un nonce aleatorio entre 1 y 0xFFFF
+            // Generate a random nonce between 1 and 0xFFFF
             nonce = (std::rand() % 0xFFFF) + 1;
 
-            // Verificar que no se haya usado antes
+            // Check that it hasn't been used before
             if (std::find(usedNonces.begin(), usedNonces.end(), nonce) == usedNonces.end())
             {
                 isUnique = true;
                 usedNonces.push_back(nonce);
 
-                // Mantener el tamaño de la lista de nonces bajo control
+                // Keep the size of the nonce list under control
                 if (usedNonces.size() > 100)
                 {
                     usedNonces.erase(usedNonces.begin());
@@ -425,7 +558,7 @@ struct LoRaWAN::Impl {
         lastDevNonce = 0;
     }
 
-    // Añadir estadísticas ADR
+    // Add ADR statistics
     std::deque<float> snrHistory;
     std::deque<int> rssiHistory;
     
@@ -455,42 +588,42 @@ struct LoRaWAN::Impl {
 };
 
 LoRaWAN::LoRaWAN() : 
-    pimpl(new Impl(SPIFactory::createCH341SPI(0))), // Usa CH341SPI por defecto
+    pimpl(new Impl(SPIFactory::createCH341SPI(0))), // Uses CH341SPI by default
     joined(false),
     currentClass(DeviceClass::CLASS_A),
     joinMode(JoinMode::OTAA),
-    adrEnabled(false), // Inicializar ADR deshabilitado
-    adrAckCounter(0)   // Inicializar contador ADR
+    adrEnabled(false), // Initialize ADR disabled
+    adrAckCounter(0)   // Initialize ADR counter
 {
-    // Inicializar registros de duty cycle
+    // Initialize duty cycle records
     auto now = std::chrono::steady_clock::now();
     for(int i = 0; i < MAX_CHANNELS; i++) {
-        lastChannelUse[i] = now - std::chrono::hours(24); // Iniciar como hace 24 horas
+        lastChannelUse[i] = now - std::chrono::hours(24); // Start as 24 hours ago
         channelAirTime[i] = 0.0f;
     }
     
-    // Configurar frecuencias de canales para la región seleccionada
+    // Configure channel frequencies for the selected region
     for (int i = 0; i < MAX_CHANNELS; i++) {
         channelFrequencies[i] = (i < 8) ? BASE_FREQ[lora_region] + i * CHANNEL_STEP[lora_region] : 0.0f;
     }
 }
 
 LoRaWAN::LoRaWAN(std::unique_ptr<SPIInterface> spi_interface) : 
-    pimpl(new Impl(std::move(spi_interface))), // Usa la interfaz proporcionada
+    pimpl(new Impl(std::move(spi_interface))), // Uses the provided interface
     joined(false),
     currentClass(DeviceClass::CLASS_A),
     joinMode(JoinMode::OTAA),
-    adrEnabled(false), // Inicializar ADR deshabilitado
-    adrAckCounter(0)   // Inicializar contador ADR
+    adrEnabled(false), // Initialize ADR disabled
+    adrAckCounter(0)   // Initialize ADR counter
 {
-    // Inicializar registros de duty cycle
+    // Initialize duty cycle records
     auto now = std::chrono::steady_clock::now();
     for(int i = 0; i < MAX_CHANNELS; i++) {
-        lastChannelUse[i] = now - std::chrono::hours(24); // Iniciar como hace 24 horas
+        lastChannelUse[i] = now - std::chrono::hours(24); // Start as 24 hours ago
         channelAirTime[i] = 0.0f;
     }
     
-    // Configurar frecuencias de canales para la región seleccionada
+    // Configure channel frequencies for the selected region
     for (int i = 0; i < MAX_CHANNELS; i++) {
         channelFrequencies[i] = (i < 8) ? BASE_FREQ[lora_region] + i * CHANNEL_STEP[lora_region] : 0.0f;
     }
@@ -533,20 +666,20 @@ bool LoRaWAN::init(int deviceIndex) {
 void LoRaWAN::setDeviceClass(DeviceClass deviceClass) {
     currentClass = deviceClass;
     
-    // Si cambiamos a Clase C, configurar inmediatamente para recepción continua en RX2
+    // If we change to Class C, configure immediately for continuous reception on RX2
     if (deviceClass == DeviceClass::CLASS_C && joined) {
-        DEBUG_PRINTLN("Configurando modo Clase C (recepción continua en 869.525 MHz)");
+        DEBUG_PRINTLN("Configuring Class C mode (continuous reception at 869.525 MHz)");
         
-        // Configurar radio para ventana RX2
+        // Configure radio for RX2 window
         pimpl->rfm->standbyMode();
-        pimpl->rfm->setFrequency(869.525); // Frecuencia RX2 para EU868
+        pimpl->rfm->setFrequency(869.525); // RX2 frequency for EU868
         
         pimpl->rfm->setSpreadingFactor(9);
         pimpl->rfm->setBandwidth(125.0);
-        pimpl->rfm->setInvertIQ(true);  // Invertir IQ para downlink
+        pimpl->rfm->setInvertIQ(true);  // Invert IQ for downlink
         pimpl->rfm->setLNA(1, true);
         
-        // Iniciar recepción continua
+        // Start continuous reception
         pimpl->rfm->setContinuousReceive();
     }
 }
@@ -554,13 +687,13 @@ void LoRaWAN::setDeviceClass(DeviceClass deviceClass) {
 void LoRaWAN::setDevEUI(const std::string& devEUI) {
     DEBUG_PRINTLN("Setting DevEUI: " << devEUI);
     
-    // Convertir string hex a bytes en orden natural
+    // Convert hex string to bytes in natural order
     for(size_t i = 0; i < 8 && (i*2+1) < devEUI.length(); i++) {
         std::string byteStr = devEUI.substr(i*2, 2);
         pimpl->devEUI[i] = std::stoi(byteStr, nullptr, 16);
     }
     
-    // Debug: mostrar DevEUI como se almacenó
+    // Debug: show DevEUI as stored
     if (LoRaWAN::getVerbose()) {
         std::cout << "DevEUI stored: ";
         for(int i = 0; i < 8; i++) {
@@ -574,13 +707,13 @@ void LoRaWAN::setDevEUI(const std::string& devEUI) {
 void LoRaWAN::setAppEUI(const std::string& appEUI) {
     DEBUG_PRINTLN("Setting AppEUI: " << appEUI);
     
-    // Convertir string hex a bytes en orden natural
+    // Convert hex string to bytes in natural order
     for(size_t i = 0; i < 8 && (i*2+1) < appEUI.length(); i++) {
         std::string byteStr = appEUI.substr(i*2, 2);
         pimpl->appEUI[i] = std::stoi(byteStr, nullptr, 16);
     }
     
-    // Debug: mostrar AppEUI como se almacenó
+    // Debug: show AppEUI as stored
     if (LoRaWAN::getVerbose()) {
         std::cout << "AppEUI stored: ";
         for(int i = 0; i < 8; i++) {
@@ -594,13 +727,13 @@ void LoRaWAN::setAppEUI(const std::string& appEUI) {
 void LoRaWAN::setAppKey(const std::string& appKey) {
     DEBUG_PRINTLN("Setting AppKey: " << appKey);
     
-    // Convertir string hex a bytes sin modificar el orden
+    // Convert hex string to bytes without changing the order
     for(size_t i = 0; i < 16 && i*2+1 < appKey.length(); i++) {
         std::string byteStr = appKey.substr(i*2, 2);
         pimpl->appKey[i] = std::stoi(byteStr, nullptr, 16);
     }
     
-    // Debug: mostrar AppKey almacenado
+    // Debug: show AppKey as stored
     if (LoRaWAN::getVerbose()) {
         std::cout << "AppKey stored: ";
         for(int i = 0; i < 16; i++) {
@@ -624,20 +757,20 @@ void LoRaWAN::setAppSKey(const std::string& appSKey) {
 }
 
 bool LoRaWAN::join(JoinMode mode, unsigned long timeout) {
-    // Intentar cargar sesión existente primero SOLAMENTE si no se forzó un reset previo
+    // Try to load existing session first ONLY if a reset wasn't forced
     if (!joined && pimpl->loadSessionData()) {
         joined = true;
         DEBUG_PRINTLN("Restored previous session");
         return true;
     }
     
-    // Si no hay sesión válida, hacer join normal
+    // If no valid session, do normal join
     DEBUG_PRINTLN("Performing new OTAA join...");
     joinMode = mode;
     
     if (mode == JoinMode::OTAA) {
-        // Configuración de radio para Join Request
-        pimpl->rfm->standbyMode();  // Cambiamos . por ->
+        // Configure radio for Join Request
+        pimpl->rfm->standbyMode();  // Standby mode before configuring
         pimpl->rfm->setFrequency(one_channel_gateway ? channelFrequencies[0] : channelFrequencies[rand() % 8]);
         current_channel = pimpl->rfm->getFrequency();
         pimpl->rfm->setTxPower(MAX_POWER[lora_region], true);
@@ -657,10 +790,10 @@ bool LoRaWAN::join(JoinMode mode, unsigned long timeout) {
         current_lna = 0x23;
         updateDataRateFromSF();
 
-        // Limpiar flags de interrupción
+        // Clear interrupt flags
         pimpl->rfm->clearIRQFlags();
 
-        // Preparar y enviar Join Request
+        // Prepare and send Join Request
         auto joinRequest = pimpl->buildJoinRequest();
         
         if (!pimpl->rfm->send(joinRequest)) {
@@ -668,7 +801,7 @@ bool LoRaWAN::join(JoinMode mode, unsigned long timeout) {
             return false;
         }
 
-        // Configuración RX1
+        // Configure RX1
         pimpl->rfm->standbyMode();
         pimpl->rfm->setFrequency(channelFrequencies[current_channel]);
         pimpl->rfm->setSpreadingFactor(current_sf);
@@ -676,16 +809,16 @@ bool LoRaWAN::join(JoinMode mode, unsigned long timeout) {
         pimpl->rfm->setInvertIQ(true);
         pimpl->rfm->setLNA(current_lna, true);
         
-        // Iniciar recepción continua
+        // Start continuous receive
         pimpl->rfm->setContinuousReceive();
         
-        // Primera ventana RX (RX1) - 5 segundos después del uplink, pero iniciamos la recepción desde el principio
+        // Configure RX1
         DEBUG_PRINTLN("Opening RX1 window...");
-        // Esperar por el paquete durante 1 segundo
+        // Wait for the packet for 1 second
         auto start = std::chrono::steady_clock::now();
         bool received = false;
         while (std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::steady_clock::now() - start).count() < 7000) { // 5 segundos de espera + 2 segundos de recepción = 7 segundos total
+            std::chrono::steady_clock::now() - start).count() < (RECEIVE_DELAY1 + WINDOW_DURATION)) {
 
             uint8_t flags = pimpl->rfm->getIRQFlags();
             if (flags & RFM95::IRQ_RX_DONE_MASK) {
@@ -700,7 +833,7 @@ bool LoRaWAN::join(JoinMode mode, unsigned long timeout) {
                             if (joinCallback) {
                                 joinCallback(true);
                             }
-                            // Si el join fue exitoso, guardar sesión
+                            // If the join was successful, save session
                             if (joined) {
                                 pimpl->saveSessionData();
                             }
@@ -716,7 +849,7 @@ bool LoRaWAN::join(JoinMode mode, unsigned long timeout) {
         }
 
         if (!received) {
-            // Segunda ventana RX (RX2)
+            // Second RX window (RX2)
             DEBUG_PRINTLN("Opening RX2 window...");
             
             pimpl->rfm->standbyMode();
@@ -726,12 +859,12 @@ bool LoRaWAN::join(JoinMode mode, unsigned long timeout) {
             pimpl->rfm->setInvertIQ(true);
             pimpl->rfm->setLNA(1, true);
             
-            // Limpiar flags antes de RX2
+            // Clear flags before RX2
             pimpl->rfm->clearIRQFlags();
             pimpl->rfm->setContinuousReceive();
             
             while (std::chrono::duration_cast<std::chrono::milliseconds>(
-                std::chrono::steady_clock::now() - start).count() < 10000) { // Los 7 segundos de RX1 + 3 segundos de RX2
+                std::chrono::steady_clock::now() - start).count() < RECEIVE_DELAY1 + RECEIVE_DELAY2 + WINDOW_DURATION) {
                 
                 uint8_t flags = pimpl->rfm->getIRQFlags();
                 if (flags & RFM95::IRQ_RX_DONE_MASK) {
@@ -745,7 +878,7 @@ bool LoRaWAN::join(JoinMode mode, unsigned long timeout) {
                                 if (joinCallback) {
                                     joinCallback(true);
                                 }
-                                // Si el join fue exitoso, guardar sesión
+                                // If the join was successful, save session
                                 if (joined) {
                                     pimpl->saveSessionData();
                                 }
@@ -765,23 +898,23 @@ bool LoRaWAN::join(JoinMode mode, unsigned long timeout) {
         return false;
     }
     
-    // Para ABP, solo validar que tenemos las keys necesarias
+    // For ABP, only validate that we have the necessary keys
     joined = validateKeys();
     return joined;
 }
 
 std::vector<uint8_t> LoRaWAN::encryptPayload(const std::vector<uint8_t> &payload, uint8_t port)
 {
-    // Si no hay payload, devolver vector vacío
+    // If there is no payload, return an empty vector
     if (payload.empty())
     {
         return std::vector<uint8_t>();
     }
 
-    // Seleccionar clave según puerto (0 = NwkSKey, otros = AppSKey)
+    // Select key based on port (0 = NwkSKey, others = AppSKey)
     const auto &key = (port == 0) ? pimpl->nwkSKey : pimpl->appSKey;
 
-    // Para depuración
+    // For debugging
     if (getVerbose())
     {
         DEBUG_PRINTLN("Encryption parameters:");
@@ -801,32 +934,32 @@ std::vector<uint8_t> LoRaWAN::encryptPayload(const std::vector<uint8_t> &payload
         DEBUG_PRINTLN(std::dec);
     }
 
-    // Preparar bloque A para encripción
+    // Prepare block A for encryption
     std::array<uint8_t, 16> block_a;
-    block_a.fill(0); // Inicializar todo a 0
+    block_a.fill(0); // Initialize everything to 0
 
-    block_a[0] = 0x00; // 0 para uplinks según especificación LoRaWAN
+    block_a[0] = 0x00; // 0 for uplinks according to LoRaWAN specification
 
-    // DevAddr en orden de red (big-endian)
+    // DevAddr in network order (big-endian)
     block_a[1] = pimpl->devAddr[0]; // MSB
     block_a[2] = pimpl->devAddr[1];
     block_a[3] = pimpl->devAddr[2];
     block_a[4] = pimpl->devAddr[3]; // LSB
 
-    // FCnt en little-endian
+    // FCnt in little-endian
     block_a[5] = pimpl->uplinkCounter & 0xFF;        // LSB
     block_a[6] = (pimpl->uplinkCounter >> 8) & 0xFF; // MSB
-    block_a[7] = 0;                                  // MSB siempre 0 para 16-bit FCnt
-    block_a[8] = 0;                                  // MSB siempre 0 para 16-bit FCnt
+    block_a[7] = 0;                                  // MSB always 0 for 16-bit FCnt
+    block_a[8] = 0;                                  // MSB always 0 for 16-bit FCnt
 
-    // Relleno y contador de bloque
-    // bytes 9-14 ya están en 0 por el fill(0)
+    // Fill and block counter
+    // bytes 9-14 are already 0 due to fill(0)
     block_a[15] = 0x01; // Block counter 1
 
-    // Para debug, mostrar el bloque A
+    // For debug, show the original block A
     if (getVerbose())
     {
-        DEBUG_PRINT("Bloque A original: ");
+        DEBUG_PRINT("Original Block A: ");
         for (const auto &b : block_a)
         {
             DEBUG_PRINT(std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(b) << " ");
@@ -834,21 +967,21 @@ std::vector<uint8_t> LoRaWAN::encryptPayload(const std::vector<uint8_t> &payload
         DEBUG_PRINTLN(std::dec);
     }
 
-    // Encrypt bloque A con la clave para obtener el pad
+    // Encrypt block A with the key to obtain the pad
     std::array<uint8_t, 16> a_encrypted;
     AESCMAC::aes_encrypt(block_a.data(), key.data(), a_encrypted.data());
 
-    // XOR entre el payload y los primeros bytes de A
+    // XOR between the payload and the first bytes of A
     std::vector<uint8_t> encrypted(payload.size());
     for (size_t i = 0; i < payload.size(); i++)
     {
         encrypted[i] = payload[i] ^ a_encrypted[i];
     }
 
-    // Debug del payload encriptado
+    // For debug, show the encrypted payload
     if (getVerbose())
     {
-        DEBUG_PRINT("Payload encriptado: ");
+        DEBUG_PRINT("Encrypted payload: ");
         for (const auto &b : encrypted)
         {
             DEBUG_PRINT(std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(b) << " ");
@@ -864,31 +997,31 @@ std::vector<uint8_t> LoRaWAN::decryptPayload(const std::vector<uint8_t> &payload
     if (payload.empty())
         return payload;
 
-    // Seleccionar la clave correcta según el puerto
+    // Select the correct key based on the port
     const auto &key = (port == 0) ? pimpl->nwkSKey : pimpl->appSKey;
 
-    // Crear bloque A para el descifrado AES-CTR
+    // Create block A for AES-CTR decryption
     std::array<uint8_t, 16> block_a;
-    block_a[0] = 0x01; // Tipo de bloque
+    block_a[0] = 0x01; // Block type
     block_a[1] = 0x00; // Padding
     block_a[2] = 0x00; // Padding
     block_a[3] = 0x00; // Padding
     block_a[4] = 0x00; // Padding
     block_a[5] = 0x01; // Dirección = 0x01 para downlink
 
-    // Copiar DevAddr (little endian)
+    // Copy DevAddr (little endian)
     std::copy(pimpl->devAddr.begin(), pimpl->devAddr.end(), block_a.begin() + 6);
 
-    // Frame counter (del downlink)
+    // Frame counter (of the downlink)
     uint16_t fcnt = pimpl->downlinkCounter;
     block_a[10] = fcnt & 0xFF;
     block_a[11] = (fcnt >> 8) & 0xFF;
     block_a[12] = 0x00; // FCnt MSB (32 bits)
     block_a[13] = 0x00; // FCnt MSB (32 bits)
     block_a[14] = 0x00; // Padding
-    block_a[15] = 0x01; // Contador de bloque
+    block_a[15] = 0x01; // Block counter
 
-    // Debug para ver los parámetros de descifrado
+    // Debug to see the decryption parameters
     DEBUG_PRINTLN("Decryption parameters:");
     DEBUG_PRINTLN("  Direction: Downlink (1)");
     DEBUG_PRINT("  DevAddr: ");
@@ -908,19 +1041,19 @@ std::vector<uint8_t> LoRaWAN::decryptPayload(const std::vector<uint8_t> &payload
     }
     DEBUG_PRINTLN("");
 
-    // Vector para almacenar los datos descifrados
+    // Vector to store the decrypted data
     std::vector<uint8_t> decrypted;
     decrypted.reserve(payload.size());
 
-    // Procesar el payload en bloques de 16 bytes
+    // Process the payload in blocks of 16 bytes
     for (size_t i = 0; i < payload.size(); i += 16)
     {
-        // Generar el bloque S usando AES-128
+        // Generate the S block using AES-128
         std::array<uint8_t, 16> s;
         AESCMAC::aes_encrypt(block_a.data(), key.data(), s.data());
 
-        // Debug del bloque S antes del XOR
-        DEBUG_PRINT("Bloque S para XOR: ");
+        // Debug of the S block before XOR
+        DEBUG_PRINT("S block for XOR: ");
         for (int j = 0; j < 16; j++)
         {
             DEBUG_PRINT(std::hex << std::setw(2) << std::setfill('0')
@@ -928,8 +1061,8 @@ std::vector<uint8_t> LoRaWAN::decryptPayload(const std::vector<uint8_t> &payload
         }
         DEBUG_PRINTLN("");
 
-        // Debug del payload cifrado
-        DEBUG_PRINT("Payload cifrado para XOR: ");
+        // Debug of the encrypted payload for XOR
+        DEBUG_PRINT("Encrypted payload for XOR: ");
         for (size_t j = 0; j < std::min(size_t(16), payload.size() - i); j++)
         {
             DEBUG_PRINT(std::hex << std::setw(2) << std::setfill('0')
@@ -937,18 +1070,18 @@ std::vector<uint8_t> LoRaWAN::decryptPayload(const std::vector<uint8_t> &payload
         }
         DEBUG_PRINTLN("");
 
-        // XOR con el payload cifrado
+        // XOR with the encrypted payload
         size_t block_size = std::min(size_t(16), payload.size() - i);
         for (size_t j = 0; j < block_size; j++)
         {
             decrypted.push_back(payload[i + j] ^ s[j]);
         }
 
-        // Incrementar contador de bloque
+        // Increment the block counter
         block_a[15]++;
     }
 
-    // Debug: mostrar resultado del descifrado
+    // Debug: show the result of the decryption
     DEBUG_PRINT("Decrypted payload: ");
     for (const auto &byte : decrypted)
     {
@@ -961,22 +1094,22 @@ std::vector<uint8_t> LoRaWAN::decryptPayload(const std::vector<uint8_t> &payload
 }
 
 float LoRaWAN::calculateTimeOnAir(size_t payload_size) {
-    // Extraer parámetros actuales
-    int sf = pimpl->rfm->getSpreadingFactor();  // Cambiamos . por ->
-    float bw = pimpl->rfm->getBandwidth() * 1000; // Convertir de kHz a Hz
+    // Extract current parameters
+    int sf = pimpl->rfm->getSpreadingFactor();  // Changed . to ->
+    float bw = pimpl->rfm->getBandwidth() * 1000; // Convert from kHz to Hz
     int cr = pimpl->rfm->getCodingRate();
     
-    // Calcular número de símbolos en preámbulo
+    // Calculate the number of symbols in preamble
     int preambleSymbols = pimpl->rfm->getPreambleLength() + 4.25;
     
-    // Calcular duración de símbolo (ms)
+    // Calculate symbol duration (ms)
     double symbolDuration = std::pow(2.0, static_cast<double>(sf)) / bw;
     
-    // Calcular tamaño en bits con overhead y codificación
+    // Calculate size in bits with overhead and encoding
     size_t packet_size = payload_size + 13; // Data + LoRaWAN overhead
     double payloadSymbols = 8 + std::max(std::ceil((8 * packet_size - 4 * sf + 28 + 16) / (4 * sf)) * (cr + 4), 0.0);
     
-    // Tiempo total en ms = (preámbulo + payload) * duración de símbolo
+    // Total time in ms = (preamble + payload) * symbol duration
     float timeOnAir = (preambleSymbols + payloadSymbols) * symbolDuration * 1000;
     
     DEBUG_PRINTLN("Calculated time on air: " << timeOnAir << " ms");
@@ -988,7 +1121,7 @@ float LoRaWAN::calculateTimeOnAir(size_t payload_size) {
 }
 
 bool LoRaWAN::checkDutyCycle(float frequency, size_t payload_size) {
-    // Identificar el canal basado en la frecuencia
+    // Identify the channel based on frequency
     int channel = -1;
     for (int i = 0; i < MAX_CHANNELS; i++) {
         if (std::abs(frequency - channelFrequencies[i]) < 0.01) {
@@ -998,25 +1131,25 @@ bool LoRaWAN::checkDutyCycle(float frequency, size_t payload_size) {
     }
     
     if (channel == -1) {
-        // Canal no encontrado, usar canal 0 por defecto
+        // Channel not found, use channel 0 as default
         channel = 0;
     }
     
-    // Obtener tiempo actual
+    // Get current time
     auto now = std::chrono::steady_clock::now();
     
-    // Calcular tiempo transcurrido desde último uso
+    // Calculate elapsed time since last use
     auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
         now - lastChannelUse[channel]).count();
     
-    // Calcular tiempo de aire requerido
+    // Calculate required air time
     float airTime = calculateTimeOnAir(payload_size);
     
-    // Calcular tiempo mínimo de espera según duty cycle (1%)
+    // Calculate minimum wait time based on duty cycle (1%)
     // t_wait = (t_air / duty_cycle) - t_air
     float minWaitTime = (airTime / 0.01) - airTime;
     
-    // Verificar si ha pasado suficiente tiempo
+    // Check if enough time has passed
     if (elapsed < minWaitTime) {
         DEBUG_PRINTLN("Duty cycle restriction: need to wait " 
                   << (minWaitTime - elapsed) << " ms more on channel " 
@@ -1024,7 +1157,7 @@ bool LoRaWAN::checkDutyCycle(float frequency, size_t payload_size) {
         return false;
     }
     
-    // Registrar uso del canal
+    // Register channel usage
     lastChannelUse[channel] = now;
     channelAirTime[channel] += airTime;
     
@@ -1033,27 +1166,27 @@ bool LoRaWAN::checkDutyCycle(float frequency, size_t payload_size) {
 
 float LoRaWAN::getDutyCycleUsage(int channel) {
     if(channel < 0 || channel >= MAX_CHANNELS) {
-        return 0.0f; // Canal inválido
+        return 0.0f; // Invalid channel
     }
     
-    // Calcular tiempo transcurrido desde último uso
+    // Calculate elapsed time since last use
     auto now = std::chrono::steady_clock::now();
     auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
         now - lastChannelUse[channel]).count();
     
-    // Si ha pasado más de 1 hora, considerar que el duty cycle es 0
+    // If more than 1 hour has passed, consider duty cycle as 0
     if(elapsed_ms > 3600000) {
         return 0.0f;
     }
     
-    // Calcular uso actual del duty cycle como porcentaje
-    return (channelAirTime[channel] / 36000.0f) * 100.0f; // Porcentaje de uso en última hora
+    // Calculate current duty cycle usage as a percentage
+    return (channelAirTime[channel] / 36000.0f) * 100.0f; // Percentage usage in the last hour
 }
 
 void LoRaWAN::resetDutyCycle() {
     auto now = std::chrono::steady_clock::now();
     for(int i = 0; i < MAX_CHANNELS; i++) {
-        lastChannelUse[i] = now - std::chrono::hours(24); // Iniciar como hace 24 horas
+        lastChannelUse[i] = now - std::chrono::hours(24); // Start as if it were 24 hours ago
         channelAirTime[i] = 0.0f;
     }
 }
@@ -1061,16 +1194,16 @@ void LoRaWAN::resetDutyCycle() {
 bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirmed, bool force_duty_cycle) {
     if (!joined) return false;
 
-    // Si ya hay una confirmación pendiente, no permitir otro envío confirmado
+    // If there's already a confirmation pending, don't allow another confirmed message
     if (confirmed && confirmState == ConfirmationState::WAITING_ACK) {
-        DEBUG_PRINTLN("Error: Ya hay un mensaje confirmado pendiente de ACK");
+        DEBUG_PRINTLN("Error: There is already a confirmed message waiting for ACK");
         return false;
     }
 
-    // Si necesitamos enviar un ACK, añadirlo al mensaje
+    // If we need to send an ACK, add it to the message
     bool ackbit = (confirmState == ConfirmationState::ACK_PENDING);
 
-    // Debug del payload original
+    // Debug the original payload
     DEBUG_PRINTLN("Preparing uplink packet:");
     DEBUG_PRINT("Data to send: ");
     for(const auto& byte : data) {
@@ -1079,10 +1212,10 @@ bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirme
     }
     DEBUG_PRINT(std::dec << std::endl);
 
-    // Configurar radio para uplink
+    // Configure radio for uplink
     pimpl->rfm->standbyMode();
     
-    // Si es gateway de un canal, usar esa frecuencia
+    // If a single-channel gateway, use that frequency
     if (one_channel_gateway) {
         pimpl->rfm->setFrequency(one_channel_freq);
         pimpl->rfm->setSpreadingFactor(one_channel_sf);
@@ -1093,11 +1226,11 @@ bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirme
         pimpl->rfm->setSyncWord(0x34);
         updateDataRateFromSF();
     } else {
-        // Seleccionar canal según mejor disponibilidad de duty cycle
+        // Select channel based on best duty cycle availability
         float lowestUsage = 100.0f;
         int bestChannel = 0;
-        // Buscar el canal con menor uso de duty cycle
-        for (int i = 0; i < 8; i++) {  // Solo los primeros 8 canales
+        // Find the channel with the lowest duty cycle usage
+        for (int i = 0; i < 8; i++) {  // Only the first 8 channels
             float usage = getDutyCycleUsage(i);
             if (usage < lowestUsage && channelFrequencies[i] > 0) {
                 lowestUsage = usage;
@@ -1112,18 +1245,18 @@ bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirme
         pimpl->rfm->setInvertIQ(false);
         pimpl->rfm->setSyncWord(0x34);
 
-        DEBUG_PRINTLN("Seleccionado canal " << bestChannel << " con frecuencia " 
-                   << channelFrequencies[bestChannel] << " MHz (uso: " << lowestUsage << "%)");
+        DEBUG_PRINTLN("Selected channel " << bestChannel << " with frequency " 
+                   << channelFrequencies[bestChannel] << " MHz (usage: " << lowestUsage << "%)");
     }
 
-    // Almacenar los parámetros actuales para utilizarlos en la ventana RX1
+    // Store current parameters for use in RX1 window
     current_channel = getChannelFromFrequency(pimpl->rfm->getFrequency());
     current_sf = pimpl->rfm->getSpreadingFactor();
     current_bw = pimpl->rfm->getBandwidth();
     current_cr = pimpl->rfm->getCodingRate();
     current_preamble = pimpl->rfm->getPreambleLength();
 
-    // Debug de las claves de sesión
+    // Debug session keys
     DEBUG_PRINT("Using NwkSKey: ");
     for(const auto& byte : pimpl->nwkSKey) {
         DEBUG_PRINT(std::hex << std::setw(2) << std::setfill('0') 
@@ -1138,79 +1271,79 @@ bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirme
     }
     DEBUG_PRINT(std::dec << std::endl);
 
-    // Construir paquete LoRaWAN estrictamente según la especificación 1.0.4
+    // Build LoRaWAN packet strictly according to specification 1.0.4
     std::vector<uint8_t> packet;
 
-    // Si hay respuestas MAC pendientes, deberíamos incluirlas
+    // If there are pending MAC responses, we should include them
     bool hasPendingMAC = !pendingMACResponses.empty();
 
     // MHDR: Unconfirmed (0x40) o Confirmed (0x80) Data Up
     uint8_t mhdr = confirmed ? 0x80 : 0x40;
 
-    // Si necesitamos añadir un ACK, activar el bit ACK (0x20)
+    // If we need to add an ACK, activate the ACK bit (0x20)
     if (ackbit)
     {
         mhdr |= 0x20;
-        DEBUG_PRINTLN("Añadiendo bit ACK al mensaje saliente");
+        DEBUG_PRINTLN("Adding ACK bit to outgoing message");
     }
 
     packet.push_back(mhdr);
 
-    // FHDR en el orden correcto según la especificación sección 4.3.1:
+    //  FHDR in the correct order according to specification section 4.3.1:
     // 1. DevAddr (4 bytes)
     packet.insert(packet.end(), pimpl->devAddr.begin(), pimpl->devAddr.end());
     
-    // 2. FCtrl (1 byte) - ANTES del FCnt
-    // Configurar FCtrl para ADR
+    // 2. FCtrl (1 byte) - BEFORE FCnt
+    // Configure FCtrl for ADR
     uint8_t fctrl = 0x00;
 
-    // Si hay comandos MAC pendientes, incluirlos en FOpts
-    // Incluir longitud de FOpts (máximo 15 bytes)
+    // If there are pending MAC commands, include them in FOpts
+    // Include length of FOpts (maximum 15 bytes)
     if (hasPendingMAC)
     {
         uint8_t fopts_len = std::min(static_cast<size_t>(15), pendingMACResponses.size());
         fctrl |= fopts_len & 0x0F;
-        DEBUG_PRINTLN("Incluyendo " << static_cast<int>(fopts_len) << " bytes de comandos MAC en FOptsLen");
+        DEBUG_PRINTLN("Including " << static_cast<int>(fopts_len) << " bytes of MAC commands in FOptsLen");
     }
 
-    // Configurar FCtrl para ADR
+    // Configure FCtrl for ADR
     if (adrEnabled) {
         fctrl |= 0x80; // bit 7 = ADR
         
     }
 
-    // ADR ACK request si es necesario
+    // ADR ACK request if necessary
     if (adrAckCounter >= ADR_ACK_LIMIT) {
         fctrl |= 0x40; // bit 6 = ADR ACK REQ
-        DEBUG_PRINTLN("Enviando ADR ACK request (contador: " << adrAckCounter << ")");
+        DEBUG_PRINTLN("Sending ADR ACK request (counter: " << adrAckCounter << ")");
     }
 
-    // Bit ACK si es necesario
+    // Bit ACK if necessary
     if (needsAck || ackbit)
     {
         fctrl |= 0x20; // Bit 5 = ACK
-        DEBUG_PRINTLN("Añadiendo bit ACK en FCtrl (0x" << std::hex << (int)fctrl << std::dec << ")");
+        DEBUG_PRINTLN("Adding ACK bit in FCtrl (0x" << std::hex << (int)fctrl << std::dec << ")");
     }
 
     packet.push_back(fctrl);
     
-    // 3. FCnt (2 bytes, little-endian) - DESPUÉS del FCtrl
+    // 3. FCnt (2 bytes, little-endian) - AFTER FCtrl
     packet.push_back(pimpl->uplinkCounter & 0xFF);        // FCnt LSB
     packet.push_back((pimpl->uplinkCounter >> 8) & 0xFF); // FCnt MSB
 
-    // FOpts: Comandos MAC si hay alguno pendiente (hasta 15 bytes)
+    // FOpts: MAC commands if there are any pending (up to 15 bytes)
     if (hasPendingMAC)
     {
         size_t mac_size = std::min(static_cast<size_t>(15), pendingMACResponses.size());
-        DEBUG_PRINTLN("Añadiendo " << mac_size << " bytes de comandos MAC en FOpts");
+        DEBUG_PRINTLN("Adding " << mac_size << " bytes of MAC commands in FOpts");
 
         for (size_t i = 0; i < mac_size; i++)
         {
             packet.push_back(pendingMACResponses[i]);
         }
 
-        // Depuración: mostrar qué comandos MAC se están enviando
-        DEBUG_PRINT("Comandos MAC enviados: ");
+        // Debug: show what MAC commands are being sent
+        DEBUG_PRINT("MAC commands sent: ");
         for (size_t i = 0; i < mac_size; i++)
         {
             DEBUG_PRINT(std::hex << std::setw(2) << std::setfill('0')
@@ -1218,18 +1351,18 @@ bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirme
         }
         DEBUG_PRINTLN(std::dec);
 
-        // Limpiar los comandos MAC enviados
+        // Clear sent MAC commands
         pendingMACResponses.erase(pendingMACResponses.begin(), pendingMACResponses.begin() + mac_size);
     }
 
     // 4. FPort (1 byte)
     packet.push_back(port);
     
-    // 5. FRMPayload (encriptado)
+    // 5. FRMPayload (encrypted)
     auto encrypted = encryptPayload(data, port);
     packet.insert(packet.end(), encrypted.begin(), encrypted.end());
 
-    // Debug detallado del paquete antes del MIC
+    // Detailed debug of the packet before the MIC
     DEBUG_PRINTLN("Packet structure:");
     DEBUG_PRINTLN("  MHDR: " << std::hex << static_cast<int>(packet[0]));
     DEBUG_PRINT("  DevAddr: ");
@@ -1249,26 +1382,26 @@ bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirme
     }
     DEBUG_PRINT(std::dec << std::endl);
     
-    // Cálculo del MIC según spec 4.4
-    // B0 block exactamente como lo define la especificación
+    // CCalculation of MIC according to spec 4.4
+    // B0 block exactly as defined by the specification
     std::array<uint8_t, 16> b0;
     std::fill(b0.begin(), b0.end(), 0);
-    b0[0] = 0x49;  // Código de bloque para MIC
-    // bytes 1-4 son 0x00 (reservado)
-    b0[5] = 0x00;  // Dir = 0 para uplink
+    b0[0] = 0x49;  // Block code for MIC
+    // bytes 1-4 are 0x00 (reserved)
+    b0[5] = 0x00;  // Dir = 0 for uplink
     
     // DevAddr (4 bytes, little-endian)
     std::copy(pimpl->devAddr.begin(), pimpl->devAddr.end(), b0.begin() + 6);
     
-    // FCnt (4 bytes, little-endian, los 2 bytes superiores son 0)
+    // FCnt (4 bytes, little-endian, the upper 2 bytes are 0)
     b0[10] = pimpl->uplinkCounter & 0xFF;
     b0[11] = (pimpl->uplinkCounter >> 8) & 0xFF;
-    // bytes 12-13 son 0x00 (FCntMSB = 0)
+    // bytes 12-13 are 0x00 (FCntMSB = 0)
     
-    // byte 14 es 0x00 (siempre 0 para mensajes pequeños)
-    b0[15] = static_cast<uint8_t>(packet.size());  // Longitud del mensaje
+    // byte 14 is 0x00 (always 0 for small messages)
+    b0[15] = static_cast<uint8_t>(packet.size());  // Length of the message
 
-    // Debug del bloque B0
+    // Debug of the B0 block
     DEBUG_PRINT("B0 block for MIC: ");
     for(const auto& byte : b0) {
         DEBUG_PRINT(std::hex << std::setw(2) << std::setfill('0') 
@@ -1276,27 +1409,27 @@ bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirme
     }
     DEBUG_PRINT(std::dec << std::endl);
 
-    // Construir el bloque para CMAC
+    // Build the block for CMAC
     std::vector<uint8_t> cmacData;
     cmacData.insert(cmacData.end(), b0.begin(), b0.end());
     cmacData.insert(cmacData.end(), packet.begin(), packet.end());
     
-    // Calcular CMAC con NwkSKey
+    // Calculate CMAC with NwkSKey
     auto cmac = AESCMAC::calculate(cmacData, pimpl->nwkSKey);
     
-    // Añadir los primeros 4 bytes como MIC
+    // Add the first 4 bytes as MIC
     packet.insert(packet.end(), cmac.begin(), cmac.begin() + 4);
     
-    // Calcular el tamaño del paquete para estimar tiempo de aire
-    size_t packetSize = data.size() + 13; // Datos + overhead LoRaWAN
+    // Calculate the size of the packet to estimate air time
+    size_t packetSize = data.size() + 13; // Data + overhead LoRaWAN
     
-    // Verificar duty cycle si no está forzado
-    float frequency = 868.1; // Para gateway one-channel, siempre usamos esta frecuencia
+    // Verify duty cycle if not forced
+    float frequency = 868.1; // For one-channel gateway, we always use this frequency
     
     if (!force_duty_cycle && !checkDutyCycle(frequency, packetSize)) {
         DEBUG_PRINTLN("Duty cycle restriction active, delaying transmission");
-        // Esperar el tiempo necesario
-        int channel = 0; // Single channel gateway siempre usa canal 0
+        // Wait the necessary time
+        int channel = 0; // Single channel gateway always uses channel 0
         auto now = std::chrono::steady_clock::now();
         auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
             now - lastChannelUse[channel]).count();
@@ -1311,62 +1444,62 @@ bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirme
         }
     }
     
-    // Debug de los parámetros radio para verificación
+    // Debug radio parameters for verification
     DEBUG_PRINTLN("Radio parameters:");
     DEBUG_PRINTLN("  Frequency: " << pimpl->rfm->getFrequency() << " MHz");
     DEBUG_PRINTLN("  SF: " << pimpl->rfm->getSpreadingFactor());
     DEBUG_PRINTLN("  BW: " << pimpl->rfm->getBandwidth() << " kHz");
     DEBUG_PRINTLN("  CR: 4/" << pimpl->rfm->getCodingRate());
     DEBUG_PRINTLN("  Power: " << pimpl->rfm->getTxPower() << " dBm");
-    DEBUG_PRINTLN("Enviando paquete...");
+    DEBUG_PRINTLN("Sending packet...");
     
-    // Asegurar que el paquete se envía correctamente comprobando estado del radio
+    // Ensure the packet is sent correctly by checking radio status
     pimpl->rfm->clearIRQFlags();
     uint8_t opMode = pimpl->rfm->readRegister(RFM95::REG_OP_MODE);
-    DEBUG_PRINTLN("Modo previo a TX: 0x" << std::hex << (int)opMode << std::dec);
+    DEBUG_PRINTLN("Mode before TX: 0x" << std::hex << (int)opMode << std::dec);
     
-    // Transmitir el paquete
+    // Transmit the packet
     bool result = pimpl->rfm->send(packet);
     
-    // Comprobar resultado incluso si el flag no se actualiza
+    // Check result even if the flag isn't updated
     if (result) {
-        DEBUG_PRINTLN("Envío de paquete completado");
+        DEBUG_PRINTLN("Packet sending completed");
         pimpl->rfm->standbyMode();
-        // Incrementar contador y guardar sesión
+        // Increment counter and save session
         pimpl->uplinkCounter++;
 
-        // Guardar el timestamp del último uplink
+        // Save the timestamp of the last uplink
         pimpl->txEndTime = std::chrono::steady_clock::now();
-        setupRxWindows(); // Configurar las ventanas RX1 y RX2
+        setupRxWindows(); // Configure RX1 and RX2 windows
 
-        // Incrementar contador ADR si está habilitado
+        // Increment ADR counter if enabled
         if (adrEnabled) {
             adrAckCounter++;
             
-            // Reducir DR (aumentar SF) si hace tiempo que no recibimos respuesta
+            // Reduce DR (increase SF) if we haven't received a response in a while
             if (adrAckCounter > ADR_ACK_LIMIT + ADR_ACK_DELAY) {
                 updateTxParamsForADR();
             }
         }
         
         pimpl->saveSessionData();
-        // // Esperamos 6 segundos para cumplir duty cycle (1% en 868.1 MHz)
-        // DEBUG_PRINTLN("Esperando 6 segundos para duty cycle...");
+        // // Wait 6 seconds to comply with duty cycle (1% on 868.1 MHz)
+        // DEBUG_PRINTLN("Waiting 6 seconds for duty cycle...");
         // std::this_thread::sleep_for(std::chrono::seconds(6));
         
-        // Volver a modo recepción continua con la configuración adecuada según la clase
+        // Return to continuous reception mode with appropriate configuration based on class
         if (currentClass == DeviceClass::CLASS_C) {
-            DEBUG_PRINTLN("Configurando recepción continua en RX2 (869.525 MHz, Clase C)");
+            DEBUG_PRINTLN("Configuring continuous reception at RX2 (869.525 MHz, Class C)");
             pimpl->rfm->standbyMode();
             pimpl->rfm->setFrequency(RX2_FREQ[lora_region]);
             pimpl->rfm->setSpreadingFactor(RX2_SF[lora_region]);
             pimpl->rfm->setBandwidth(RX2_BW[lora_region]);
             pimpl->rfm->setCodingRate(RX2_CR[lora_region]);
             pimpl->rfm->setPreambleLength(RX2_PREAMBLE[lora_region]);
-            pimpl->rfm->setInvertIQ(true);      // IQ invertido para downlink
+            pimpl->rfm->setInvertIQ(true);      // Inverted IQ for downlink
             pimpl->rfm->setContinuousReceive();
         } else {
-            // Para Clase A, configurar RX1 normalmente
+            // For Class A, configure RX1 normally
             pimpl->rfm->setFrequency(channelFrequencies[current_channel]);
             pimpl->rfm->setSpreadingFactor(current_sf);
             pimpl->rfm->setBandwidth(current_bw);
@@ -1374,16 +1507,16 @@ bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirme
             pimpl->rfm->setPreambleLength(current_preamble);
             pimpl->rfm->setInvertIQ(false);
             pimpl->rfm->setContinuousReceive();
-            DEBUG_PRINTLN("Volviendo a modo standby (Clase A)");
+            DEBUG_PRINTLN("Returning to standby mode (Class A)");
             pimpl->rfm->standbyMode();
         }
     } else {
-        DEBUG_PRINTLN("Error al enviar el paquete");
+        DEBUG_PRINTLN("Error sending packet");
 
-        // En caso de error, no configurar ventanas RX
+        // In case of error, don't configure RX windows
         pimpl->rxState = RX_IDLE;
 
-        // Para Clase C, volver a escucha continua en RX2
+        // For Class C, return to continuous listening on RX2
         if (currentClass == DeviceClass::CLASS_C)
         {
             pimpl->rfm->standbyMode();
@@ -1397,7 +1530,7 @@ bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirme
         }
     }
 
-    // Si es un mensaje confirmado y se envió correctamente, actualizar el estado
+    // If it's a confirmed message and was sent successfully, update the state
     if (confirmed && result)
     {
         confirmState = ConfirmationState::WAITING_ACK;
@@ -1405,10 +1538,10 @@ bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirme
         lastConfirmAttempt = std::chrono::steady_clock::now();
         pendingAck = data;
         ackPort = port;
-        DEBUG_PRINTLN("Mensaje confirmado enviado, esperando ACK. Intento: " << confirmRetries);
+        DEBUG_PRINTLN("Confirmed message sent, waiting for ACK. Attempt: " << confirmRetries);
     }
 
-    // Si teníamos que ACK un mensaje y lo hemos enviado, resetear
+    // If we had to ACK a message and have sent it, reset
     if (ackbit && result)
     {
         resetConfirmationState();
@@ -1420,33 +1553,33 @@ bool LoRaWAN::send(const std::vector<uint8_t>& data, uint8_t port, bool confirme
 void LoRaWAN::update() {
     if (!joined) return;
 
-    // Gestionar las ventanas de recepción
+    // Manage reception windows
     updateRxWindows();
 
-    // Gestionar confirmaciones pendientes
+    // Manage pending confirmations
     handleConfirmation();
 
-    // Verificar si la clase ha cambiado o necesitamos reiniciar la escucha continua
+    // Check if the class has changed or we need to restart continuous listening
     uint8_t opMode = pimpl->rfm->readRegister(RFM95::REG_OP_MODE);
 
-    // Solo reconfigurar si no estamos ya en modo RX continuo
+    // Only reconfigure if we're not already in continuous RX mode
     if ((opMode & 0x07) != RFM95::MODE_RX_CONTINUOUS &&
         pimpl->rxState != RX_WINDOW_1 && pimpl->rxState != RX_WINDOW_2) {
-        // Si estamos en Clase C, siempre escuchar en RX2
+        // If we're in Class C, always listen on RX2
         if (currentClass == DeviceClass::CLASS_C) {
-            // Configurar para RX2
+            // Configure for RX2
             pimpl->rfm->standbyMode();
             pimpl->rfm->setFrequency(RX2_FREQ[lora_region]);
             pimpl->rfm->setSpreadingFactor(RX2_SF[lora_region]);
             pimpl->rfm->setBandwidth(RX2_BW[lora_region]);
             pimpl->rfm->setCodingRate(RX2_CR[lora_region]);
             pimpl->rfm->setPreambleLength(RX2_PREAMBLE[lora_region]);
-            pimpl->rfm->setInvertIQ(true);  // Invertir IQ para downlink
+            pimpl->rfm->setInvertIQ(true);  // Invert IQ for downlink
             pimpl->rfm->setContinuousReceive();
             pimpl->rxState = RX_CONTINUOUS;
-            DEBUG_PRINTLN("Radio reconfigurada para RX2 continuo en " << RX2_FREQ[lora_region] << " MHz (SF" << RX2_SF[lora_region] << ")");
+            DEBUG_PRINTLN("Radio reconfigured for continuous RX2 at " << RX2_FREQ[lora_region] << " MHz (SF" << RX2_SF[lora_region] << ")");
         } else {
-            // Para Clase A, configurar en la frecuencia principal
+            // For Class A, configure at the main frequency
             pimpl->rfm->standbyMode();
             pimpl->rfm->setFrequency(channelFrequencies[current_channel]);
             pimpl->rfm->setSpreadingFactor(current_sf);
@@ -1455,27 +1588,27 @@ void LoRaWAN::update() {
             pimpl->rfm->setPreambleLength(current_preamble);
             pimpl->rfm->setInvertIQ(true);
             pimpl->rfm->setContinuousReceive();
-            DEBUG_PRINTLN("Volviendo a modo standby (Clase A)");
+            DEBUG_PRINTLN("Returning to standby mode (Class A)");
         }
     }
 
-    // Comprobar si hay datos recibidos verificando IRQ flags
+    // Check if there is received data by checking IRQ flags
     uint8_t flags = pimpl->rfm->getIRQFlags();
     
     if (flags & RFM95::IRQ_RX_DONE_MASK) {
-        DEBUG_PRINTLN("¡Detectada recepción de paquete!");
+        DEBUG_PRINTLN("Packet reception detected!");
         
-        // Verificar si hay error CRC
+        // Check if there's a CRC error
         if (flags & RFM95::IRQ_PAYLOAD_CRC_ERROR_MASK) {
-            DEBUG_PRINTLN("Error CRC en paquete recibido");
+            DEBUG_PRINTLN("CRC error in received packet");
         } else {
-            // Mostrar información detallada del paquete
+            // Show detailed information about the packet
             int rssi = pimpl->rfm->getRSSI();
             float snr = pimpl->rfm->getSNR();
             
             auto payload = pimpl->rfm->readPayload();
             if (!payload.empty()) {
-                DEBUG_PRINTLN("Paquete recibido: " << payload.size() << " bytes, RSSI: " 
+                DEBUG_PRINTLN("Packet received: " << payload.size() << " bytes, RSSI: " 
                           << rssi << " dBm, SNR: " << snr << " dB");
                 DEBUG_PRINT("Hex: ");
                 for (const auto& b : payload) {
@@ -1483,38 +1616,38 @@ void LoRaWAN::update() {
                 }
                 DEBUG_PRINTLN(std::dec);
                 
-                // Procesar el paquete si es un formato LoRaWAN válido
+                // Process the packet if it's a valid LoRaWAN format
                 if (payload.size() >= 13) {
                     Message msg;
                     uint8_t mhdr = payload[0];
                     
-                    // Verificar si es downlink (0x60 = unconfirmed, 0xA0 = confirmed)
+                    // Check if it's a downlink (0x60 = unconfirmed, 0xA0 = confirmed)
                     if ((mhdr & 0xE0) == 0x60 || (mhdr & 0xE0) == 0xA0) {
-                        // Extraer DevAddr para verificación
+                        // Extract DevAddr for verification
                         std::array<uint8_t, 4> recvDevAddr;
                         std::copy(payload.begin() + 1, payload.begin() + 5, recvDevAddr.begin());
                         
-                        // Verificar que el DevAddr coincide con el nuestro
+                        // Verify that the DevAddr matches ours
                         bool addressMatch = std::equal(recvDevAddr.begin(), recvDevAddr.end(), pimpl->devAddr.begin());
                         
                         if (addressMatch) {
-                            // Recolectar estadísticas para ADR
+                            // Collect statistics for ADR
                             pimpl->addSnrSample(snr);
                             pimpl->addRssiSample(rssi);
                             
-                            // Usar handleReceivedMessage para procesar el mensaje
+                            // Use handleReceivedMessage to process the message
                             handleReceivedMessage(payload, msg);
                             
-                            // Notificar mediante callback
+                            // Notify via callback
                             if (receiveCallback) {
                                 receiveCallback(msg);
                             } else {
-                                // Guardar en la cola
+                                // Save in the queue
                                 std::lock_guard<std::mutex> lock(pimpl->queueMutex);
                                 pimpl->rxQueue.push(msg);
                             }
 
-                            // Verificar si hay comandos MAC en FPort 0 o en FOpts
+                            // Check if there are MAC commands in FPort 0 or in FOpts
                             if (payload.size() > 8)
                             {
                                 uint8_t fctrl = payload[5];
@@ -1522,59 +1655,59 @@ void LoRaWAN::update() {
 
                                 if (fopts_len > 0)
                                 {
-                                    // Hay comandos MAC en FOpts
-                                    DEBUG_PRINTLN("Detectados " << static_cast<int>(fopts_len) << " bytes de comandos MAC en FOpts");
+                                    // There are MAC commands in FOpts
+                                    DEBUG_PRINTLN("Detected " << static_cast<int>(fopts_len) << " bytes of MAC commands in FOpts");
 
-                                    // Extraer comandos MAC de FOpts (después del FCnt)
+                                    // Extract MAC commands from FOpts (after FCnt)
                                     std::vector<uint8_t> macCommands(payload.begin() + 8, payload.begin() + 8 + fopts_len);
 
-                                    // Procesar comandos y generar respuesta
+                                    // Process commands and generate response
                                     std::vector<uint8_t> macResponse;
                                     processMACCommands(macCommands, macResponse);
 
-                                    // Almacenar respuesta para incluirla en el próximo uplink
+                                    // Store response to include in next uplink
                                     if (!macResponse.empty())
                                     {
                                         pendingMACResponses = macResponse;
-                                        DEBUG_PRINTLN("Respuesta MAC guardada para próximo uplink: " << macResponse.size() << " bytes");
+                                        DEBUG_PRINTLN("MAC response saved for next uplink: " << macResponse.size() << " bytes");
                                     }
                                 }
 
-                                // También verificar si hay comandos en FPort 0
+                                // Also check if there are commands in FPort 0
                                 if (payload.size() > 8 && payload[8] == 0 && payload.size() > 9)
                                 {
-                                    // FPort 0 indica que el payload son comandos MAC
+                                    // FPort 0 indicates that the payload contains MAC commands
                                     std::vector<uint8_t> encrypted(payload.begin() + 9, payload.end() - 4);
                                     std::vector<uint8_t> macCommands = decryptPayload(encrypted, 0);
 
-                                    DEBUG_PRINT("Recibidos comandos MAC en FPort 0: ");
+                                    DEBUG_PRINT("Received MAC commands in FPort 0: ");
                                     for (const auto &b : macCommands)
                                     {
                                         DEBUG_PRINT(std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(b) << " ");
                                     }
                                     DEBUG_PRINTLN(std::dec);
 
-                                    // Procesar comandos y generar respuesta
+                                    // Process commands and generate response
                                     std::vector<uint8_t> macResponse;
                                     processMACCommands(macCommands, macResponse);
 
-                                    // Almacenar respuesta para incluirla en el próximo uplink
+                                    // Store response to include in next uplink
                                     if (!macResponse.empty())
                                     {
                                         pendingMACResponses = macResponse;
-                                        DEBUG_PRINTLN("Respuesta MAC (FPort 0) guardada para próximo uplink: " << macResponse.size() << " bytes");
+                                        DEBUG_PRINTLN("MAC response (FPort 0) saved for next uplink: " << macResponse.size() << " bytes");
                                     }
                                 }
                             }
                         } else {
-                            DEBUG_PRINTLN("DevAddr no coincide, ignorando paquete");
+                            DEBUG_PRINTLN("DevAddr doesn't match, ignoring packet");
                         }
                     }
                 }
             }
         }
         
-        // Limpiar flag y reconfigurar para seguir recibiendo
+        // Clear flag and reconfigure to continue receiving
         pimpl->rfm->clearIRQFlagRxDone();
         pimpl->rfm->setContinuousReceive();
     }
@@ -1634,13 +1767,13 @@ void LoRaWAN::setFrequency(float freq_mhz) {
     if (channel >= 0) {
         pimpl->rfm->setFrequency(freq_mhz);
     } else {
-        DEBUG_PRINTLN("Frecuencia no válida o no permitida en ningún canal");
+        DEBUG_PRINTLN("Invalid frequency or not allowed on any channel");
     }
 }
 
 int LoRaWAN::getChannelFromFrequency(float freq_mhz) const {
     if (lora_region < 0 || lora_region >= REGIONS) {
-        DEBUG_PRINTLN("Región LoRa no válida");
+        DEBUG_PRINTLN("Invalid LoRa region");
         return -1;
     }
     
@@ -1662,15 +1795,15 @@ float LoRaWAN::getFrequencyFromChannel(int channel) const {
 void LoRaWAN::setChannel(uint8_t channel) {
     if (channel < MAX_CHANNELS && channelFrequencies[channel] > 0) {
         pimpl->channel = channel;
-        // Establecer la frecuencia correspondiente en el radio
+        // Set the corresponding frequency in the radio
         pimpl->rfm->setFrequency(channelFrequencies[channel]);
     } else {
-        DEBUG_PRINTLN("Canal no válido o desactivado: " << channel);
+        DEBUG_PRINTLN("Invalid or disabled channel: " << channel);
     }
 }
 
 uint8_t LoRaWAN::getChannel() const {
-    return pimpl->channel; // Devolver directamente el canal almacenado
+    return pimpl->channel; // Return directly the stored channel
 }
 
 void LoRaWAN::setSingleChannel(bool enable, float freq_mhz, int sf, int bw, int cr, int power, int preamble)
@@ -1694,8 +1827,8 @@ float LoRaWAN::getSingleChannelFrequency() const {
 }
 
 void LoRaWAN::setTxPower(int8_t power) {
-    // Limitar entre 2 dBm y el máximo permitido por la región
-    if (power < 2) power = 2; // La mayoría de los módulos LoRa no van por debajo de 2 dBm
+    // Limit between 2 dBm and the maximum allowed by the region
+    if (power < 2) power = 2; // Most LoRa modules do not go below 2 dBm
     if (power > MAX_POWER[lora_region]) power = MAX_POWER[lora_region];
     
     pimpl->txPower = power;
@@ -1727,7 +1860,7 @@ void LoRaWAN::sleep() {
 }
 
 bool LoRaWAN::validateKeys() const {
-    // Validar DevAddr - no debe ser todo ceros
+    // Validate DevAddr - shouldn't be all zeros
     bool validDevAddr = false;
     for (const auto& byte : pimpl->devAddr) {
         if (byte != 0) {
@@ -1737,11 +1870,11 @@ bool LoRaWAN::validateKeys() const {
     }
     if (!validDevAddr) {
         DEBUG_PRINTLN("ABP validation failed: DevAddr is all zeros");
-        std::cerr << "Error: DevAddr no válida para ABP" << std::endl;
+        std::cerr << "Error: Invalid DevAddr for ABP" << std::endl;
         return false;
     }
     
-    // Validar NwkSKey - no debe ser todo ceros
+    // Validate NwkSKey - shouldn't be all zeros
     bool validNwkSKey = false;
     for (const auto& byte : pimpl->nwkSKey) {
         if (byte != 0) {
@@ -1751,11 +1884,11 @@ bool LoRaWAN::validateKeys() const {
     }
     if (!validNwkSKey) {
         DEBUG_PRINTLN("ABP validation failed: NwkSKey is all zeros");
-        std::cerr << "Error: NwkSKey no válida para ABP" << std::endl;
+        std::cerr << "Error: Invalid NwkSKey for ABP" << std::endl;
         return false;
     }
     
-    // Validar AppSKey - no debe ser todo ceros
+    // Validate AppSKey - shouldn't be all zeros
     bool validAppSKey = false;
     for (const auto& byte : pimpl->appSKey) {
         if (byte != 0) {
@@ -1765,7 +1898,7 @@ bool LoRaWAN::validateKeys() const {
     }
     if (!validAppSKey) {
         DEBUG_PRINTLN("ABP validation failed: AppSKey is all zeros");
-        std::cerr << "Error: AppSKey no válida para ABP" << std::endl;
+        std::cerr << "Error: Invalid AppSKey for ABP" << std::endl;
         return false;
     }
     
@@ -1791,23 +1924,23 @@ bool LoRaWAN::isADREnabled() const {
 
 void LoRaWAN::resetSession()
 {
-    // Limpiar claves de sesión
+    // Clear session keys
     pimpl->devAddr.fill(0);
     pimpl->nwkSKey.fill(0);
     pimpl->appSKey.fill(0);
 
-    // Reiniciar flags y contadores
+    // Reset flags and counters
     pimpl->uplinkCounter = 0;
     pimpl->downlinkCounter = 0;
     joined = false;
 
-    // Borrar el archivo de sesión si existe
+    // Delete session file if it exists
     SessionManager::clearSession(pimpl->sessionFile);
 
-    // Reiniciar DevNonces
+    // Reset DevNonces
     pimpl->resetDevNonces();
 
-    // También reiniciar estadísticas ADR
+    // Also reset ADR statistics
     pimpl->snrHistory.clear();
     pimpl->rssiHistory.clear();
     adrAckCounter = 0;
@@ -1817,11 +1950,11 @@ void LoRaWAN::resetSession()
 
 void LoRaWAN::applyADRSettings(uint8_t dataRate, uint8_t txPower, const std::vector<uint8_t>& channelMask) {
 
-    // Mapear DR a SF/BW según la región
-    int sf = 9; // Valor predeterminado
+    // Map DR to SF/BW based on the region
+    int sf = 9; // Default value
     float bw = 125.0f;
 
-    // Determinar SF y BW según la región y el DR
+    // Determine SF and BW based on the region and DR
     switch (lora_region) {
         case REGION_EU868:
             if (dataRate < 6) {
@@ -1838,31 +1971,31 @@ void LoRaWAN::applyADRSettings(uint8_t dataRate, uint8_t txPower, const std::vec
             }
             break;
             
-        // Añadir otras regiones según sea necesario
+        // Add other regions as necessary
         default:
-            // Mapeo genérico
+            // Generic mapping for other regions
             sf = dataRate <= 6 ? (12 - dataRate) : 7;
             bw = dataRate == 6 ? 250.0f : 125.0f;
     }
 
-    // Determinar potencia según la región
-    int power = 14; // Valor predeterminado
+    // Determine power based on the region
+    int power = 14; // Default value
     switch (lora_region) {
         case REGION_EU868:
             power = MAX_POWER[lora_region] - (txPower * 2);
             break;
-        // Añadir otras regiones según sea necesario
+        // Add other regions as necessary
         default:
             power = MAX_POWER[lora_region] - (txPower * 2);
     }
     
-    // Limitar a valores seguros
+    // Limit to safe values
     if (sf < 7) sf = 7;
     if (sf > 12) sf = 12;
     if (power < 2) power = 2;
     if (power > MAX_POWER[lora_region]) power = MAX_POWER[lora_region];
     
-    // Aplicar configuración al radio usando el pimpl (esto se hace en LoRaWAN.cpp)
+    // Apply settings to the radio using the pimpl (this is done in LoRaWAN.cpp)
     pimpl->rfm->setSpreadingFactor(sf);
     current_sf = sf;
     pimpl->rfm->setBandwidth(bw);
@@ -1875,7 +2008,7 @@ void LoRaWAN::applyADRSettings(uint8_t dataRate, uint8_t txPower, const std::vec
 
 void LoRaWAN::processMACCommands(const std::vector<uint8_t> &commands, std::vector<uint8_t> &response)
 {
-    DEBUG_PRINTLN("Procesando comandos MAC:");
+    DEBUG_PRINTLN("Processing MAC commands:");
     for (size_t i = 0; i < commands.size(); i++)
     {
         DEBUG_PRINT(std::hex << std::setw(2) << std::setfill('0')
@@ -1892,7 +2025,7 @@ void LoRaWAN::processMACCommands(const std::vector<uint8_t> &commands, std::vect
         switch (cmd)
         {
         case MAC_LINK_ADR_REQ:
-            DEBUG_PRINTLN("Recibido LinkADR comando:");
+            DEBUG_PRINTLN("Received LinkADR command:");
             DEBUG_PRINTLN("  DataRate_TXPower: 0x" << std::hex
                                                    << static_cast<int>(commands[index + 1]));
             DEBUG_PRINTLN("  ChMask: 0x" << std::hex
@@ -1904,7 +2037,7 @@ void LoRaWAN::processMACCommands(const std::vector<uint8_t> &commands, std::vect
             if (index + 4 <= commands.size())
             {
                 processLinkADRReq(commands, index - 1, response);
-                index += 4; // Avanzar a después de los 4 bytes de parámetros
+                index += 4; // Skip the parameters
             }
             break;
 
@@ -1917,49 +2050,47 @@ void LoRaWAN::processMACCommands(const std::vector<uint8_t> &commands, std::vect
                 DEBUG_PRINTLN("DutyCycle: MaxDutyCycle=" << static_cast<int>(maxDutyCycle)
                                                          << ", duty cycle=" << (dutyCycle * 100) << "%");
 
-                // Añadir respuesta - siempre aceptamos el duty cycle
+                // Always accept duty cycle
                 response.push_back(MAC_DUTY_CYCLE_ANS);
             }
             break;
 
         case MAC_DEV_STATUS_REQ:
-            // Responder con estado del dispositivo (batería y margen de señal)
+            // Respond with device status (battery and signal margin)
             {
-                DEBUG_PRINTLN("Recibido comando DEV_STATUS_REQ");
-
-                // Añadir comando de respuesta
+                DEBUG_PRINTLN("Received DEV_STATUS_REQ command");
+                // Add response command
                 response.push_back(MAC_DEV_STATUS_ANS);
 
-                // Añadir nivel de batería (0-254, 0=externo, 1=min, 254=max, 255=no medido)
-                // Usar un valor real si se dispone de sensor de batería
-                uint8_t battery = 254;
+                // Add battery level (0-254, 0=external power, 1=min, 254=max, 255=not measured)
+                uint8_t battery = 254; // Use a real value if you have a battery sensor
                 response.push_back(battery);
 
-                // Añadir margen de señal (-32...31 dB)
+                // Add signal margin (-32...31 dB)
                 float snr = pimpl->rfm->getSNR();
                 int8_t margin = static_cast<int8_t>(std::max(-32.0f, std::min(31.0f, snr)));
+                response.push_back(static_cast<uint8_t>(margin));
 
-                response.push_back(static_cast<uint8_t>(margin)); // Convertir a uint8_t para añadir al vector
-
-                DEBUG_PRINTLN("Respondiendo DEV_STATUS: Batería=" << static_cast<int>(battery)
-                                                                  << ", Margen=" << static_cast<int>(margin) << " dB");
+                DEBUG_PRINTLN("Responding DEV_STATUS: Battery=" << static_cast<int>(battery)
+                                                                << ", Margin=" << static_cast<int>(margin) << " dB");
             }
             break;
+
         case MAC_LINK_CHECK_ANS:
             if (index + 1 < commands.size())
             {
                 uint8_t margin = commands[index++];
                 uint8_t gwCount = commands[index++];
 
-                DEBUG_PRINTLN("Recibido LINK_CHECK_ANS: Margen=" << static_cast<int>(margin)
+                DEBUG_PRINTLN("Received LINK_CHECK_ANS: Margin=" << static_cast<int>(margin)
                                                                  << " dB, GW Count=" << static_cast<int>(gwCount));
 
-                // TODO: Almacenar estos valores o notificarlos mediante un callback
+                // Here you could store these values or notify via a callback
             }
             break;
 
         case MAC_RX_PARAM_SETUP_REQ:
-            DEBUG_PRINTLN("Recibido RX_PARAM_SETUP_REQ");
+            DEBUG_PRINTLN("Received RX_PARAM_SETUP_REQ");
 
             if (index + 3 <= commands.size())
             {
@@ -1968,35 +2099,35 @@ void LoRaWAN::processMACCommands(const std::vector<uint8_t> &commands, std::vect
                 uint8_t frequency_mid = commands[index++];
                 uint8_t frequency_lsb = commands[index++];
 
-                // Extraer parámetros
-                rx1DrOffset = (dlSettings >> 4) & 0x07; // 3 bits superiores del DLSettings
-                rx2DataRate = dlSettings & 0x0F;        // 4 bits inferiores del DLSettings
+                // Extract parameters
+                rx1DrOffset = (dlSettings >> 4) & 0x07; // Upper 3 bits of DLSettings
+                rx2DataRate = dlSettings & 0x0F;        // Lower 4 bits of DLSettings
 
-                // Calcular frecuencia RX2 (24 bits, en múltiplos de 100 Hz)
+                // Calculate RX2 frequency (24 bits, in multiples of 100 Hz)
                 uint32_t freq_value = (frequency_msb << 16) | (frequency_mid << 8) | frequency_lsb;
-                float rx2_freq = static_cast<float>(freq_value) / 10000.0f; // Convertir a MHz
+                float rx2_freq = static_cast<float>(freq_value) / 10000.0f; // Convert to MHz
 
                 DEBUG_PRINTLN("  RX1DrOffset=" << static_cast<int>(rx1DrOffset)
                                                << ", RX2DataRate=" << static_cast<int>(rx2DataRate)
                                                << ", RX2 Freq=" << rx2_freq << " MHz");
 
-                // Respuesta: status bits
-                uint8_t status = 0x07; // Por defecto todos los bits en 1 (éxito)
+                // Response: status bits
+                uint8_t status = 0x07; // Default all bits to 1 (success)
 
-                // Validar los parámetros
+                // Validate parameters
                 bool rx1DrOffsetOK = true;
                 bool rx2DataRateOK = true;
                 bool channelOK = true;
 
-                // Validar RX1 DR Offset (0-7)
+                // Validate RX1 DR Offset (0-7)
                 if (rx1DrOffset > 7)
                 {
                     rx1DrOffsetOK = false;
-                    status &= ~0x04; // Error en RX1DrOffset
+                    status &= ~0x04; // Error in RX1DrOffset
                 }
 
-                // Validar RX2 DataRate según la región
-                int maxDR = 7; // Por defecto para EU868
+                // Validate RX2 DataRate based on region
+                int maxDR = 7; // Default for EU868
                 switch (lora_region)
                 {
                 case REGION_EU868:
@@ -2005,64 +2136,52 @@ void LoRaWAN::processMACCommands(const std::vector<uint8_t> &commands, std::vect
                 case REGION_US915:
                     maxDR = 4;
                     break;
-                    // Añadir otras regiones según sea necesario
+                    // Add other regions as needed
                 }
 
                 if (rx2DataRate > maxDR)
                 {
                     rx2DataRateOK = false;
-                    status &= ~0x02; // Error en RX2 DataRate
+                    status &= ~0x02; // Error in RX2 DataRate
                 }
 
-                // Validar canal de frecuencia
+                // Validate frequency channel
                 if (rx2_freq < 100.0f || rx2_freq > 1000.0f)
                 {
-                    // Valores arbitrarios para el ejemplo, ajustar según la región
+                    // Arbitrary values for example, adjust according to region
                     channelOK = false;
-                    status &= ~0x01; // Error en el canal
+                    status &= ~0x01; // Error in channel
                 }
 
-                // Si todo está bien, aplicar los cambios
+                // If all OK, apply changes
                 if (status == 0x07)
                 {
-                    // Guarda la configuración de RX2
+                    // Store the old RX2 frequency
                     float old_rx2_freq = RX2_FREQ[lora_region];
 
-                    // Actualizar configuración RX2 interna
-                    // TODO: Se podrían añadir atributos para almacenar la frecuencia RX2 personalizada
+                    // Update internal RX2 configuration
+                    // TODO: You might add attributes to store custom RX2 frequency
 
-                    DEBUG_PRINTLN("Parámetros RX actualizados: RX1DrOffset=" << static_cast<int>(rx1DrOffset)
-                                                                             << ", RX2DataRate=" << static_cast<int>(rx2DataRate)
-                                                                             << ", cambiando RX2 de " << old_rx2_freq << " a " << rx2_freq << " MHz");
+                    DEBUG_PRINTLN("RX parameters updated: RX1DrOffset=" << static_cast<int>(rx1DrOffset)
+                                                                        << ", RX2DataRate=" << static_cast<int>(rx2DataRate)
+                                                                        << ", changing RX2 from " << old_rx2_freq << " to " << rx2_freq << " MHz");
                 }
                 else
                 {
-                    DEBUG_PRINTLN("Parámetros RX inválidos, status=" << std::bitset<3>(status));
+                    DEBUG_PRINTLN("Invalid RX parameters, status=" << std::bitset<3>(status));
                 }
 
-                // Añadir respuesta
+                // Add response
                 response.push_back(MAC_RX_PARAM_SETUP_ANS);
                 response.push_back(status);
             }
             break;
 
         default:
-            // Omitir comandos no reconocidos
-            DEBUG_PRINTLN("Comando MAC no reconocido: 0x" << std::hex << static_cast<int>(cmd));
+            // Skip unrecognized commands
+            DEBUG_PRINTLN("Unrecognized MAC command: 0x" << std::hex << static_cast<int>(cmd));
             break;
         }
-    }
-
-    // Verificación adicional para confirmar que se han generado respuestas
-    if (!response.empty())
-    {
-        DEBUG_PRINTLN("Respuesta MAC generada correctamente con " << response.size() << " bytes:");
-        for (const auto &byte : response)
-        {
-            DEBUG_PRINT(std::hex << std::setw(2) << std::setfill('0')
-                                 << static_cast<int>(byte) << " ");
-        }
-        DEBUG_PRINTLN(std::dec);
     }
 }
 
@@ -2072,8 +2191,8 @@ void LoRaWAN::processLinkADRReq(const std::vector<uint8_t> &cmd, size_t index, s
         return;
 
     uint8_t datarate_txpower = cmd[index + 1];
-    uint8_t dr = (datarate_txpower >> 4) & 0x0F; // 4 bits más significativos
-    uint8_t txpower = datarate_txpower & 0x0F;   // 4 bits menos significativos
+    uint8_t dr = (datarate_txpower >> 4) & 0x0F; // 4 bits most significant
+    uint8_t txpower = datarate_txpower & 0x0F;   // 4 bits least significant
     uint16_t chmask = (cmd[index + 3] << 8) | cmd[index + 2];
     uint8_t redundancy = cmd[index + 4];
     uint8_t chmaskcntl = (redundancy >> 4) & 0x07;
@@ -2084,7 +2203,7 @@ void LoRaWAN::processLinkADRReq(const std::vector<uint8_t> &cmd, size_t index, s
     if (nbRep > 15)
         nbRep = 15;
 
-    DEBUG_PRINTLN("LinkADRReq recibido:");
+    DEBUG_PRINTLN("LinkADRReq received:");
     DEBUG_PRINT("  Raw DataRate_TXPower byte: 0x" << std::hex << (int)datarate_txpower << std::dec << "\n");
     DEBUG_PRINT("  Binary: " << std::bitset<8>(datarate_txpower) << "\n");
     DEBUG_PRINTLN("  DR=" << (int)dr << " (SF" << (dr < 6 ? 12 - dr : 7) << ")");
@@ -2094,11 +2213,11 @@ void LoRaWAN::processLinkADRReq(const std::vector<uint8_t> &cmd, size_t index, s
     DEBUG_PRINTLN("  ChMaskCntl=" << (int)chmaskcntl);
     DEBUG_PRINTLN("  NbRep=" << (int)nbRep);
 
-    // Construir respuesta
+    //  Construct response
     uint8_t status = 0b111; // Bits: Channel mask OK, Data rate OK, Power OK
 
-    // Verificar validez del data rate según la región
-    int maxDR = 5; // Por defecto para la mayoría de regiones
+    // Check validity of data rate according to region
+    int maxDR = 5; // Default for most regions
     switch (lora_region)
     {
     case REGION_US915:
@@ -2107,19 +2226,19 @@ void LoRaWAN::processLinkADRReq(const std::vector<uint8_t> &cmd, size_t index, s
         break;
     case REGION_EU868:
     case REGION_EU433:
-        maxDR = 7; // DR0-7 para EU868 (SF12-SF7 + modulation variants)
+        maxDR = 7; // Default for EU868 (SF12-SF7 + modulation variants)
         break;
-        // Otras regiones según sea necesario
+        // Other regions as needed
     }
 
     if (dr > maxDR)
     {
-        status &= ~0x04; // DR no aceptado
-        DEBUG_PRINTLN("DR " << static_cast<int>(dr) << " no válido para esta región, max=" << maxDR);
+        status &= ~0x04; // DR not accepted
+        DEBUG_PRINTLN("DR " << static_cast<int>(dr) << " not valid for this region, max=" << maxDR);
     }
 
-    // Verificar validez de la potencia según la región
-    int maxPower = 7; // Valor por defecto para EU868
+    // Check validity of power according to region
+    int maxPower = 7; // Default value for EU868
     switch (lora_region)
     {
     case REGION_US915:
@@ -2127,119 +2246,119 @@ void LoRaWAN::processLinkADRReq(const std::vector<uint8_t> &cmd, size_t index, s
         break;
     case REGION_EU868:
         if (txpower > 7)
-        {                    // Solo 0-7 son válidos para EU868
-            status &= ~0x02; // Power no aceptado
+        {                    // Only 0-7 are valid for EU868
+            status &= ~0x02; // Power not accepted
             DEBUG_PRINTLN("TXPower " << static_cast<int>(txpower)
-                                     << " no válido para EU868, debe ser 0-7");
+                                     << " not valid for EU868, must be 0-7");
         }
         else
         {
-            // Convertir el índice a dBm según la especificación LoRaWAN
-            int power_dbm = 14 - (2 * txpower); // 14dBm es la potencia máxima
+            // Convert index to dBm according to LoRaWAN specification
+            int power_dbm = 14 - (2 * txpower); // 14dBm is the maximum power
             DEBUG_PRINTLN("TXPower " << static_cast<int>(txpower)
-                                     << " corresponde a " << power_dbm << "dBm");
+                                     << " corresponds to " << power_dbm << "dBm");
         }
         break;
-        // Otras regiones según sea necesario
+        // Other regions as needed
     }
 
     if (txpower > maxPower)
     {
-        status &= ~0x02; // Power no aceptado
-        DEBUG_PRINTLN("TXPower " << static_cast<int>(txpower) << " no válido para esta región, max=" << maxPower);
+        status &= ~0x02; // Power not accepted
+        DEBUG_PRINTLN("TXPower " << static_cast<int>(txpower) << " not valid for this region, max=" << maxPower);
     }
 
-    // Verificar validez de la máscara de canales según la región
+    // Check validity of the channel mask according to the region
     bool validChannelMask = false;
 
-    // Verificar según ChMaskCntl y región
+    // Check according to ChMaskCntl and region
     switch (lora_region)
     {
     case REGION_EU868:
-        // Para EU868 normalmente tenemos 8 canales, ChMaskCntl 0-5
+        // For EU868 we normally have 8 channels, ChMaskCntl 0-5
         if (chmaskcntl > 5)
-        {                    // En EU868, solo 0-5 son válidos
+        {                    // Only 0-5 are valid in EU868
             status &= ~0x01; // Bit 0 = Channel mask ACK
-            DEBUG_PRINTLN("ChMaskCntl " << (int)chmaskcntl << " no válido para EU868");
-            DEBUG_PRINTLN("Máscara de canales no válida: ChMaskCntl=" << (int)chmaskcntl << ", ChMask=0x" << std::hex << chmask << std::dec);
+            DEBUG_PRINTLN("ChMaskCntl " << (int)chmaskcntl << " not valid for EU868");
+            DEBUG_PRINTLN("Invalid channel mask: ChMaskCntl=" << (int)chmaskcntl << ", ChMask=0x" << std::hex << chmask << std::dec);
         }
         else
         {
-            // Interpretar ChMaskCntl según especificación EU868
+            // Interpret ChMaskCntl according to EU868 specification
             switch (chmaskcntl)
             {
-            case 0: // Aplica directamente ChMask
+            case 0: // Applies ChMask directly
                 validChannelMask = true;
                 break;
-            case 1: // Todos los canales ON
+            case 1: // All channels ON
                 chmask = 0xFFFF;
                 validChannelMask = true;
                 break;
-            case 2: // Todos los canales OFF
+            case 2: // All channels OFF
                 chmask = 0x0000;
                 validChannelMask = true;
                 break;
-            case 3: // Channel 16 ON, otros según ChMask
+            case 3: // Channel 16 ON, others according to ChMask
                 chmask |= (1 << 15);
                 validChannelMask = true;
                 break;
-            case 4: // Channel 16 OFF, otros según ChMask
+            case 4: // Channel 16 OFF, others according to ChMask
                 chmask &= ~(1 << 15);
                 validChannelMask = true;
                 break;
             case 5: // RFU (Reserved for Future Use)
                 status &= ~0x01;
                 validChannelMask = false;
-                DEBUG_PRINTLN("ChMaskCntl 5 reservado para uso futuro");
+                DEBUG_PRINTLN("ChMaskCntl 5 reserved for future use");
                 break;
             }
         }
         break;
 
     case REGION_US915:
-        // US915 tiene un manejo especial con 72 canales
+        // US915 has special handling with 72 channels
         if (chmaskcntl <= 7)
         {
             validChannelMask = true;
 
-            // Verificar reglas específicas para US915
+            // Verify specific rules for US915
             if (chmaskcntl == 7 && chmask == 0)
             {
                 validChannelMask = false;
-                DEBUG_PRINTLN("Canal inválido para US915 con ChMaskCntl=7");
+                DEBUG_PRINTLN("Invalid channel for US915 with ChMaskCntl=7");
             }
         }
         break;
 
-        // Otras regiones según sea necesario
+        // Other regions as needed
     }
 
     if (!validChannelMask)
     {
-        status &= ~0x01; // Channel mask no aceptada
-        DEBUG_PRINTLN("Máscara de canales no válida: ChMaskCntl=" << static_cast<int>(chmaskcntl) << ", ChMask=0x" << std::hex << chmask << std::dec);
+        status &= ~0x01; // Channel mask not accepted
+        DEBUG_PRINTLN("Invalid channel mask: ChMaskCntl=" << static_cast<int>(chmaskcntl) << ", ChMask=0x" << std::hex << chmask << std::dec);
     }
 
-    // Si todo está bien, aplicar los cambios
+    // If everything is okay, apply the changes
     if (status == 0b111)
     {
-        // Aplicar Data Rate (mapear DR a SF según la región)
+        // Apply Data Rate (map DR to SF according to the region)
         int sf;
-        float bw = 125.0; // Por defecto
+        float bw = 125.0; // Default value
 
-        // Mapeo específico por región
+        // Map specific to the region
         switch (lora_region)
         {
         case REGION_EU868:
-            // Para EU868: DR0=SF12/125kHz, DR1=SF11/125kHz, ..., DR6=SF7/250kHz
+            // For EU868: DR0=SF12/125kHz, DR1=SF11/125kHz, ..., DR6=SF7/250kHz
             if (dr > 7)
-            {                    // DR0-DR7 son válidos
-                status &= ~0x04; // DR no válido
-                DEBUG_PRINTLN("DR " << (int)dr << " no válido para EU868, max=7");
+            {                    // DR0-DR7 are valid
+                status &= ~0x04; // Invalid DR
+                DEBUG_PRINTLN("DR " << (int)dr << " is not valid for EU868, max=7");
             }
             else
             {
-                // Mapeo correcto de DR a SF/BW para EU868
+                // Correct mapping of DR to SF/BW for EU868
                 if (dr < 6)
                 {
                     sf = 12 - dr;
@@ -2260,7 +2379,7 @@ void LoRaWAN::processLinkADRReq(const std::vector<uint8_t> &cmd, size_t index, s
             break;
 
         case REGION_US915:
-            // Para US915: DR0=SF10/125kHz, DR1=SF9/125kHz, ..., DR3=SF7/125kHz, DR4=SF8/500kHz
+            // For US915: DR0=SF10/125kHz, DR1=SF9/125kHz, ..., DR3=SF7/125kHz, DR4=SF8/500kHz
             if (dr <= 3)
             {
                 sf = 10 - dr;
@@ -2274,12 +2393,12 @@ void LoRaWAN::processLinkADRReq(const std::vector<uint8_t> &cmd, size_t index, s
             break;
 
         default:
-            // Mapeo genérico si no hay implementación específica
+            // Generic mapping if no specific implementation exists
             sf = dr <= 6 ? (12 - dr) : 7;
             bw = dr == 6 ? 250.0 : 125.0;
         }
 
-        // Aplicar potencia TX según la región
+        // Apply TX power according to the region
         int power;
         switch (lora_region)
         {
@@ -2294,11 +2413,11 @@ void LoRaWAN::processLinkADRReq(const std::vector<uint8_t> &cmd, size_t index, s
             break;
 
         default:
-            // Mapeo genérico
+            // Generic mapping if no specific implementation exists
             power = MAX_POWER[lora_region] - (txpower * 2);
         }
 
-        // Limitar a valores seguros
+        // Limit to safe values
         if (sf < 7)
             sf = 7;
         if (sf > 12)
@@ -2308,31 +2427,31 @@ void LoRaWAN::processLinkADRReq(const std::vector<uint8_t> &cmd, size_t index, s
         if (power > MAX_POWER[lora_region])
             power = MAX_POWER[lora_region];
 
-        DEBUG_PRINTLN("Actualizando parámetros radio:");
+        DEBUG_PRINTLN("Updating radio parameters:");
         DEBUG_PRINTLN("  SF: " << sf);
         DEBUG_PRINTLN("  BW: " << bw << "kHz");
         DEBUG_PRINTLN("  Power: " << (MAX_POWER[lora_region] - 2 * txpower) << "dBm");
 
-        // Aplicar configuración al radio
+        // Apply configuration to the radio
         pimpl->rfm->setSpreadingFactor(sf);
         current_sf = sf;
         pimpl->rfm->setBandwidth(bw);
         current_bw = bw;
         pimpl->rfm->setTxPower(power, true);
         pimpl->txPower = power;
-        updateDataRateFromSF(); // Actualizar DR desde SF
+        updateDataRateFromSF(); // Update DR from SF
 
-        // Aplicar máscara de canales si es válida
+        // Apply channel mask if valid
         if (validChannelMask)
         {
-            // Para EU868 con ChMaskCntl=0, aplicar directamente
+            // For EU868 with ChMaskCntl=0, apply directly the ChMask
             if (lora_region == REGION_EU868 && chmaskcntl == 0)
             {
                 for (int i = 0; i < 16; i++)
                 {
                     if (i < 8)
-                    { // Solo tenemos 8 canales en EU868
-                        // Si el bit está activado, habilitamos el canal
+                    { // We only have 8 channels in EU868
+                        // If the bit is enabled, activate the channel
                         bool enabled = (chmask & (1 << i)) != 0;
                         if (enabled)
                         {
@@ -2340,33 +2459,33 @@ void LoRaWAN::processLinkADRReq(const std::vector<uint8_t> &cmd, size_t index, s
                         }
                         else
                         {
-                            channelFrequencies[i] = 0; // Desactivar canal
+                            channelFrequencies[i] = 0; // Disable channel
                         }
                     }
                 }
             }
 
-            // Para otras combinaciones de región/ChMaskCntl, implementar según necesidad
+            // For other region/ChMaskCntl combinations, implement as needed
         }
 
-        DEBUG_PRINTLN("Status final del comando ADR: " << std::bitset<3>(status).to_string());
+        DEBUG_PRINTLN("Final status of ADR command: " << std::bitset<3>(status).to_string());
 
-        // Aplicar número de repeticiones (nbRep)
+        // Apply the number of repetitions (nbRep)
         if (nbRep > 0)
         {
-            // Almacenar para uso en transmisiones
+            // Store for use in transmissions
             current_nbRep = nbRep;
-            DEBUG_PRINTLN("Número de repeticiones ajustado a " << (int)nbRep);
+            DEBUG_PRINTLN("Number of repetitions set to " << (int)nbRep);
         }
 
-        // Resetear contador ADR ya que recibimos y aplicamos una respuesta
+        // Reset ADR counter since we received and applied a response
         adrAckCounter = 0;
 
-        DEBUG_PRINTLN("ADR params aplicados: SF=" << sf << ", BW=" << bw << "kHz, TXPower=" << power << "dBm, NbRep=" << static_cast<int>(nbRep));
+        DEBUG_PRINTLN("ADR params applied: SF=" << sf << ", BW=" << bw << "kHz, TXPower=" << power << "dBm, NbRep=" << static_cast<int>(nbRep));
     }
     else
     {
-        DEBUG_PRINTLN("ADR params rechazados, status=" << std::bitset<3>(status));
+        DEBUG_PRINTLN("ADR params rejected, status=" << std::bitset<3>(status));
     }
 
     // Añadir respuesta
@@ -2379,90 +2498,90 @@ void LoRaWAN::sendADRStatistics()
     if (!pendingMACResponses.empty() || !joined)
         return;
 
-    // Enviar información sobre condiciones de señal para ayudar al ADR
+    // Send information about signal conditions to assist ADR
     std::vector<uint8_t> data;
 
-    // Recolectar datos estadísticos
+    // Collect statistical data
     float avgSnr = pimpl->rfm->getSNR();
     int avgRssi = pimpl->rfm->getRSSI();
 
-    // Paquete personalizado con estadísticas (puerto 2)
-    data.push_back(0x01); // Tipo de mensaje estadístico
+    // Custom packet with statistics (port 2)
+    data.push_back(0x01); // Type of statistical message
 
-    // Añadir SNR promedio (en un formato personalizado)
-    int snrValue = static_cast<int>(avgSnr * 4); // *4 para precisión de 0.25 dB
+    // Add average SNR (in a custom format)
+    int snrValue = static_cast<int>(avgSnr * 4); // *4 for precision of 0.25 dB
     data.push_back(snrValue & 0xFF);
 
-    // Añadir RSSI promedio
+    // Add average RSSI (in dBm)
     data.push_back(static_cast<uint8_t>(avgRssi & 0xFF));
 
-    // Enviar estadísticas
+    // Send statistics as unconfirmed data
     send(data, 2, false);
 
-    DEBUG_PRINTLN("Enviadas estadísticas ADR: SNR=" << avgSnr << "dB, RSSI=" << avgRssi << "dBm");
+    DEBUG_PRINTLN("Sent ADR statistics: SNR=" << avgSnr << "dB, RSSI=" << avgRssi << "dBm");
 }
 
-// Actualizar parámetros TX cuando se excede el ADR_ACK_DELAY sin respuesta
+// Update TX parameters when ADR_ACK_DELAY is exceeded without response
 void LoRaWAN::updateTxParamsForADR()
 {
-    // Obtener SF actual
+    // Get current SF and power
     int currentSF = pimpl->rfm->getSpreadingFactor();
 
-    // Incrementar SF (reducir DR) para mejorar alcance
+    // Increment SF (reduce DR) to improve range
     if (currentSF < 12)
     {
         currentSF++;
         pimpl->rfm->setSpreadingFactor(currentSF);
         current_sf = currentSF;
-        DEBUG_PRINTLN("ADR: Aumentando SF a " << currentSF << " debido a falta de respuesta");
+        DEBUG_PRINTLN("ADR: Increasing SF to " << currentSF << " due to lack of response");
     }
 
-    // También podríamos aumentar la potencia TX si fuera necesario
-    int currentPower = pimpl->rfm->getTxPower();
-    if (currentPower < 14)
+    // We could also increase TX power if needed
+    if (current_power < 14)
     {
-        pimpl->rfm->setTxPower(currentPower + 2, true);
-        current_power = currentPower + 2;
-        DEBUG_PRINTLN("ADR: Aumentando potencia TX a " << (currentPower + 2) << " dBm");
+        current_power += 2;
+        pimpl->rfm->setTxPower(current_power, true);
+        DEBUG_PRINTLN("ADR: Increasing TX power to " << current_power << " dBm");
     }
 
-    // Resetear el contador para dar tiempo a la nueva configuración
+    // Reset the counter to allow time for the new configuration
     adrAckCounter = ADR_ACK_LIMIT;
 }
 
-// Método para configurar ventanas de recepción después de una transmisión
 void LoRaWAN::setupRxWindows()
 {
-    // Registrar el momento en que terminó la transmisión
+    // Record the time when transmission finished
     pimpl->txEndTime = std::chrono::steady_clock::now();
 
-    // Preparar para ventana RX1
+    // Prepare for RX1 window
     pimpl->rxState = RX_WAIT_1;
-    DEBUG_PRINTLN("Esperando ventana RX1 (se abrirá en " << RECEIVE_DELAY1 << " ms)");
+    DEBUG_PRINTLN("Waiting for RX1 window (opening in " << RECEIVE_DELAY1 << " ms)");
 }
 
-// Método auxiliar para abrir la ventana RX1 (modificado para usar rx1DrOffset)
+/**
+ * Open the RX1 window (modified to use rx1DrOffset)
+ */
 void LoRaWAN::openRX1Window()
 {
-    DEBUG_PRINTLN("Abriendo ventana RX1 en frecuencia " << channelFrequencies[current_channel] << " MHz");
+    DEBUG_PRINTLN("Opening RX1 window on frequency " << channelFrequencies[current_channel] << " MHz");
 
-    // Configurar radio para RX1: misma frecuencia, ajustar SF según rx1DrOffset
+    // Configure radio for RX1: same frequency, adjust SF based on rx1DrOffset
     pimpl->rfm->standbyMode();
     pimpl->rfm->setFrequency(channelFrequencies[current_channel]);
 
-    // Calcular SF para RX1 basado en el offset
+    // Calculate SF for RX1 based on the offset
     int rx1_sf = current_sf;
 
-    // Aplicar el offset de RX1 según la región
+    // Apply the RX1 offset based on region
     int rx1_dr = 0;
     switch (lora_region)
     {
     case REGION_EU868:
-        // Para EU868, el DR del downlink = uplink_dr - rx1_dr_offset
-        // (limitado al rango válido de DR)
+        // For EU868, downlink DR = uplink_dr - rx1_dr_offset
+        // (limited to the valid DR range)
         rx1_dr = std::max(0, std::min(7, current_dr - rx1DrOffset));
 
-        // Convertir DR a SF
+        // Convert DR to SF
         if (rx1_dr < 6)
         {
             rx1_sf = 12 - rx1_dr;
@@ -2478,49 +2597,50 @@ void LoRaWAN::openRX1Window()
         break;
 
     case REGION_US915:
-        // Para US915, aplicar regla específica
-        // ... implementación para US915 ...
+        // For US915, apply specific rule
+        // ... implementation for US915 ...
         break;
 
-        // Otras regiones según sea necesario
+        // Other regions as needed
 
     default:
-        // Implementación genérica si no hay regla específica
+        // Generic implementation if no specific rule
         rx1_sf = current_sf;
         break;
     }
 
-    // Aplicar configuración RX1
+    // Apply RX1 configuration
     pimpl->rfm->setSpreadingFactor(rx1_sf);
     pimpl->rfm->setBandwidth(current_bw);
     pimpl->rfm->setCodingRate(current_cr);
     pimpl->rfm->setPreambleLength(current_preamble);
-    pimpl->rfm->setInvertIQ(true); // Siempre IQ invertido para downlink
+    pimpl->rfm->setInvertIQ(true); // Always invert IQ for downlink
     pimpl->rfm->setContinuousReceive();
 
-    // Actualizar estado
+    // Update state
     pimpl->rxState = RX_WINDOW_1;
     pimpl->rxWindowStart = std::chrono::steady_clock::now();
 
-    DEBUG_PRINTLN("Ventana RX1 abierta (SF" << rx1_sf << ", "
-                                            << channelFrequencies[current_channel] << " MHz Timestamp: "
-                                            << std::chrono::duration_cast<std::chrono::milliseconds>(pimpl->rxWindowStart.time_since_epoch()).count() << ");");
+    DEBUG_PRINTLN("RX1 window opened (SF" << rx1_sf << ", "
+                                          << channelFrequencies[current_channel] << " MHz)");
 }
 
-// Método auxiliar para abrir la ventana RX2 (usando rx2DataRate personalizado si está configurado)
+/**
+ * Open the RX2 window (using custom rx2DataRate if configured)
+ */
 void LoRaWAN::openRX2Window()
 {
-    DEBUG_PRINTLN("Abriendo ventana RX2 en frecuencia " << RX2_FREQ[lora_region] << " MHz");
+    DEBUG_PRINTLN("Opening RX2 window on frequency " << RX2_FREQ[lora_region] << " MHz");
 
-    // Configurar radio para RX2: frecuencia y SF determinados por rx2DataRate si está configurado
+    // Configure radio for RX2: frequency and SF determined by rx2DataRate if configured
     pimpl->rfm->standbyMode();
     pimpl->rfm->setFrequency(RX2_FREQ[lora_region]);
 
-    // Determinar SF para RX2 basado en rx2DataRate (si se configuró mediante RX_PARAM_SETUP_REQ)
-    int rx2_sf = RX2_SF[lora_region];   // Valor por defecto de la región
-    float rx2_bw = RX2_BW[lora_region]; // Valor por defecto de la región
+    // Determine SF for RX2 based on rx2DataRate (if configured via RX_PARAM_SETUP_REQ)
+    int rx2_sf = RX2_SF[lora_region];   // Default value for the region
+    float rx2_bw = RX2_BW[lora_region]; // Default value for the region
 
-    // Si rx2DataRate fue configurado mediante comando MAC, usarlo
+    // If rx2DataRate was configured via MAC command, use it
     if (rx2DataRate > 0)
     {
         switch (lora_region)
@@ -2544,33 +2664,33 @@ void LoRaWAN::openRX2Window()
             break;
 
         case REGION_US915:
-            // Implementación específica para US915
-            // ... código para US915 ...
+            // Specific implementation for US915
+            // ... code for US915 ...
             break;
 
-            // Otras regiones según sea necesario
+            // Other regions as needed
         }
     }
 
-    // Aplicar configuración RX2
+    // Apply RX2 configuration
     pimpl->rfm->setSpreadingFactor(rx2_sf);
     pimpl->rfm->setBandwidth(rx2_bw);
     pimpl->rfm->setCodingRate(RX2_CR[lora_region]);
     pimpl->rfm->setPreambleLength(RX2_PREAMBLE[lora_region]);
-    pimpl->rfm->setInvertIQ(true); // Siempre IQ invertido para downlink
+    pimpl->rfm->setInvertIQ(true); // Always invert IQ for downlink
     pimpl->rfm->setContinuousReceive();
 
-    // Actualizar estado
+    // Update state
     pimpl->rxState = RX_WINDOW_2;
     pimpl->rxWindowStart = std::chrono::steady_clock::now();
 
-    DEBUG_PRINTLN("Ventana RX2 abierta (SF" << rx2_sf << ", "
-                                            << RX2_FREQ[lora_region] << " MHz)");
+    DEBUG_PRINTLN("RX2 window opened (SF" << rx2_sf << ", "
+                                          << RX2_FREQ[lora_region] << " MHz)");
 }
 
 // Método para actualizar el estado de las ventanas de recepción
 void LoRaWAN::updateRxWindows() {
-    // Si no estamos unidos o no estamos esperando/en una ventana RX, no hacer nada
+    // If we're not joined or not waiting/in an RX window, do nothing
     if (!joined || pimpl->rxState == RX_IDLE) {
         return;
     }
@@ -2579,90 +2699,90 @@ void LoRaWAN::updateRxWindows() {
     auto elapsedSinceTx = std::chrono::duration_cast<std::chrono::milliseconds>(
                               now - pimpl->txEndTime).count();
 
-    // Procesar según el estado actual
+    // Process according to current state
     switch (pimpl->rxState) {
         case RX_WAIT_1:
             // Comprobar si es hora de abrir la ventana RX1
             if (elapsedSinceTx >= RECEIVE_DELAY1) {
-                DEBUG_PRINTLN("Abriendo ventana RX1 en frecuencia " << channelFrequencies[current_channel] << " MHz tras " << elapsedSinceTx << " ms (deberían ser " << RECEIVE_DELAY1 << " ms)");
+                DEBUG_PRINTLN("Opening RX1 window on frequency " << channelFrequencies[current_channel] << " MHz after " << elapsedSinceTx << " ms (should be " << RECEIVE_DELAY1 << " ms)");
 
-                // Configurar radio para RX1: misma frecuencia, ajustar SF según rx1DrOffset
+                // Configure radio for RX1: same frequency, adjust SF based on rx1DrOffset
                 pimpl->rfm->standbyMode();
                 pimpl->rfm->setFrequency(channelFrequencies[current_channel]);
                 
-                // Calcular SF para RX1 basado en el offset
+                // Calculate SF for RX1 based on the offset
                 int rx1_sf = current_sf;
                 if (rx1DrOffset > 0) {
-                    rx1_sf = std::min(rx1_sf + rx1DrOffset, 12); // Ajustar SF según offset
+                    rx1_sf = std::min(rx1_sf + rx1DrOffset, 12); // Adjust SF based on offset
                 }
                 
                 pimpl->rfm->setSpreadingFactor(rx1_sf);
                 pimpl->rfm->setBandwidth(current_bw);
                 pimpl->rfm->setCodingRate(current_cr);
                 pimpl->rfm->setPreambleLength(current_preamble);
-                pimpl->rfm->setInvertIQ(true);  // Siempre IQ invertido para downlink
+                pimpl->rfm->setInvertIQ(true);  // Always invert IQ for downlink
                 pimpl->rfm->setContinuousReceive();
                 
-                // Actualizar estado
+                // Update state
                 pimpl->rxState = RX_WINDOW_1;
                 pimpl->rxWindowStart = now;
                 
-                DEBUG_PRINTLN("Ventana RX1 abierta (SF" << rx1_sf << ", " 
+                DEBUG_PRINTLN("RX1 window opened (SF" << rx1_sf << ", " 
                              << channelFrequencies[current_channel] << " MHz Timestamp: "
                              << std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count() << ");");
             }
             break;
             
         case RX_WINDOW_1:
-            // Comprobar si la ventana RX1 ha expirado
+            // Check if RX1 window has expired
             if (std::chrono::duration_cast<std::chrono::milliseconds>(
                 now - pimpl->rxWindowStart).count() >= WINDOW_DURATION) {
                 
-                // Si no se recibió nada en RX1, preparar para RX2
+                // If nothing was received in RX1, prepare for RX2
                 if (elapsedSinceTx < RECEIVE_DELAY2) {
                     pimpl->rxState = RX_WAIT_2;
-                    DEBUG_PRINTLN("Ventana RX1 cerrada, esperando ventana RX2 Timestamp: "
+                    DEBUG_PRINTLN("RX1 window closed, waiting for RX2 window Timestamp: "
                                  << std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count());
                 } else {
-                    // Si ya pasó el tiempo para RX2, abrir directamente
+                    // If RX2 time has passed, open directly
                     openRX2Window();
                 }
             }
             break;
             
         case RX_WAIT_2:
-            // Comprobar si es hora de abrir la ventana RX2
+            // Check if it's time to open the RX2 window
             if (elapsedSinceTx >= RECEIVE_DELAY2) {
-                DEBUG_PRINTLN("Abriendo ventana RX2 después de " << elapsedSinceTx << " ms (debería ser " << RECEIVE_DELAY2 << " ms)");
+                DEBUG_PRINTLN("Opening RX2 window after " << elapsedSinceTx << " ms (should be " << RECEIVE_DELAY2 << " ms)");
                 openRX2Window();
             }
             break;
             
         case RX_WINDOW_2:
-            // Comprobar si la ventana RX2 ha expirado
+            // Check if RX2 window has expired
             if (std::chrono::duration_cast<std::chrono::milliseconds>(
                 now - pimpl->rxWindowStart).count() >= WINDOW_DURATION) {
                 
-                // Ventana RX2 cerrada, volver a modo adecuado según la clase
+                // RX2 window closed, revert to appropriate mode based on the class
                 if (currentClass == DeviceClass::CLASS_C) {
-                    // Para Clase C, mantener recepción continua en RX2
+                    // For Class C, maintain continuous reception on RX2
                     pimpl->rxState = RX_CONTINUOUS;
-                    DEBUG_PRINTLN("Ventana RX2 cerrada, volviendo a recepción continua (Clase C) Timestamp: "
+                    DEBUG_PRINTLN("RX2 window closed, returning to continuous reception (Class C) Timestamp: "
                                  << std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count());
                     
-                    // No cambiar configuración, ya estamos en RX2
+                    // No configuration changes, we are already in RX2
                 } else {
-                    // Para Clase A, volver a standby hasta próxima TX
+                    // For Class A, revert to standby until next TX
                     pimpl->rfm->standbyMode();
                     pimpl->rxState = RX_IDLE;
-                    DEBUG_PRINTLN("Ventana RX2 cerrada, modo standby hasta próxima TX (Clase A) Timestamp: "
+                    DEBUG_PRINTLN("RX2 window closed, standby mode until next TX (Class A) Timestamp: "
                                  << std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count());
                 }
             }
             break;
             
         case RX_CONTINUOUS:
-            // Para Clase C, asegurarse de que estamos en modo RX continuo con config RX2
+            // For Class C, ensure we are in continuous RX mode with RX2 config
             break;
             
         default:
@@ -2670,51 +2790,51 @@ void LoRaWAN::updateRxWindows() {
     }
 }
 
-// Método para gestionar las confirmaciones
+// MMethod to handle confirmations
 void LoRaWAN::handleConfirmation()
 {
-    // Si no estamos esperando ACK, no hacer nada
+    // If we're not waiting for ACK, do nothing
     if (confirmState != ConfirmationState::WAITING_ACK)
     {
         return;
     }
 
-    // Comprobar si ha pasado tiempo suficiente para reintentar
+    // Check if enough time has passed to retry
     auto now = std::chrono::steady_clock::now();
     auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - lastConfirmAttempt).count();
 
-    // Reintentar cada 5 segundos
+    // Retry every 5 seconds
     if (elapsed >= 5 && confirmRetries < MAX_RETRIES)
     {
-        DEBUG_PRINTLN("No se ha recibido ACK, reintentando envío confirmado: "
+        DEBUG_PRINTLN("No ACK received, retrying confirmed send: "
                       << (confirmRetries + 1) << "/" << MAX_RETRIES);
 
-        // Antes de reenviar, temporalmente cambiar el estado para permitir el nuevo envío
+        // Before resending, temporarily change the state to allow the new send
         ConfirmationState oldState = confirmState;
         confirmState = ConfirmationState::NONE;
 
-        // Guardar una copia local de pendingAck y ackPort
+        // Save a local copy of pendingAck and ackPort
         std::vector<uint8_t> localPendingAck = pendingAck;
         uint8_t localAckPort = ackPort;
 
-        // Reenviar el mismo mensaje que está pendiente
+        // Resend the same message that is pending
         bool result = send(localPendingAck, localAckPort, true);
 
         if (!result)
         {
-            DEBUG_PRINTLN("Error al reenviar mensaje confirmado");
-            // Si falló el envío, restaurar el estado anterior para intentar más tarde
+            DEBUG_PRINTLN("Error resending confirmed message");
+            // If the send failed, restore the previous state to try again later
             confirmState = oldState;
         }
-        // No necesitamos restaurar el estado si el envío fue exitoso,
-        // porque send() ya configuró el estado correctamente
+        // No need to restore the state if the send was successful,
+        // because send() already set the state correctly
     }
     else if (confirmRetries >= MAX_RETRIES)
     {
-        DEBUG_PRINTLN("Se alcanzó el número máximo de reintentos (" << MAX_RETRIES
-                                                                    << "). Mensaje no confirmado.");
+        DEBUG_PRINTLN("Maximum number of retries reached (" << MAX_RETRIES
+                                                            << "). Message not confirmed.");
 
-        // Resetear el estado de confirmación
+        // Reset the confirmation state
         resetConfirmationState();
     }
 }
@@ -2727,23 +2847,23 @@ void LoRaWAN::sendAck()
         return;
     }
 
-    DEBUG_PRINTLN("Enviando ACK para mensaje confirmado");
+    DEBUG_PRINTLN("Sending ACK for confirmed message");
 
-    // Crear un mensaje vacío para ACK
+    // Create an empty message for ACK
     std::vector<uint8_t> emptyPayload;
 
-    // Guardar estado antiguo para verificación
+    // Save old state for verification
     ConfirmationState oldState = confirmState;
 
-    // Temporal: forzar envío sin confirmación y con ACK
+    // Temporarily: force send without confirmation and with ACK
     confirmState = ConfirmationState::ACK_PENDING;
 
-    // Enviar como mensaje no confirmado (el ACK va implícito en el bit ACK del MHDR)
+    // Send as unconfirmed message (the ACK is implicit in the ACK bit of MHDR)
     bool result = send(emptyPayload, 0, false, true);
 
-    DEBUG_PRINTLN("Resultado de envío ACK: " << (result ? "ÉXITO" : "FALLO"));
+    DEBUG_PRINTLN("ACK send result: " << (result ? "SUCCESS" : "FAIL"));
 
-    // Resetear el estado de confirmación
+    // Reset the confirmation state
     resetConfirmationState();
 
     confirmState = oldState;
@@ -2752,92 +2872,93 @@ void LoRaWAN::sendAck()
 // Método para resetear el estado de confirmación
 void LoRaWAN::resetConfirmationState()
 {
-    DEBUG_PRINTLN("Reseteando estado de confirmación");
+    DEBUG_PRINTLN("Resetting confirmation state");
     confirmState = ConfirmationState::NONE;
     confirmRetries = 0;
     pendingAck.clear();
     ackPort = 0;
     needsAck = false;
-    // No resetear lastFcntDown, eso nos ayuda a rastrear respuestas del servidor
+    // Do not reset lastFcntDown, it helps us track server responses
 }
 
-// Método para manejar una recepción correcta
+// MMethod to handle a correct reception
 void LoRaWAN::handleReceivedMessage(const std::vector<uint8_t> &payload, Message &msg)
 {
-    // Verificar MHDR para saber tipo de mensaje
+    // Verify MHDR to know message type
     uint8_t mhdr = payload[0];
 
-    // Join Accept (0x20) - procesar diferente
+    // Join Accept (0x20) - process differently
     if ((mhdr & 0xE0) == 0x20)
     {
-        DEBUG_PRINTLN("Recibido mensaje JOIN ACCEPT");
+        DEBUG_PRINTLN("Received JOIN ACCEPT message");
         if (processJoinAccept(payload))
         {
-            // Join exitoso, no hay mensaje para devolver al usuario
+            // Successful join, no message to return to user
             msg.payload.clear();
             msg.port = 0;
             msg.confirmed = false;
             return;
         }
-        // Si falló el procesamiento, retornar mensaje vacío
+        // If processing failed, return empty message
         msg.payload.clear();
         return;
     }
 
-    // A partir de aquí es un mensaje de datos normal (uplink/downlink)
+    // From here on is a normal data message (uplink/downlink)
 
-    // Extraer contador de downlink
+    // Extract downlink counter (FCnt) from payload
     uint16_t fcnt = payload[6] | (payload[7] << 8);
 
-    // Verificar si es confirmado y si tiene bit ACK
+    // Verify if confirmed and check ACK bit
     bool needsAck = ((mhdr & 0xE0) == 0xA0); // 0xA0 = Confirmed Data Down
-    bool isAck = (mhdr & 0x20);              // Bit ACK activado
+    bool isAck = (mhdr & 0x20);              // ACK bit activated
 
-    // Extraer FPort
+    // Extract FPort
     msg.port = (payload.size() > 8) ? payload[8] : 0;
     msg.confirmed = ((mhdr & 0xE0) == 0xA0);
 
-    // Resetear contador ADR al recibir cualquier downlink
+    // Reset ADR counter upon receiving any downlink
     if (adrEnabled)
     {
         adrAckCounter = 0;
-        DEBUG_PRINTLN("ADR: Resetear contador por recepción de downlink");
+        DEBUG_PRINTLN("ADR: Resetting counter due to downlink reception");
     }
 
-    // Si tenemos un mensaje que necesita ACK, marcarlo
+    // If we have a message that needs ACK, mark it as pending
     if (needsAck)
     {
         confirmState = ConfirmationState::ACK_PENDING;
-        DEBUG_PRINTLN("Mensaje confirmado recibido, ACK pendiente");
+        DEBUG_PRINTLN("Confirmed message received, ACK pending");
 
-        // Si estamos en Clase C, enviar ACK inmediatamente
-        if (currentClass == DeviceClass::CLASS_C) {
+        // If we are in Class C, send ACK immediately
+        if (currentClass == DeviceClass::CLASS_C)
+        {
             sendAck();
         }
     }
 
-    // Si recibimos un ACK para un mensaje pendiente
+    // If we receive an ACK for a pending message, reset the state
     if (isAck && confirmState == ConfirmationState::WAITING_ACK)
     {
-        DEBUG_PRINTLN("ACK recibido para mensaje confirmado");
+        DEBUG_PRINTLN("ACK received for pending confirmed message");
         resetConfirmationState();
     }
 
-    // Guardar último contador
+    // Save the last counter
     lastFcntDown = fcnt;
-    // Actualizar el contador de downlink en la implementación
+    // Update the downlink counter in the implementation
     pimpl->downlinkCounter = fcnt;
-    DEBUG_PRINTLN("FCnt extraído del downlink: " << fcnt);
+    DEBUG_PRINTLN("FCnt extracted from downlink: " << fcnt);
 
-    // Extraer y decodificar payload si existe
+    // Extract and decode payload if it exists
     if (payload.size() > 9)
     {
         std::vector<uint8_t> encrypted(payload.begin() + 9, payload.end() - 4);
         msg.payload = decryptPayload(encrypted, msg.port);
 
-        DEBUG_PRINT("Mensaje LoRaWAN descifrado: Puerto=" << (int)msg.port
-                                                          << ", Tipo=" << (msg.confirmed ? "Confirmado" : "No Confirmado")
-                                                          << ", Payload=");
+        DEBUG_PRINT("LoRaWAN message decrypted: Port=" << (int)msg.port
+                                                       << ", Type=" << (msg.confirmed ? "Confirmed" : "Unconfirmed")
+                                                       << ", Payload=");
         for (const auto &b : msg.payload)
         {
             DEBUG_PRINT(std::hex << std::setw(2) << std::setfill('0')
@@ -2846,18 +2967,18 @@ void LoRaWAN::handleReceivedMessage(const std::vector<uint8_t> &payload, Message
         DEBUG_PRINTLN(std::dec);
     }
 
-    // Si recibimos datos en el puerto 3 (LinkADR común) o puerto 0 (MAC commands)
+    // If we receive data on port 3 (common LinkADR) or port 0 (MAC commands)
     if (msg.port == 3)
     {
-        DEBUG_PRINTLN("Procesando comando LinkADR en puerto 3");
+        DEBUG_PRINTLN("Processing LinkADR command on port 3");
 
-        // Verificar que tengamos suficientes bytes para un LinkADR (mínimo 5)
+        // Verify that we have enough bytes for a LinkADR (minimum 5)
         if (msg.payload.size() >= 5)
         {
             std::vector<uint8_t> macCommands;
             macCommands.push_back(MAC_LINK_ADR_REQ);
 
-            // Solo añadir los primeros 5 bytes (lo que necesita un LinkADR)
+            // Only add the first 5 bytes (what a LinkADR needs)
             // 0x03 (CID) + DataRate_TXPower (1) + ChMask (2) + Redundancy (1) = 5 bytes
             macCommands.insert(macCommands.end(),
                                msg.payload.begin(),
@@ -2869,36 +2990,36 @@ void LoRaWAN::handleReceivedMessage(const std::vector<uint8_t> &payload, Message
             if (!macResponse.empty())
             {
                 pendingMACResponses = macResponse;
-                DEBUG_PRINTLN("Respuesta LinkADR preparada: " << std::hex << (int)macResponse[0] << " " << (int)macResponse[1] << std::dec);
+                DEBUG_PRINTLN("LinkADR response prepared: " << std::hex << (int)macResponse[0] << " " << (int)macResponse[1] << std::dec);
             }
         }
     }
 
-    // Si recibimos un mensaje confirmado, enviar ACK inmediatamente si estamos en clase C
+    // If we receive a confirmed message, send ACK immediately if we are in class C
     if (needsAck && currentClass == DeviceClass::CLASS_C)
     {
         sendAck();
     }
 
-    // Extraer FCtrl (byte 5) para verificar ACK
+    // Extract FCtrl (byte 5) to verify ACK
     uint8_t fctrl = payload[5];
     isAck = (fctrl & 0x20) != 0;  // Bit 5 = ACK
     
     DEBUG_PRINTLN("FCtrl: 0x" << std::hex << (int)fctrl << std::dec 
-                 << " (ACK=" << (isAck ? "Sí" : "No") << ")");
+                 << " (ACK=" << (isAck ? "Yes" : "No") << ")");
 
     if (isAck && confirmState == ConfirmationState::WAITING_ACK) {
-        DEBUG_PRINTLN("Recibido ACK para mensaje confirmado pendiente");
+        DEBUG_PRINTLN("ACK received for pending confirmed message");
         resetConfirmationState();
     }
 }
 
 bool LoRaWAN::processJoinAccept(const std::vector<uint8_t> &data)
 {
-    // Crear una copia no const de los datos que podemos modificar
+    // Create a non-const copy of the data that we can modify
     std::vector<uint8_t> response = data;
 
-    // Delegamos el procesamiento a la estructura Impl
+    // Delegate processing to the Impl structure
     bool result = pimpl->processJoinAccept(response);
 
     if (result)
@@ -2915,37 +3036,37 @@ bool LoRaWAN::processJoinAccept(const std::vector<uint8_t> &data)
 }
 
 /**
- * @brief Solicita al servidor información sobre la calidad del enlace.
+ * @brief Request to server info about the device link quality
  *
- * Envía un comando MAC LinkCheckReq al servidor. La respuesta llegará en un downlink
- * futuro con valores de margen y número de gateways que recibieron el último uplink.
- * La aplicación debe registrar un callback de recepción para procesar la respuesta.
- *
- * @return true si el comando se programó correctamente, false en caso contrario
+ * Sends a MAC LinkCheckReq command to the server. The response will arrive in a future downlink
+ * with the margin and number of gateways that received the last uplink. The application must
+ * register a reception callback to process the response.
+ * 
+ * @return true if the command was scheduled correctly, false otherwise
  */
 void LoRaWAN::requestLinkCheck()
 {
     if (!joined)
     {
-        DEBUG_PRINTLN("Error: No se puede solicitar LinkCheck sin estar unido a la red");
+        DEBUG_PRINTLN("Error: Cannot request LinkCheck without being joined to the network");
         return;
     }
 
-    // Programar el comando para el próximo uplink
+    // Schedule the command for the next uplink
     if (pendingMACResponses.size() < 15)
-    { // Máximo 15 bytes en FOpts
+    { // Maximum 15 bytes in FOpts
         pendingMACResponses.push_back(MAC_LINK_CHECK_REQ);
-        DEBUG_PRINTLN("LinkCheckReq programado para el próximo uplink");
+        DEBUG_PRINTLN("LinkCheckReq scheduled for next uplink");
     }
     else
     {
-        DEBUG_PRINTLN("Error: No hay espacio en FOpts para añadir LinkCheckReq");
+        DEBUG_PRINTLN("Error: No space in FOpts to add LinkCheckReq");
     }
 }
 
 void LoRaWAN::updateDataRateFromSF()
 {
-    // Para EU868
+    // For EU868
     if (lora_region == REGION_EU868)
     {
         int sf = pimpl->rfm->getSpreadingFactor();
@@ -2967,7 +3088,7 @@ void LoRaWAN::updateDataRateFromSF()
             current_dr = 6; // DR6
         }
 
-        DEBUG_PRINTLN("Data Rate actualizado: DR" << current_dr);
+        DEBUG_PRINTLN("Data Rate updated: DR" << current_dr);
     }
-    // Añadir otras regiones según sea necesario
+    // Add additional configurations for other regions as necessary
 }
