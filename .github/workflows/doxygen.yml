@@ -64,7 +64,7 @@ jobs:
           git checkout --orphan gh-pages
           git reset --hard
           git commit --allow-empty -m "Initializing gh-pages branch"
-          git push origin gh-pages
+          git push https://$GH_PAT@github.com/serper/LoRaWANCH341.git gh-pages
         fi
       env:
         GH_PAT: ${{ secrets.GH_PAT }}
