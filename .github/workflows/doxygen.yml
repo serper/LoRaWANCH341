@@ -66,6 +66,8 @@ jobs:
           git commit --allow-empty -m "Initializing gh-pages branch"
           git push origin gh-pages
         fi
+      env:
+        GH_PAT: ${{ secrets.GH_PAT }}
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
