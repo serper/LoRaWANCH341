@@ -1,0 +1,11 @@
+<map id="LinuxSPI::unexportGPIO" name="LinuxSPI::unexportGPIO">
+<area shape="rect" id="Node000001" title="Unexports a GPIO pin." alt="" coords="371,55,545,80"/>
+<area shape="rect" id="Node000002" href="$classLinuxSPI.html#a29e7826b096e43aa70db5c33ec40b1db" title="Closes the SPI device." alt="" coords="204,55,323,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="357,70,323,70,323,65,357,65"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="295,44,286,36,263,33,244,35,234,40,232,46,238,53,233,56,227,46,230,37,243,30,263,28,288,32,299,40"/>
+<area shape="rect" id="Node000003" href="$classLinuxSPI.html#a391c05e1b1a5cc3813fde2097a775a26" title="Opens the SPI device." alt="" coords="22,29,139,55"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="190,60,139,53,140,47,191,55"/>
+<area shape="rect" id="Node000004" href="$classLinuxSPI.html#a5620134541096ed3130776810a15434c" title="Destroys the LinuxSPI object." alt="" coords="5,79,156,104"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="191,80,157,84,156,79,190,74"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="113,19,103,11,81,8,62,10,52,15,49,20,55,28,51,31,44,21,48,11,60,5,81,3,106,6,116,15"/>
+</map>

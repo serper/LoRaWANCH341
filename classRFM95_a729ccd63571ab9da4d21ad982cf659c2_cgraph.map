@@ -1,0 +1,5 @@
+<map id="RFM95::getFrequency" name="RFM95::getFrequency">
+<area shape="rect" id="Node000001" title="Get current frequency in MHz." alt="" coords="5,5,168,31"/>
+<area shape="rect" id="Node000002" href="$classRFM95.html#a6415deddf04059d8fe48d208de82e327" title="Read a register value." alt="" coords="216,5,375,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,15,202,15,202,21,168,21"/>
+</map>

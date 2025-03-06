@@ -1,0 +1,5 @@
+<map id="RFM95::getPreambleLength" name="RFM95::getPreambleLength">
+<area shape="rect" id="Node000001" title="Get current preamble length." alt="" coords="5,5,208,31"/>
+<area shape="rect" id="Node000002" href="$classRFM95.html#a6415deddf04059d8fe48d208de82e327" title="Read a register value." alt="" coords="256,5,415,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="208,15,242,15,242,21,208,21"/>
+</map>

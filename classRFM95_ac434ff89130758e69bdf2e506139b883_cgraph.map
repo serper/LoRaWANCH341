@@ -1,0 +1,5 @@
+<map id="RFM95::getPayloadCRCError" name="RFM95::getPayloadCRCError">
+<area shape="rect" id="Node000001" title="Check if payload CRC error flag is set." alt="" coords="5,5,211,31"/>
+<area shape="rect" id="Node000002" href="$classRFM95.html#a6415deddf04059d8fe48d208de82e327" title="Read a register value." alt="" coords="259,5,417,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,15,245,15,245,21,211,21"/>
+</map>

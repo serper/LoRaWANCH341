@@ -1,0 +1,21 @@
+<map id="include/CH341SPI.hpp" name="include/CH341SPI.hpp">
+<area shape="rect" id="Node000001" title="Header file for the CH341SPI class, which implements the SPIInterface for the CH341 USB to SPI adapte..." alt="" coords="241,5,405,31"/>
+<area shape="rect" id="Node000002" href="$SPIInterface_8hpp.html" title=" " alt="" coords="158,79,286,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="309,33,251,73,248,68,306,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,152,68,177"/>
+<area shape="poly" id="edge8_Node000001_Node000003" title=" " alt="" coords="276,33,213,53,147,81,100,112,61,145,57,140,96,108,145,76,211,48,274,28"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="397,152,455,177"/>
+<area shape="poly" id="edge9_Node000001_Node000007" title=" " alt="" coords="327,30,335,64,352,103,372,125,395,142,392,147,369,128,348,105,330,66,322,31"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="361,79,435,104"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="337,29,378,67,374,71,333,33"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="459,79,523,104"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="351,28,452,71,450,76,349,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="193,107,80,149,79,145,191,102"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="93,152,159,177"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="208,106,154,146,151,141,205,102"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="183,152,261,177"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="225,104,225,138,219,138,219,104"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="285,152,372,177"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="241,102,301,142,298,147,238,106"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="256,102,385,146,383,151,254,107"/>
+</map>

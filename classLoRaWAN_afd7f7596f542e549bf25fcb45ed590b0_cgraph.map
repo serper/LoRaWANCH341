@@ -1,0 +1,5 @@
+<map id="LoRaWAN::checkDutyCycle" name="LoRaWAN::checkDutyCycle">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,204,31"/>
+<area shape="rect" id="Node000002" href="$classLoRaWAN.html#afa737e87fce3b27f7454e16114e51443" title=" " alt="" coords="252,5,473,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="204,15,239,15,239,21,204,21"/>
+</map>

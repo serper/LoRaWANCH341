@@ -1,0 +1,9 @@
+<map id="RFM95::setDIOMapping" name="RFM95::setDIOMapping">
+<area shape="rect" id="Node000001" title="Configure DIO pins for TX/RX indication." alt="" coords="232,55,407,80"/>
+<area shape="rect" id="Node000002" href="$classRFM95.html#a03996e8ad2ffe3289ae6dc49c333b768" title="Receive data packet." alt="" coords="33,5,156,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="247,54,153,33,154,28,248,49"/>
+<area shape="rect" id="Node000003" href="$classRFM95.html#a8beb7f2709c1d4b14dc53153ff471b0f" title="Send data packet." alt="" coords="41,55,148,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="218,70,149,70,149,65,218,65"/>
+<area shape="rect" id="Node000004" href="$classRFM95.html#abcbe314dc2c49a02686d301a25e1889d" title="Configure beacon mode with automatic periodic transmission." alt="" coords="5,104,184,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="248,86,154,107,153,101,247,80"/>
+</map>

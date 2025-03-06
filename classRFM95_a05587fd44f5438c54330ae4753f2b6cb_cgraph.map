@@ -1,0 +1,5 @@
+<map id="RFM95::checkOperatingMode" name="RFM95::checkOperatingMode">
+<area shape="rect" id="Node000001" title="Check and print current operating mode." alt="" coords="5,5,219,31"/>
+<area shape="rect" id="Node000002" href="$classRFM95.html#a6415deddf04059d8fe48d208de82e327" title="Read a register value." alt="" coords="267,5,425,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="219,15,253,15,253,21,219,21"/>
+</map>

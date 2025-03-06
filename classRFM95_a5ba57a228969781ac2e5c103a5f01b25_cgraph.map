@@ -1,0 +1,7 @@
+<map id="RFM95::stopBeaconMode" name="RFM95::stopBeaconMode">
+<area shape="rect" id="Node000001" title="Stop beacon mode." alt="" coords="5,5,192,31"/>
+<area shape="rect" id="Node000002" href="$classRFM95.html#a464b7599901d3973ae900181ada290f0" title="Set standby mode." alt="" coords="240,5,403,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,15,226,15,226,21,192,21"/>
+<area shape="rect" id="Node000003" href="$classRFM95.html#afb56059331ddf0a79b8c136da20d2ab2" title="Write a register value." alt="" coords="451,5,613,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="403,15,437,15,437,21,403,21"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="RFM95::setBandwidth" name="RFM95::setBandwidth">
+<area shape="rect" id="Node000001" title="Set bandwidth in kHz (7.8, 10.4, 15.6, 20.8, 31.25, 41.7, 62.5, 125, 250, 500)" alt="" coords="5,31,169,56"/>
+<area shape="rect" id="Node000002" href="$classRFM95.html#a6415deddf04059d8fe48d208de82e327" title="Read a register value." alt="" coords="219,5,378,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,31,205,26,206,32,170,36"/>
+<area shape="rect" id="Node000003" href="$classRFM95.html#afb56059331ddf0a79b8c136da20d2ab2" title="Write a register value." alt="" coords="217,55,380,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="170,50,204,54,204,59,169,55"/>
+</map>

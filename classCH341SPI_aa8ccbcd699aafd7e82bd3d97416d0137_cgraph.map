@@ -1,0 +1,10 @@
+<map id="CH341SPI::open" name="CH341SPI::open">
+<area shape="rect" id="Node000001" title="Opens the SPI connection." alt="" coords="5,56,131,81"/>
+<area shape="rect" id="Node000002" href="$classCH341SPI.html#a0d9b9a35f501d451d2900c9830cf0463" title="Closes the SPI connection." alt="" coords="205,5,331,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,53,203,31,205,37,120,58"/>
+<area shape="rect" id="Node000003" href="$classCH341SPI.html#aa80da461c46c50b1919aaf1261c7cff9" title="Enables or disables the pins." alt="" coords="405,31,569,56"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="131,62,392,46,392,52,131,68"/>
+<area shape="rect" id="Node000004" href="$classCH341SPI.html#a6d389ee2510c94ad255a0c2bfc51d684" title="Configures the SPI stream." alt="" coords="179,107,357,132"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="120,79,205,101,203,106,118,84"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="332,23,392,30,392,35,331,28"/>
+</map>

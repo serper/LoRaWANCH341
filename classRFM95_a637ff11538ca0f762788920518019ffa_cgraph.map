@@ -1,0 +1,15 @@
+<map id="RFM95::begin" name="RFM95::begin">
+<area shape="rect" id="Node000001" title="Initialize RFM95 module." alt="" coords="5,80,116,105"/>
+<area shape="rect" id="Node000002" href="$classRFM95.html#aa6f2d2d854c168899e286f843439419d" title="Read VERSION register (0x42) directly." alt="" coords="164,5,371,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,78,120,58,163,40,188,32,189,37,165,44,122,63,85,82"/>
+<area shape="rect" id="Node000003" href="$classRFM95.html#a25b3f3c4c5519a7d5451d45015e9f2cd" title="Set sleep mode." alt="" coords="194,55,341,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="116,83,180,75,181,81,116,89"/>
+<area shape="rect" id="Node000005" href="$classRFM95.html#afb56059331ddf0a79b8c136da20d2ab2" title="Write a register value." alt="" coords="419,105,581,131"/>
+<area shape="poly" id="edge7_Node000001_Node000005" title=" " alt="" coords="117,93,405,110,404,115,116,98"/>
+<area shape="rect" id="Node000006" href="$classRFM95.html#a464b7599901d3973ae900181ada290f0" title="Set standby mode." alt="" coords="186,156,349,181"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="90,103,165,134,210,149,208,154,163,139,88,108"/>
+<area shape="rect" id="Node000004" href="$classRFM95.html#a6415deddf04059d8fe48d208de82e327" title="Read a register value." alt="" coords="421,55,579,80"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="341,65,407,65,407,70,341,70"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="327,78,429,100,427,105,326,83"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="326,153,427,131,429,136,327,158"/>
+</map>

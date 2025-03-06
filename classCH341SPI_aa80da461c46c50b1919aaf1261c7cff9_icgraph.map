@@ -1,0 +1,10 @@
+<map id="CH341SPI::enablePins" name="CH341SPI::enablePins">
+<area shape="rect" id="Node000001" title="Enables or disables the pins." alt="" coords="395,29,559,55"/>
+<area shape="rect" id="Node000002" href="$classCH341SPI.html#a0d9b9a35f501d451d2900c9830cf0463" title="Closes the SPI connection." alt="" coords="220,55,347,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="381,57,347,62,347,56,381,52"/>
+<area shape="rect" id="Node000003" href="$classCH341SPI.html#aa8ccbcd699aafd7e82bd3d97416d0137" title="Opens the SPI connection." alt="" coords="26,5,151,31"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="381,39,152,25,152,19,381,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="219,54,139,33,141,28,220,49"/>
+<area shape="rect" id="Node000004" href="$classCH341SPI.html#afa5877a80f6c880a1258b848b947e61b" title="Destructor for CH341SPI." alt="" coords="5,55,172,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="206,70,172,70,172,65,206,65"/>
+</map>

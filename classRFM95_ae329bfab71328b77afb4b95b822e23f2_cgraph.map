@@ -1,0 +1,5 @@
+<map id="RFM95::getTxPower" name="RFM95::getTxPower">
+<area shape="rect" id="Node000001" title="Get current transmit power level." alt="" coords="5,5,157,31"/>
+<area shape="rect" id="Node000002" href="$classRFM95.html#a6415deddf04059d8fe48d208de82e327" title="Read a register value." alt="" coords="205,5,364,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="157,15,192,15,192,21,157,21"/>
+</map>

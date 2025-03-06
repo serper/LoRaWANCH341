@@ -1,0 +1,14 @@
+<map id="RFM95::receive" name="RFM95::receive">
+<area shape="rect" id="Node000001" title="Receive data packet." alt="" coords="5,57,128,82"/>
+<area shape="rect" id="Node000002" href="$classRFM95.html#a6415deddf04059d8fe48d208de82e327" title="Read a register value." alt="" coords="401,6,559,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,55,127,34,175,16,230,8,285,4,387,6,387,11,285,9,230,13,177,22,129,39,89,59"/>
+<area shape="rect" id="Node000003" href="$classRFM95.html#a2a244c31a0bc2e43401e3cc83bf72d29" title="Configure DIO pins for TX/RX indication." alt="" coords="176,32,351,57"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="128,59,162,55,163,60,129,65"/>
+<area shape="rect" id="Node000004" href="$classRFM95.html#afb56059331ddf0a79b8c136da20d2ab2" title="Write a register value." alt="" coords="399,82,561,108"/>
+<area shape="poly" id="edge7_Node000001_Node000004" title=" " alt="" coords="128,71,385,87,385,92,128,76"/>
+<area shape="rect" id="Node000005" href="$classRFM95.html#a456b5eac3fad526b08d60b41e04d661a" title="Set IQ inversion (used for LoRaWAN downlinks)" alt="" coords="190,133,337,158"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="100,80,177,111,215,126,214,131,175,116,98,85"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="351,32,387,27,387,33,351,37"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="319,55,412,77,411,82,318,60"/>
+<area shape="poly" id="edge6_Node000005_Node000004" title=" " alt="" coords="318,130,411,108,412,114,319,136"/>
+</map>

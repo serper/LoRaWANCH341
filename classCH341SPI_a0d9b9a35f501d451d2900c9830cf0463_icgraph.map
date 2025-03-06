@@ -1,0 +1,7 @@
+<map id="CH341SPI::close" name="CH341SPI::close">
+<area shape="rect" id="Node000001" title="Closes the SPI connection." alt="" coords="220,31,347,56"/>
+<area shape="rect" id="Node000002" href="$classCH341SPI.html#aa8ccbcd699aafd7e82bd3d97416d0137" title="Opens the SPI connection." alt="" coords="26,5,151,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="206,36,151,29,152,23,206,31"/>
+<area shape="rect" id="Node000003" href="$classCH341SPI.html#afa5877a80f6c880a1258b848b947e61b" title="Destructor for CH341SPI." alt="" coords="5,55,172,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="207,55,173,60,172,54,206,50"/>
+</map>

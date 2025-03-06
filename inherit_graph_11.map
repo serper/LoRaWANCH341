@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classSPIInterface.html" title="Interfaz abstracta para comunicación SPI." alt="" coords="5,31,105,56"/>
+<area shape="rect" id="Node000001" href="$classCH341SPI.html" title="A class to interface with the CH341 USB to SPI adapter." alt="" coords="153,5,239,31"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="119,29,153,23,154,28,120,35"/>
+<area shape="rect" id="Node000002" href="$classLinuxSPI.html" title="Implementation of SPIInterface using Linux spidev." alt="" coords="157,55,235,80"/>
+<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="119,52,158,58,157,63,119,57"/>
+</map>

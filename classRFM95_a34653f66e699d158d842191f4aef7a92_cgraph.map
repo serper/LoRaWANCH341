@@ -1,0 +1,5 @@
+<map id="RFM95::getBandwidth" name="RFM95::getBandwidth">
+<area shape="rect" id="Node000001" title="Get current bandwidth in kHz." alt="" coords="5,5,171,31"/>
+<area shape="rect" id="Node000002" href="$classRFM95.html#a6415deddf04059d8fe48d208de82e327" title="Read a register value." alt="" coords="219,5,377,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,15,205,15,205,21,171,21"/>
+</map>

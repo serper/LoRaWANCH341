@@ -1,0 +1,91 @@
+<map id="RFM95::readRegister" name="RFM95::readRegister">
+<area shape="rect" id="Node000001" title="Read a register value." alt="" coords="500,992,659,1017"/>
+<area shape="rect" id="Node000002" href="$classRFM95.html#a39ad5f6d39bd9b15d838fc8fea9afae7" title="Calibrate temperature sensor with a reference temperature." alt="" coords="235,5,449,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="576,979,575,793,571,658,562,511,547,364,524,229,510,170,492,118,473,76,450,44,437,33,440,29,454,40,477,73,497,116,515,168,530,228,552,364,567,511,576,658,580,793,581,979"/>
+<area shape="rect" id="Node000003" href="$classRFM95.html#a9e80570fe226c82655eb2b8c24158a22" title="Check and print IRQ flags." alt="" coords="257,55,427,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="576,979,574,802,569,674,559,535,544,396,521,268,507,212,490,163,471,123,450,93,426,77,429,72,454,89,476,121,495,161,512,211,527,267,549,395,564,534,574,674,579,802,581,979"/>
+<area shape="rect" id="Node000004" href="$classRFM95.html#a05587fd44f5438c54330ae4753f2b6cb" title="Check and print current operating mode." alt="" coords="235,104,449,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="575,978,572,809,566,688,556,557,541,426,518,307,504,254,489,208,470,171,450,143,436,132,440,127,454,139,475,168,493,206,510,253,524,305,546,426,561,557,571,688,577,809,581,978"/>
+<area shape="rect" id="Node000005" href="$classRFM95.html#a1ef62325d77f0a9fac5df9824dc08d0c" title="Check if automatic gain control is enabled." alt="" coords="265,153,419,179"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="575,978,570,818,553,581,537,458,515,346,487,253,469,218,450,192,436,181,419,173,421,168,438,176,454,188,474,215,492,251,521,344,543,457,558,580,576,818,580,978"/>
+<area shape="rect" id="Node000006" href="$classRFM95.html#a34653f66e699d158d842191f4aef7a92" title="Get current bandwidth in kHz." alt="" coords="259,203,425,228"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="575,978,569,827,550,605,534,490,513,385,485,299,468,266,450,241,424,224,426,220,454,237,473,263,490,297,518,383,539,489,555,604,574,827,580,978"/>
+<area shape="rect" id="Node000007" href="$classRFM95.html#afd3cc970bae4664a3d9f2aff0578134e" title="Check if CAD detected flag is set." alt="" coords="251,252,433,277"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="574,978,567,835,547,628,531,521,510,423,483,344,467,313,450,291,432,277,435,273,454,287,472,310,488,342,515,422,536,520,552,627,572,835,580,978"/>
+<area shape="rect" id="Node000008" href="$classRFM95.html#a98115b27df0c3a6e1c8bfcec39042bfd" title="Check if CAD done flag is set." alt="" coords="263,301,421,327"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="574,978,565,844,544,652,527,553,507,463,481,389,466,361,450,340,437,329,420,322,423,317,439,325,454,336,471,358,486,387,512,461,533,552,549,651,570,844,579,978"/>
+<area shape="rect" id="Node000009" href="$classRFM95.html#a895dd2ee4e91e9b372ed8758143fa53f" title="Get current coding rate denominator." alt="" coords="257,351,427,376"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="574,978,563,853,541,675,524,585,504,502,479,434,465,408,450,389,426,374,429,369,454,385,470,406,484,432,509,500,529,583,546,675,568,853,579,978"/>
+<area shape="rect" id="Node000010" href="$classRFM95.html#a6c0c30d4145f416cee314eee79d698b7" title="Get current RX FIFO address." alt="" coords="235,400,449,425"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="573,979,561,862,537,699,521,616,501,541,477,479,464,456,450,439,436,428,439,423,454,435,468,453,482,477,506,539,526,615,543,699,566,862,579,978"/>
+<area shape="rect" id="Node000011" href="$classRFM95.html#a729ccd63571ab9da4d21ad982cf659c2" title="Get current frequency in MHz." alt="" coords="261,449,423,475"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="573,979,559,871,534,723,517,648,498,580,475,525,450,488,422,471,425,467,454,484,480,522,503,578,522,647,539,722,564,871,578,978"/>
+<area shape="rect" id="Node000012" href="$classRFM95.html#af6c5a79350a6ac3198cf6ffd35db7380" title="Check if IQ inversion is enabled." alt="" coords="268,499,416,524"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="572,979,557,881,531,748,514,680,495,620,473,570,450,537,434,526,415,518,417,513,437,521,454,533,478,567,500,618,519,679,536,746,562,880,577,978"/>
+<area shape="rect" id="Node000013" href="$classRFM95.html#ab9a5d5dcb1695a2add2b2f6dff869226" title="Get current IRQ flags." alt="" coords="265,548,419,573"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="576,978,573,901,567,850,556,795,541,738,519,682,489,631,450,587,436,576,419,569,421,564,438,572,454,583,493,628,523,680,546,736,562,793,572,849,578,900,581,978"/>
+<area shape="rect" id="Node000014" href="$classRFM95.html#ae82ff0196debc786ffc3032403e72fff" title="Get current LNA settings." alt="" coords="281,597,403,623"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="575,979,569,909,550,816,534,767,513,719,485,674,450,636,428,622,403,615,404,610,430,618,454,632,489,671,518,716,539,765,555,815,574,909,580,978"/>
+<area shape="rect" id="Node000015" href="$classRFM95.html#ac434ff89130758e69bdf2e506139b883" title="Check if payload CRC error flag is set." alt="" coords="239,647,445,672"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="573,979,564,918,543,838,527,796,507,755,481,718,450,685,433,674,436,670,454,681,486,714,512,753,532,794,548,836,569,917,578,978"/>
+<area shape="rect" id="Node000016" href="$classRFM95.html#ac8a233b8ad8ebe30b324466fdaefba95" title="Get current preamble length." alt="" coords="241,696,443,721"/>
+<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="571,979,559,927,537,860,521,826,501,792,478,761,450,735,432,724,435,719,454,731,482,758,506,789,525,823,542,858,564,925,576,978"/>
+<area shape="rect" id="Node000017" href="$classRFM95.html#a4cfe1bbc21f9ff1031eed43deb0a4688" title="Get current RSSI in dBm." alt="" coords="279,745,405,771"/>
+<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="568,979,553,936,529,882,495,829,474,805,450,784,429,772,404,765,406,760,431,767,454,780,478,801,499,826,534,880,558,934,573,977"/>
+<area shape="rect" id="Node000018" href="$classRFM95.html#acd4771804113995e9d947e50f524305f" title="Check if RX done flag is set." alt="" coords="269,795,415,820"/>
+<area shape="poly" id="edge17_Node000001_Node000018" title=" " alt="" coords="565,980,547,946,522,906,489,867,451,834,415,818,417,813,453,829,493,863,526,903,552,944,569,978"/>
+<area shape="rect" id="Node000019" href="$classRFM95.html#a408e6c4bd8e09074c635ea5c11a083d1" title="Check if RX error flag is set." alt="" coords="270,844,414,869"/>
+<area shape="poly" id="edge18_Node000001_Node000019" title=" " alt="" coords="559,983,513,931,484,905,451,883,413,869,415,864,453,878,487,901,517,928,563,979"/>
+<area shape="rect" id="Node000020" href="$classRFM95.html#aa8ac9cb12a20e390513d6cc0ee61387b" title="Get number of received bytes." alt="" coords="258,893,426,919"/>
+<area shape="poly" id="edge19_Node000001_Node000020" title=" " alt="" coords="548,986,504,958,451,932,415,921,417,916,453,928,506,954,551,982"/>
+<area shape="rect" id="Node000021" href="$classRFM95.html#a6f0a181c45a8fbf96df0f602a4fb267c" title="Get last packet SNR in dB." alt="" coords="281,943,403,968"/>
+<area shape="poly" id="edge20_Node000001_Node000021" title=" " alt="" coords="504,992,403,971,404,965,505,987"/>
+<area shape="rect" id="Node000022" href="$classRFM95.html#a5d7d2006c4cc56607a73bbdeedfc5107" title="Get current spreading factor." alt="" coords="242,992,442,1017"/>
+<area shape="poly" id="edge21_Node000001_Node000022" title=" " alt="" coords="486,1007,442,1007,442,1002,486,1002"/>
+<area shape="rect" id="Node000023" href="$classRFM95.html#a750154c24bceab812b961779810daf8b" title="Get current sync word." alt="" coords="262,1041,422,1067"/>
+<area shape="poly" id="edge22_Node000001_Node000023" title=" " alt="" coords="505,1023,405,1044,403,1039,504,1018"/>
+<area shape="rect" id="Node000024" href="$classRFM95.html#a3b5be8366007bfbc202399a23bdfaeef" title="Check if TX done flag is set." alt="" coords="269,1091,415,1116"/>
+<area shape="poly" id="edge23_Node000001_Node000024" title=" " alt="" coords="550,1027,506,1055,453,1080,413,1093,411,1088,451,1076,503,1050,548,1023"/>
+<area shape="rect" id="Node000025" href="$classRFM95.html#ae329bfab71328b77afb4b95b822e23f2" title="Get current transmit power level." alt="" coords="266,1140,418,1165"/>
+<area shape="poly" id="edge24_Node000001_Node000025" title=" " alt="" coords="563,1030,517,1081,487,1107,453,1130,419,1143,417,1138,451,1125,484,1103,513,1077,559,1026"/>
+<area shape="rect" id="Node000026" href="$classRFM95.html#a06c37fdd54d68ef1a1a10024267b80c1" title="Check if valid header flag is set." alt="" coords="255,1189,429,1215"/>
+<area shape="poly" id="edge25_Node000001_Node000026" title=" " alt="" coords="569,1031,551,1065,526,1105,493,1145,453,1179,428,1192,425,1187,451,1174,489,1141,521,1102,547,1062,564,1029"/>
+<area shape="rect" id="Node000027" href="$classRFM95.html#ab35d7cef17f76e703bb0cdc6ec1c7a04" title="Print key registers for debugging." alt="" coords="259,1239,425,1264"/>
+<area shape="poly" id="edge26_Node000001_Node000027" title=" " alt="" coords="573,1032,558,1075,534,1128,499,1182,478,1207,454,1228,427,1242,424,1238,450,1224,474,1203,495,1179,529,1126,553,1073,568,1030"/>
+<area shape="rect" id="Node000028" href="$classRFM95.html#a56e4ccb0829701db20301352e6d145db" title="Read received data packet." alt="" coords="265,1288,419,1313"/>
+<area shape="poly" id="edge27_Node000001_Node000028" title=" " alt="" coords="576,1032,564,1084,541,1151,505,1219,481,1250,454,1277,421,1295,418,1290,450,1273,477,1247,501,1216,536,1149,559,1083,571,1031"/>
+<area shape="rect" id="Node000029" href="$classRFM95.html#ad304df9b32889396bad523dcf5c638fc" title="Read calibrated temperature." alt="" coords="249,1337,435,1363"/>
+<area shape="poly" id="edge28_Node000001_Node000029" title=" " alt="" coords="578,1031,569,1092,548,1172,532,1214,511,1256,485,1294,454,1327,434,1339,431,1335,450,1323,481,1290,507,1253,527,1212,543,1170,564,1091,573,1031"/>
+<area shape="rect" id="Node000030" href="$classRFM95.html#a03996e8ad2ffe3289ae6dc49c333b768" title="Receive data packet." alt="" coords="33,1401,156,1427"/>
+<area shape="poly" id="edge29_Node000001_Node000030" title=" " alt="" coords="581,1031,575,1102,558,1196,542,1246,520,1294,491,1339,454,1376,420,1398,382,1415,342,1425,302,1432,223,1434,156,1428,156,1423,223,1429,301,1426,341,1420,380,1410,417,1394,450,1372,487,1335,515,1292,537,1244,553,1195,570,1101,575,1031"/>
+<area shape="rect" id="Node000031" href="$classRFM95.html#a8beb7f2709c1d4b14dc53153ff471b0f" title="Send data packet." alt="" coords="41,1476,148,1501"/>
+<area shape="poly" id="edge30_Node000001_Node000031" title=" " alt="" coords="582,1031,580,1111,574,1164,565,1221,549,1279,526,1337,495,1389,454,1435,437,1443,409,1450,327,1465,148,1486,148,1481,326,1459,408,1445,435,1438,450,1431,490,1386,521,1334,544,1278,559,1220,569,1163,574,1111,576,1031"/>
+<area shape="rect" id="Node000032" href="$classRFM95.html#ad38bc0b74eb019eb9bf6ba06fe6512e4" title="Enable or disable automatic gain control." alt="" coords="265,1591,419,1616"/>
+<area shape="poly" id="edge31_Node000001_Node000032" title=" " alt="" coords="578,1031,566,1146,541,1309,524,1392,504,1468,481,1530,454,1573,438,1586,420,1595,418,1590,435,1581,450,1570,476,1528,499,1466,519,1391,536,1308,560,1146,573,1030"/>
+<area shape="rect" id="Node000033" href="$classRFM95.html#a1457fc6da2d27aac0691598439d04b45" title="Set LNA gain and boost." alt="" coords="34,1616,155,1641"/>
+<area shape="poly" id="edge41_Node000001_Node000033" title=" " alt="" coords="580,1031,571,1160,551,1341,534,1434,513,1518,487,1585,471,1611,454,1629,415,1653,373,1668,328,1674,283,1674,197,1662,130,1644,132,1639,198,1657,283,1669,328,1669,372,1662,413,1648,450,1625,467,1607,482,1583,508,1516,529,1433,545,1341,566,1159,574,1031"/>
+<area shape="rect" id="Node000034" href="$classRFM95.html#ae99b2c13eea871ebf14ab407b22b3161" title="Set bandwidth in kHz (7.8, 10.4, 15.6, 20.8, 31.25, 41.7, 62.5, 125, 250, 500)" alt="" coords="260,1692,424,1717"/>
+<area shape="poly" id="edge33_Node000001_Node000034" title=" " alt="" coords="579,1031,570,1165,548,1357,531,1457,510,1548,485,1623,470,1652,454,1675,426,1694,423,1690,450,1671,466,1649,480,1621,505,1546,526,1456,542,1357,564,1164,574,1031"/>
+<area shape="rect" id="Node000035" href="$classRFM95.html#abcbe314dc2c49a02686d301a25e1889d" title="Configure beacon mode with automatic periodic transmission." alt="" coords="5,1533,184,1559"/>
+<area shape="poly" id="edge34_Node000001_Node000035" title=" " alt="" coords="578,1031,566,1140,542,1291,526,1367,505,1436,482,1491,468,1512,454,1528,417,1552,377,1567,334,1576,291,1580,208,1574,140,1561,141,1556,209,1569,291,1574,334,1571,376,1562,415,1547,450,1524,464,1509,477,1489,500,1434,520,1366,537,1290,561,1140,573,1031"/>
+<area shape="rect" id="Node000036" href="$classRFM95.html#a67189c586dffafa2e37efc75cff49a4f" title="Set coding rate denominator (5&#45;8, giving rates of 4/5, 4/6, 4/7, 4/8)" alt="" coords="257,1741,427,1767"/>
+<area shape="poly" id="edge35_Node000001_Node000036" title=" " alt="" coords="580,1031,572,1175,552,1385,536,1494,515,1593,488,1675,472,1706,454,1731,429,1747,426,1743,450,1727,467,1704,483,1673,510,1592,531,1493,547,1385,567,1175,575,1031"/>
+<area shape="rect" id="Node000037" href="$classRFM95.html#afdb021b7e1f2f398859f2d9c4e3d6b09" title="Set continuous receive mode." alt="" coords="232,1791,452,1816"/>
+<area shape="poly" id="edge36_Node000001_Node000037" title=" " alt="" coords="580,1031,574,1184,555,1409,539,1525,518,1632,490,1720,473,1754,454,1780,437,1793,434,1789,450,1776,468,1751,485,1718,513,1631,534,1525,550,1408,569,1184,575,1031"/>
+<area shape="rect" id="Node000038" href="$classRFM95.html#a2a244c31a0bc2e43401e3cc83bf72d29" title="Configure DIO pins for TX/RX indication." alt="" coords="255,1489,429,1515"/>
+<area shape="poly" id="edge37_Node000001_Node000038" title=" " alt="" coords="577,1031,561,1128,535,1260,518,1327,498,1388,477,1438,454,1472,424,1492,421,1487,450,1468,472,1435,493,1386,512,1325,529,1259,556,1128,572,1031"/>
+<area shape="rect" id="Node000039" href="$classRFM95.html#acf949d5db9c7e6282b75c3cfbcbd883b" title="Enable or disable LoRa mode." alt="" coords="261,1840,423,1865"/>
+<area shape="poly" id="edge42_Node000001_Node000039" title=" " alt="" coords="580,1031,576,1193,559,1433,543,1557,521,1671,492,1765,474,1801,454,1829,440,1840,425,1848,422,1843,437,1836,450,1826,469,1799,487,1763,516,1670,537,1556,553,1432,570,1193,575,1031"/>
+<area shape="rect" id="Node000040" href="$classRFM95.html#a50a0e0e2acb5db46e880d73e8797820d" title="Set spreading factor (6&#45;12)" alt="" coords="243,1889,441,1915"/>
+<area shape="poly" id="edge43_Node000001_Node000040" title=" " alt="" coords="581,1031,577,1200,572,1323,562,1455,546,1588,524,1710,510,1763,494,1810,475,1849,454,1879,438,1891,435,1887,450,1875,470,1846,489,1808,505,1762,519,1708,541,1587,556,1455,566,1322,572,1200,575,1031"/>
+<area shape="rect" id="Node000041" href="$classRFM95.html#a25b3f3c4c5519a7d5451d45015e9f2cd" title="Set sleep mode." alt="" coords="269,1939,415,1964"/>
+<area shape="poly" id="edge44_Node000001_Node000041" title=" " alt="" coords="581,1031,579,1210,574,1339,565,1480,550,1621,527,1750,513,1807,496,1857,476,1898,454,1929,437,1942,417,1950,415,1946,434,1938,450,1925,472,1895,491,1855,508,1805,522,1749,544,1620,560,1479,569,1339,574,1209,576,1031"/>
+<area shape="rect" id="Node000043" href="$classRFM95.html#a775916cb6f91503cf6b4c68bebfd7e7d" title="Test basic SPI communication." alt="" coords="241,1988,443,2013"/>
+<area shape="poly" id="edge46_Node000001_Node000043" title=" " alt="" coords="581,1031,581,1218,577,1354,568,1503,553,1652,530,1789,515,1849,498,1902,477,1945,454,1978,440,1990,437,1986,450,1975,473,1943,493,1900,510,1847,525,1788,548,1651,563,1503,571,1354,575,1218,576,1031"/>
+<area shape="poly" id="edge32_Node000032_Node000033" title=" " alt="" coords="252,1615,156,1625,155,1620,252,1610"/>
+<area shape="poly" id="edge38_Node000038_Node000030" title=" " alt="" coords="291,1487,130,1429,132,1424,293,1482"/>
+<area shape="poly" id="edge39_Node000038_Node000031" title=" " alt="" coords="241,1499,148,1494,148,1489,241,1494"/>
+<area shape="poly" id="edge40_Node000038_Node000035" title=" " alt="" coords="257,1520,167,1536,166,1531,256,1514"/>
+<area shape="rect" id="Node000042" href="$classRFM95.html#a637ff11538ca0f762788920518019ffa" title="Initialize RFM95 module." alt="" coords="39,1939,150,1964"/>
+<area shape="poly" id="edge45_Node000041_Node000042" title=" " alt="" coords="255,1954,150,1954,150,1949,255,1949"/>
+</map>

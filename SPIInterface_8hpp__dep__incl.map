@@ -1,0 +1,31 @@
+<map id="include/SPIInterface.hpp" name="include/SPIInterface.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="508,5,687,31"/>
+<area shape="rect" id="Node000002" href="$CH341SPI_8hpp.html" title="Header file for the CH341SPI class, which implements the SPIInterface for the CH341 USB to SPI adapte..." alt="" coords="635,79,799,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="630,35,699,76,696,81,627,40"/>
+<area shape="rect" id="Node000003" href="$RFM95_8hpp.html" title="Header file for RFM95 LoRa Module Handler." alt="" coords="413,152,560,177"/>
+<area shape="poly" id="edge14_Node000001_Node000003" title=" " alt="" coords="582,43,498,153,493,150,578,40"/>
+<area shape="rect" id="Node000005" href="$RFM95_8cpp.html" title="Implementation of the RFM95 LoRa module interface." alt="" coords="483,225,600,251"/>
+<area shape="poly" id="edge15_Node000001_Node000005" title=" " alt="" coords="598,44,591,106,575,178,551,226,546,224,569,176,586,105,593,44"/>
+<area shape="rect" id="Node000007" href="$SPIFactory_8cpp.html" title=" " alt="" coords="794,152,931,177"/>
+<area shape="poly" id="edge16_Node000001_Node000007" title=" " alt="" coords="701,29,759,47,787,60,812,77,830,94,844,114,861,150,856,153,839,117,826,97,809,81,784,65,757,52,699,34"/>
+<area shape="rect" id="Node000008" href="$LinuxSPI_8hpp.html" title=" " alt="" coords="875,79,1031,104"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="668,31,896,76,895,81,667,36"/>
+<area shape="rect" id="Node000010" href="$LoRaWAN_8hpp.html" title=" " alt="" coords="209,79,373,104"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="535,36,341,81,340,76,534,31"/>
+<area shape="rect" id="Node000012" href="$main_8cpp.html" title=" " alt="" coords="283,152,389,177"/>
+<area shape="poly" id="edge17_Node000001_Node000012" title=" " alt="" coords="566,40,358,154,355,150,563,35"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="668,111,525,154,523,149,666,106"/>
+<area shape="rect" id="Node000006" href="$CH341SPI_8cpp.html" title="Implementation of the CH341SPI class for SPI communication using the CH341 USB&#45;SPI adapter." alt="" coords="635,152,770,177"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="715,118,708,152,702,151,710,117"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="754,108,840,149,838,154,752,112"/>
+<area shape="rect" id="Node000004" href="$LoRaWAN_8cpp.html" title="Implementation of the LoRaWAN protocol for communication with LoRaWAN networks." alt="" coords="278,225,413,251"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="453,186,370,227,367,223,451,181"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="506,187,535,224,530,227,502,190"/>
+<area shape="poly" id="edge9_Node000008_Node000007" title=" " alt="" coords="929,115,879,154,876,150,926,110"/>
+<area shape="rect" id="Node000009" href="$LinuxSPI_8cpp.html" title=" " alt="" coords="955,152,1082,177"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="975,113,1010,150,1006,154,971,116"/>
+<area shape="poly" id="edge11_Node000010_Node000004" title=" " alt="" coords="280,117,270,146,269,162,273,176,283,191,295,204,323,223,320,227,292,208,279,194,268,178,264,162,265,145,274,115"/>
+<area shape="rect" id="Node000011" href="$LoRaWAN__ADRStats_8cpp.html" title=" " alt="" coords="5,152,208,177"/>
+<area shape="poly" id="edge12_Node000010_Node000011" title=" " alt="" coords="249,111,138,154,136,149,247,106"/>
+<area shape="poly" id="edge13_Node000010_Node000012" title=" " alt="" coords="308,114,331,150,326,153,303,117"/>
+</map>

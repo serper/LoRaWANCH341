@@ -1,0 +1,5 @@
+<map id="CH341SPI::swapBits" name="CH341SPI::swapBits">
+<area shape="rect" id="Node000001" title="Swaps the bits of a byte." alt="" coords="197,5,349,31"/>
+<area shape="rect" id="Node000002" href="$classCH341SPI.html#aaf51a68aa742ae5d480019cef4bd5891" title="Transfers data over SPI." alt="" coords="5,5,149,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="184,21,149,21,149,15,184,15"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="RFM95::setInvertIQ" name="RFM95::setInvertIQ">
+<area shape="rect" id="Node000001" title="Set IQ inversion (used for LoRaWAN downlinks)" alt="" coords="5,5,152,31"/>
+<area shape="rect" id="Node000002" href="$classRFM95.html#afb56059331ddf0a79b8c136da20d2ab2" title="Write a register value." alt="" coords="200,5,363,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,15,186,15,186,21,152,21"/>
+</map>

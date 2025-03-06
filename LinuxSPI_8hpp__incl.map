@@ -1,0 +1,22 @@
+<map id="include/LinuxSPI.hpp" name="include/LinuxSPI.hpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="391,5,547,31"/>
+<area shape="rect" id="Node000002" href="$SPIInterface_8hpp.html" title=" " alt="" coords="209,79,337,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="438,33,318,76,317,71,436,28"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="397,152,455,177"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="459,32,441,53,427,80,422,109,424,138,419,138,417,109,422,78,437,50,455,29"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="437,79,501,104"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="471,31,471,65,466,65,466,31"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="525,79,591,104"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="485,29,534,68,531,72,481,33"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="615,79,666,104"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="497,28,603,72,601,77,495,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,152,68,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="236,107,82,153,80,147,234,101"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="93,152,159,177"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="250,106,163,148,161,144,248,102"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="183,152,261,177"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="266,106,240,142,236,139,262,103"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="285,152,372,177"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="284,103,313,140,309,143,280,106"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="298,102,390,144,388,149,296,106"/>
+</map>

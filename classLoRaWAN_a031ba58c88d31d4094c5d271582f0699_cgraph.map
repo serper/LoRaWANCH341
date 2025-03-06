@@ -1,0 +1,7 @@
+<map id="LoRaWAN::join" name="LoRaWAN::join">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,123,56"/>
+<area shape="rect" id="Node000002" href="$classLoRaWAN.html#abcd90de882ca6eae1fd3c7218a4fb35d" title=" " alt="" coords="171,5,419,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,34,165,30,166,35,123,40"/>
+<area shape="rect" id="Node000003" href="$classLoRaWAN.html#a98daefba444f0e35efeb07ab184e103b" title=" " alt="" coords="206,55,383,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="123,47,192,54,192,59,123,52"/>
+</map>

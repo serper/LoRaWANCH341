@@ -1,0 +1,5 @@
+<map id="RFM95::setAutoAGC" name="RFM95::setAutoAGC">
+<area shape="rect" id="Node000001" title="Enable or disable automatic gain control." alt="" coords="175,5,328,31"/>
+<area shape="rect" id="Node000002" href="$classRFM95.html#a1457fc6da2d27aac0691598439d04b45" title="Set LNA gain and boost." alt="" coords="5,5,127,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,21,127,21,127,15,161,15"/>
+</map>

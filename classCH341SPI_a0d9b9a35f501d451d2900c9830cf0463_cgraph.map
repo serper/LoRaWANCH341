@@ -1,0 +1,5 @@
+<map id="CH341SPI::close" name="CH341SPI::close">
+<area shape="rect" id="Node000001" title="Closes the SPI connection." alt="" coords="5,5,132,31"/>
+<area shape="rect" id="Node000002" href="$classCH341SPI.html#aa80da461c46c50b1919aaf1261c7cff9" title="Enables or disables the pins." alt="" coords="180,5,344,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,15,166,15,166,21,132,21"/>
+</map>

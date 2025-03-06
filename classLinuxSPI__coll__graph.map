@@ -1,0 +1,5 @@
+<map id="LinuxSPI" name="LinuxSPI">
+<area shape="rect" id="Node000001" title="Implementation of SPIInterface using Linux spidev." alt="" coords="5,319,176,884"/>
+<area shape="rect" id="Node000002" href="$classSPIInterface.html" title="Interfaz abstracta para comunicación SPI." alt="" coords="5,5,176,271"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,284,93,318,88,318,88,284"/>
+</map>

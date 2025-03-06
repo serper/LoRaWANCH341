@@ -1,0 +1,5 @@
+<map id="LinuxSPI::writeGPIOValue" name="LinuxSPI::writeGPIOValue">
+<area shape="rect" id="Node000001" title="Writes a value to a GPIO pin." alt="" coords="215,5,401,31"/>
+<area shape="rect" id="Node000002" href="$classLinuxSPI.html#a00ca67e738bad114917b814bbd52f51c" title="Sets the value of a GPIO pin." alt="" coords="5,5,167,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="201,21,167,21,167,15,201,15"/>
+</map>

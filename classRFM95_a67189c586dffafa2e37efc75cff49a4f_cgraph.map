@@ -1,0 +1,7 @@
+<map id="RFM95::setCodingRate" name="RFM95::setCodingRate">
+<area shape="rect" id="Node000001" title="Set coding rate denominator (5&#45;8, giving rates of 4/5, 4/6, 4/7, 4/8)" alt="" coords="5,31,176,56"/>
+<area shape="rect" id="Node000002" href="$classRFM95.html#a6415deddf04059d8fe48d208de82e327" title="Read a register value." alt="" coords="226,5,385,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,31,212,26,213,32,177,36"/>
+<area shape="rect" id="Node000003" href="$classRFM95.html#afb56059331ddf0a79b8c136da20d2ab2" title="Write a register value." alt="" coords="224,55,387,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="177,50,210,54,210,59,176,56"/>
+</map>

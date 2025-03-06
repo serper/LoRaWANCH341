@@ -1,0 +1,11 @@
+<map id="RFM95::standbyMode" name="RFM95::standbyMode">
+<area shape="rect" id="Node000001" title="Set standby mode." alt="" coords="273,80,436,105"/>
+<area shape="rect" id="Node000002" href="$classRFM95.html#a637ff11538ca0f762788920518019ffa" title="Initialize RFM95 module." alt="" coords="60,5,171,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="311,77,225,45,170,31,171,26,226,39,313,72"/>
+<area shape="rect" id="Node000003" href="$classRFM95.html#a8beb7f2709c1d4b14dc53153ff471b0f" title="Send data packet." alt="" coords="62,55,169,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="259,85,169,76,169,70,260,80"/>
+<area shape="rect" id="Node000004" href="$classRFM95.html#afdb021b7e1f2f398859f2d9c4e3d6b09" title="Set continuous receive mode." alt="" coords="5,104,225,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="260,105,226,108,225,103,259,100"/>
+<area shape="rect" id="Node000005" href="$classRFM95.html#a5ba57a228969781ac2e5c103a5f01b25" title="Stop beacon mode." alt="" coords="22,153,209,179"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="311,113,226,143,178,156,177,151,225,138,309,108"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="RFM95::resetPtrRx" name="RFM95::resetPtrRx">
+<area shape="rect" id="Node000001" title="Reset RX pointer." alt="" coords="5,5,148,31"/>
+<area shape="rect" id="Node000002" href="$classRFM95.html#afb56059331ddf0a79b8c136da20d2ab2" title="Write a register value." alt="" coords="196,5,359,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,15,182,15,182,21,148,21"/>
+</map>

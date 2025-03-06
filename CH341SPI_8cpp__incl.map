@@ -1,0 +1,32 @@
+<map id="src/CH341SPI.cpp" name="src/CH341SPI.cpp">
+<area shape="rect" id="Node000001" title="Implementation of the CH341SPI class for SPI communication using the CH341 USB&#45;SPI adapter." alt="" coords="352,5,487,31"/>
+<area shape="rect" id="Node000002" href="$CH341SPI_8hpp.html" title="Header file for the CH341SPI class, which implements the SPIInterface for the CH341 USB to SPI adapte..." alt="" coords="219,79,332,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="397,33,312,75,310,70,395,28"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,225,68,251"/>
+<area shape="poly" id="edge17_Node000001_Node000004" title=" " alt="" coords="352,23,276,32,191,54,148,70,109,92,73,120,44,153,38,167,34,182,34,212,29,212,29,181,33,165,40,151,70,116,106,88,146,66,189,48,275,27,352,18"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="375,152,439,177"/>
+<area shape="poly" id="edge16_Node000001_Node000010" title=" " alt="" coords="421,31,412,139,407,138,416,31"/>
+<area shape="rect" id="Node000011" href="$CH341Config_8hpp.html" title=" " alt="" coords="464,152,599,177"/>
+<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="427,30,446,63,472,102,509,141,506,145,468,106,441,66,423,32"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="482,79,562,104"/>
+<area shape="poly" id="edge14_Node000001_Node000012" title=" " alt="" coords="437,28,495,68,492,73,434,33"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="586,79,653,104"/>
+<area shape="poly" id="edge15_Node000001_Node000013" title=" " alt="" coords="452,28,574,71,573,76,451,33"/>
+<area shape="rect" id="Node000003" href="$SPIInterface_8hpp.html" title=" " alt="" coords="74,152,202,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="254,106,174,148,171,143,252,102"/>
+<area shape="poly" id="edge9_Node000002_Node000004" title=" " alt="" coords="219,97,180,102,139,112,99,129,64,154,54,167,47,181,40,212,35,211,42,180,50,164,60,150,96,124,137,107,179,96,218,91"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="307,225,366,251"/>
+<area shape="poly" id="edge10_Node000002_Node000008" title=" " alt="" coords="286,103,314,151,333,211,328,212,309,153,281,105"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="227,152,300,177"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="276,105,270,139,265,138,271,104"/>
+<area shape="poly" id="edge11_Node000002_Node000010" title=" " alt="" coords="298,102,375,143,373,148,295,106"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="123,180,66,219,63,215,120,175"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="443,225,510,251"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="193,175,430,224,429,229,192,180"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="94,225,171,251"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="140,178,137,212,132,212,134,177"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="196,225,283,251"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="156,175,213,215,210,219,153,180"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="171,175,295,219,293,224,169,180"/>
+<area shape="poly" id="edge13_Node000011_Node000005" title=" " alt="" coords="524,179,496,216,492,213,520,176"/>
+</map>

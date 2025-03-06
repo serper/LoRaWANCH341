@@ -1,0 +1,5 @@
+<map id="LinuxSPI::setGPIODirection" name="LinuxSPI::setGPIODirection">
+<area shape="rect" id="Node000001" title="Sets the direction of a GPIO pin." alt="" coords="5,5,201,31"/>
+<area shape="rect" id="Node000002" href="$classLinuxSPI.html#aadb0b8c2396683abdd9ba4fd586af49b" title="Exports a GPIO pin for use." alt="" coords="249,5,408,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="202,15,236,15,236,21,202,21"/>
+</map>

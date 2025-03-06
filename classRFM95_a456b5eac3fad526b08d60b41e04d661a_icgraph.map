@@ -1,0 +1,7 @@
+<map id="RFM95::setInvertIQ" name="RFM95::setInvertIQ">
+<area shape="rect" id="Node000001" title="Set IQ inversion (used for LoRaWAN downlinks)" alt="" coords="176,31,323,56"/>
+<area shape="rect" id="Node000002" href="$classRFM95.html#a03996e8ad2ffe3289ae6dc49c333b768" title="Receive data packet." alt="" coords="5,5,128,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,34,128,29,128,24,163,29"/>
+<area shape="rect" id="Node000003" href="$classRFM95.html#a8beb7f2709c1d4b14dc53153ff471b0f" title="Send data packet." alt="" coords="13,55,120,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="163,57,121,63,120,58,162,52"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="RFM95::getSNR" name="RFM95::getSNR">
+<area shape="rect" id="Node000001" title="Get last packet SNR in dB." alt="" coords="5,5,128,31"/>
+<area shape="rect" id="Node000002" href="$classRFM95.html#a6415deddf04059d8fe48d208de82e327" title="Read a register value." alt="" coords="176,5,335,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,15,162,15,162,21,128,21"/>
+</map>

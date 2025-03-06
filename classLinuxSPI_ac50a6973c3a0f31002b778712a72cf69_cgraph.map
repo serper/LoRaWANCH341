@@ -1,0 +1,7 @@
+<map id="LinuxSPI::pinMode" name="LinuxSPI::pinMode">
+<area shape="rect" id="Node000001" title="Sets the mode of a GPIO pin." alt="" coords="5,5,147,31"/>
+<area shape="rect" id="Node000002" href="$classLinuxSPI.html#ade6428ff4ac39717281cbfcfc4aeb121" title="Sets the direction of a GPIO pin." alt="" coords="195,5,391,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="147,15,181,15,181,21,147,21"/>
+<area shape="rect" id="Node000003" href="$classLinuxSPI.html#aadb0b8c2396683abdd9ba4fd586af49b" title="Exports a GPIO pin for use." alt="" coords="439,5,597,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="391,15,425,15,425,21,391,21"/>
+</map>
