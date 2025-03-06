@@ -2,6 +2,8 @@
 
 This project provides a C++ implementation of the LoRaWAN protocol using the CH341 USB-to-SPI converter to interface with a RFM95/SX1276 LoRa radio module.
 
+**Documentation**: Full API documentation is available at [https://serper.github.io/LoRaWANCH341](https://serper.github.io/LoRaWANCH341)
+
 ## Features
 
 - Full LoRaWAN 1.0.3 protocol implementation
@@ -137,3 +139,16 @@ The `SPIFactory` class provides factory methods to create appropriate SPI interf
 - libopenssl
 - C++17 compatible compiler
 - CMake build system (version 3.10 or higher)
+
+## Documentation
+
+Complete API documentation is generated using Doxygen and available online at [https://serper.github.io/LoRaWANCH341](https://serper.github.io/LoRaWANCH341). 
+
+The documentation includes:
+- Detailed class and function descriptions
+- Code examples
+- Implementation details
+- UML diagrams of class relationships
+- Call graphs for complex functions
+
+You can also generate the documentation locally by installing Doxygen and running:
