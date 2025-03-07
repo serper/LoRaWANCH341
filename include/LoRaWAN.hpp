@@ -1,361 +1,645 @@
+/**
+ * @file LoRaWAN.hpp
+ * @brief Class declaration for LoRaWAN protocol communication.
+ * 
+ * This header file defines the LoRaWAN class, which provides a complete
+ * implementation of the LoRaWAN protocol for communication with LoRaWAN networks.
+ * 
+ * The class supports both Over-The-Air Activation (OTAA) and Activation By 
+ * Personalization (ABP), Class A and Class C device operation, and provides
+ * a comprehensive set of methods for sending and receiving messages, managing
+ * MAC commands, and controlling radio parameters.
+ * 
+ * @author Sergio Pérez
+ * @date 2023/03/08
+ * @version 1.0
+ * 
+ * @see LoRaWAN.cpp for the implementation
+ */
+
 #pragma once
 
+#include <memory>
+#include <vector>
+#include <array>
 #include <string>
 #include <functional>
-#include <cstdint>
-#include <vector>
-#include <memory>
-#include <array>
 #include <chrono>
 #include "SPIInterface.hpp"
-#include <deque>
-#include <chrono>
 
+// LoRaWAN MAC commands
+#define MAC_LINK_CHECK_REQ 0x02
+#define MAC_LINK_ADR_REQ 0x03
+#define MAC_LINK_ADR_ANS 0x03
+#define MAC_DUTY_CYCLE_REQ 0x04
+#define MAC_DUTY_CYCLE_ANS 0x04
+#define MAC_RX_PARAM_SETUP_REQ 0x05
+#define MAC_RX_PARAM_SETUP_ANS 0x05
+#define MAC_DEV_STATUS_REQ 0x06
+#define MAC_DEV_STATUS_ANS 0x06
+#define MAC_NEW_CHANNEL_REQ 0x07
+#define MAC_NEW_CHANNEL_ANS 0x07
+#define MAC_RX_TIMING_SETUP_REQ 0x08
+#define MAC_RX_TIMING_SETUP_ANS 0x08
+#define MAC_TX_PARAM_SETUP_REQ 0x09
+#define MAC_TX_PARAM_SETUP_ANS 0x09
+#define MAC_DL_CHANNEL_REQ 0x0A
+#define MAC_DL_CHANNEL_ANS 0x0A
+#define MAC_REKEY_CONF 0x0B
+#define MAC_ADR_PARAM_SETUP_REQ 0x0C
+#define MAC_ADR_PARAM_SETUP_ANS 0x0C
+#define MAC_DEVICE_TIME_REQ 0x0D
+#define MAC_DEVICE_TIME_ANS 0x0D
+#define MAC_REJOIN_PARAM_REQ 0x0E
+#define MAC_REJOIN_PARAM_ANS 0x0E
+#define MAC_PING_SLOT_INFO_REQ 0x10
+#define MAC_PING_SLOT_INFO_ANS 0x10
+#define MAC_PING_SLOT_CHANNEL_REQ 0x11
+#define MAC_PING_SLOT_FREQ_ANS 0x11
+#define MAC_BEACON_TIMING_REQ 0x12
+#define MAC_BEACON_TIMING_ANS 0x12
+#define MAC_BEACON_FREQ_REQ 0x13
+#define MAC_BEACON_FREQ_ANS 0x13
+#define MAC_LINK_CHECK_ANS 0x02
+
+/**
+ * @brief Class that provides LoRaWAN protocol implementation.
+ * 
+ * The LoRaWAN class implements the LoRaWAN protocol for communications with 
+ * LoRaWAN networks. It supports both OTAA and ABP activation methods,
+ * Class A and Class C device operation, and provides methods for sending 
+ * and receiving messages, managing MAC commands, and controlling various 
+ * radio parameters.
+ */
 class LoRaWAN {
-    public:
-    // LoRa Regions
-    static constexpr uint8_t REGION_EU433 = 0;
-    static constexpr uint8_t REGION_EU868 = 1;
-    static constexpr uint8_t REGION_US915 = 2;
-    static constexpr uint8_t REGION_AU915 = 3;
-    static constexpr uint8_t REGION_AS923 = 4;
-    static constexpr uint8_t REGION_KR920 = 5;
-    static constexpr uint8_t REGION_IN865 = 6;
-    static constexpr uint8_t REGION_CN470 = 7;
-    static constexpr uint8_t REGION_CN779 = 8;
-    static constexpr uint8_t REGION_EU433OLD = 9;
-    static constexpr uint8_t REGION_AU915OLD = 10;
-    static constexpr uint8_t REGION_CN470PREQUEL = 11;
-    static constexpr uint8_t REGION_AS923JP = 12;
-    static constexpr uint8_t REGION_AS923KR = 13;
-    static constexpr uint8_t REGIONS = 14;
-    
-    // LoRa Regions base frequency
-    static constexpr float BASE_FREQ[REGIONS] = {
-        433.05, // EU433
-        868.1,  // EU868
-        903.9,  // US915
-        915.2,  // AU915
-        923.2,  // AS923
-        920.9,  // KR920
-        865.1,  // IN865
-        470.3,  // CN470
-        779.5,  // CN779
-        433.05, // EU433
-        915.2,  // AU915OLD
-        470.3,  // CN470PREQUEL
-        923.2,  // AS923JP
-        920.9   // AS923KR
-    };
-    
-    // LoRa Regions RX2 frequency
-    static constexpr float RX2_FREQ[REGIONS] = {
-        434.665, // EU433
-        869.525, // EU868
-        923.3,   // US915
-        923.3,   // AU915
-        923.2,   // AS923
-        921.9,   // KR920
-        866.1,   // IN865
-        505.3,   // CN470
-        786.5,   // CN779
-        434.665, // EU433
-        923.3,   // AU915OLD
-        505.3,   // CN470PREQUEL
-        923.2,   // AS923JP
-        921.9    // AS923KR
-    };
-    
-    // LoRa Regions RX2 Spread Factor
-    static constexpr uint8_t RX2_SF[REGIONS] = {
-        7, // EU433
-        9, // EU868
-        8, // US915
-        8, // AU915
-        8, // AS923
-        8, // KR920
-        8, // IN865
-        7, // CN470
-        7, // CN779
-        7, // EU433
-        8, // AU915OLD
-        7, // CN470PREQUEL
-        8, // AS923JP
-        8  // AS923KR
-    };
-    
-    // LoRa Regions RX2 Bandwidth
-    static constexpr float RX2_BW[REGIONS] = {
-        125.0, // EU433
-        125.0, // EU868
-        500.0, // US915
-        500.0, // AU915
-        500.0, // AS923
-        500.0, // KR920
-        500.0, // IN865
-        125.0, // CN470
-        125.0, // CN779
-        125.0, // EU433
-        500.0, // AU915OLD
-        125.0, // CN470PREQUEL
-        500.0, // AS923JP
-        500.0  // AS923KR
-    };
-    
-    // LoRa Regions RX2 Coding Rate
-    static constexpr uint8_t RX2_CR[REGIONS] = {
-        1, // EU433
-        1, // EU868
-        4, // US915
-        4, // AU915
-        4, // AS923
-        4, // KR920
-        4, // IN865
-        1, // CN470
-        1, // CN779
-        1, // EU433
-        4, // AU915OLD
-        1, // CN470PREQUEL
-        4, // AS923JP
-        4  // AS923KR
-    };
-    
-    // LoRa Regions RX2 preamble length
-    static constexpr uint16_t RX2_PREAMBLE[REGIONS] = {
-        8, // EU433
-        8, // EU868
-        8, // US915
-        8, // AU915
-        8, // AS923
-        8, // KR920
-        8, // IN865
-        8, // CN470
-        8, // CN779
-        8, // EU433
-        8, // AU915OLD
-        8, // CN470PREQUEL
-        8, // AS923JP
-        8  // AS923KR
+public:
+    /**
+     * @brief LoRaWAN supported regions.
+     */
+    enum Region {
+        REGION_EU868 = 0, /**< European Union 863-870 MHz band */
+        REGION_US915,     /**< United States 902-928 MHz band */
+        REGION_AU915,     /**< Australia 915-928 MHz band */
+        REGION_EU433,     /**< European Union 433 MHz band */
+        REGIONS           /**< Number of regions */
     };
 
-    static constexpr unsigned long RECEIVE_DELAY1 = 4000;  // 5 segundos como está en TTN
-    static constexpr unsigned long RECEIVE_DELAY2 = 6000;  // 6 segundos (RECEIVE_DELAY1 + 1s)
-    static constexpr unsigned long WINDOW_DURATION = 2000; // 200ms por ventana
+    /**
+     * @brief LoRaWAN device classes.
+     */
+    enum DeviceClass {
+        CLASS_A, /**< Class A device - lowest power consumption, bidirectional */
+        CLASS_B, /**< Class B device - synchronized beacons, bidirectional with scheduled receive slots */
+        CLASS_C  /**< Class C device - continuous receive, bidirectional with lowest latency */
+    };
 
-    // LoRa Regions channel step
-    static constexpr float CHANNEL_STEP[REGIONS] = {
-        0.1, // EU433
-        0.2, // EU868
-        0.2, // US915
-        0.2, // AU915
-        0.2, // AS923
-        0.2, // KR920
-        0.2, // IN865
-        0.6, // CN470
-        1.6, // CN779
-        0.1, // EU433
-        0.2, // AU915OLD
-        0.6, // CN470PREQUEL
-        0.6, // AS923JP
-        0.2  // AS923KR
+    /**
+     * @brief LoRaWAN join modes.
+     */
+    enum JoinMode {
+        OTAA, /**< Over-The-Air Activation - dynamic session keys */
+        ABP   /**< Activation By Personalization - static session keys */
     };
-    
-    // LoRa max channels
-    static constexpr uint8_t CHANNELS = 8;
-    static constexpr int MAX_CHANNELS = 16;  // Soporte hasta 16 canales
-    
-    // LoRa Bandwidths
-    static constexpr float LORA_BW[10] = {7.8, 10.4, 15.6, 20.8, 31.25, 41.7, 62.5, 125.0, 250.0, 500.0};
-    
-    // LoRa Bandwidths
-    static constexpr float BW_7_8_KHZ = 7.8;
-    static constexpr float BW_10_4_KHZ = 10.4;
-    static constexpr float BW_15_6_KHZ = 15.6;
-    static constexpr float BW_20_8_KHZ = 20.8;
-    static constexpr float BW_31_25_KHZ = 31.25;
-    static constexpr float BW_41_7_KHZ = 41.7;
-    static constexpr float BW_62_5_KHZ = 62.5;
-    static constexpr float BW_125_KHZ = 125.0;
-    static constexpr float BW_250_KHZ = 250.0;
-    static constexpr float BW_500_KHZ = 500.0;
-    
-    // LoRa Spreading Factors
-    static constexpr int SF_6 = 6;
-    static constexpr int SF_7 = 7;
-    static constexpr int SF_8 = 8;
-    static constexpr int SF_9 = 9;
-    static constexpr int SF_10 = 10;
-    static constexpr int SF_11 = 11;
-    static constexpr int SF_12 = 12;
-    
-    // LoRa Coding Rates
-    static constexpr int CR_5 = 5;
-    static constexpr int CR_6 = 6;
-    static constexpr int CR_7 = 7;
-    static constexpr int CR_8 = 8;
-    
-    // LNA Gain
-    static constexpr uint8_t LNA_MAX_GAIN = 0x23;
-    static constexpr uint8_t LNA_HIGH_GAIN = 0x20;
-    static constexpr uint8_t LNA_MED_GAIN = 0x13;
-    static constexpr uint8_t LNA_LOW_GAIN = 0x03;
-    static constexpr uint8_t LNA_OFF = 0x00;
-    
-    // LoRaWAN TTN Max TX Power by region
-    static constexpr int MAX_POWER[REGIONS] = {
-        16, // EU433
-        14, // EU868
-        30, // US915
-        30, // AU915
-        30, // AS923
-        27, // KR920
-        27, // IN865
-        14, // CN470
-        14, // CN779
-        16, // EU433
-        30, // AU915OLD
-        14, // CN470PREQUEL
-        30, // AS923JP
-        27  // AS923KR
+
+    /**
+     * @brief Represents the state of message confirmations.
+     */
+    enum ConfirmationState {
+        NONE,        /**< No confirmation pending */
+        WAITING_ACK, /**< Waiting for acknowledgment of sent message */
+        ACK_PENDING  /**< Need to acknowledge a received message */
     };
-    
-    // LoRa Duty Cycle
-    static constexpr float DUTY_CYCLE = 1.0 / 3600.0; // 1 hour
-    
-    enum class DeviceClass {
-        CLASS_A,
-        CLASS_C
+
+    /**
+     * @brief Represents the state of receive windows.
+     */
+    enum RxWindowState {
+        RX_IDLE,        /**< Not in a receive window */
+        RX_WAIT_1,      /**< Waiting to open RX1 window */
+        RX_WINDOW_1,    /**< In RX1 window */
+        RX_WAIT_2,      /**< Waiting to open RX2 window */
+        RX_WINDOW_2,    /**< In RX2 window */
+        RX_CONTINUOUS   /**< Continuous reception (Class C) */
     };
-    
-    enum class JoinMode {
-        OTAA,
-        ABP
-    };
-    
-    // Estado de las ventanas de recepción
-    enum RxWindowState
-    {
-        RX_IDLE,      // No esperando ninguna ventana
-        RX_WAIT_1,    // Esperando que se abra RX1
-        RX_WINDOW_1,  // En ventana RX1
-        RX_WAIT_2,    // Esperando que se abra RX2
-        RX_WINDOW_2,  // En ventana RX2
-        RX_CONTINUOUS // Escucha continua (solo Clase C)
-    };
-    
-    // Añadir después de las otras enumeraciones
-    enum class ConfirmationState {
-        NONE,           // Sin confirmación pendiente
-        WAITING_ACK,    // Esperando ACK para un mensaje enviado
-        ACK_RECEIVED,   // ACK recibido correctamente
-        ACK_PENDING     // Necesitamos enviar un ACK al servidor
-    };
-    
+
+    /**
+     * @brief Structure representing a LoRaWAN message.
+     */
     struct Message {
-        std::vector<uint8_t> payload;
-        uint8_t port;
-        bool confirmed;
+        std::vector<uint8_t> payload; /**< Message payload */
+        uint8_t port;                 /**< Message port */
+        bool confirmed;               /**< Whether the message is confirmed */
     };
+
+    /**
+     * @brief Callback type for received messages.
+     */
+    typedef std::function<void(const Message&)> ReceiveCallback;
     
-    // Constructor estándar (usa CH341SPI por defecto)
+    /**
+     * @brief Callback type for join events.
+     */
+    typedef std::function<void(bool)> JoinCallback;
+
+    /**
+     * @brief Default constructor.
+     * 
+     * Initializes a LoRaWAN instance with default SPI interface (CH341SPI).
+     */
     LoRaWAN();
-    
-    // Constructor que acepta un SPIInterface específico
-    LoRaWAN(std::unique_ptr<SPIInterface> spi_interface);
-    
+
+    /**
+     * @brief Constructor with custom SPI interface.
+     * 
+     * @param spi_interface A unique pointer to an SPIInterface implementation
+     */
+    explicit LoRaWAN(std::unique_ptr<SPIInterface> spi_interface);
+
+    /**
+     * @brief Destructor.
+     */
     ~LoRaWAN();
-    
-    // Inicialización
+
+    /**
+     * @brief Initialize the LoRaWAN stack and radio.
+     * 
+     * @param deviceIndex Optional device index for SPI
+     * @return true if initialization succeeded, false otherwise
+     */
     bool init(int deviceIndex = 0);
+
+    /**
+     * @brief Set the device class (A, B, or C).
+     * 
+     * @param deviceClass The device class to set
+     */
     void setDeviceClass(DeviceClass deviceClass);
-    
-    // Configuración OTAA
+
+    /**
+     * @brief Set the Device EUI.
+     * 
+     * @param devEUI Device EUI as a hexadecimal string
+     */
     void setDevEUI(const std::string& devEUI);
+
+    /**
+     * @brief Set the Application EUI.
+     * 
+     * @param appEUI Application EUI as a hexadecimal string
+     */
     void setAppEUI(const std::string& appEUI);
+
+    /**
+     * @brief Set the Application Key.
+     * 
+     * @param appKey Application Key as a hexadecimal string
+     */
     void setAppKey(const std::string& appKey);
-    
-    // Configuración ABP
+
+    /**
+     * @brief Set the Device Address.
+     * 
+     * Used for ABP activation.
+     * 
+     * @param devAddr Device Address as a hexadecimal string
+     */
     void setDevAddr(const std::string& devAddr);
+
+    /**
+     * @brief Set the Network Session Key.
+     * 
+     * Used for ABP activation.
+     * 
+     * @param nwkSKey Network Session Key as a hexadecimal string
+     */
     void setNwkSKey(const std::string& nwkSKey);
+
+    /**
+     * @brief Set the Application Session Key.
+     * 
+     * Used for ABP activation.
+     * 
+     * @param appSKey Application Session Key as a hexadecimal string
+     */
     void setAppSKey(const std::string& appSKey);
-    
-    // Gestión de conexión
-    bool join(JoinMode mode = JoinMode::OTAA, unsigned long timeout = 20000);
-    bool isJoined() const;
-    void disconnect();
-    
-    // Transmisión y recepción
-    bool send(const std::vector<uint8_t>& data, uint8_t port = 1, bool confirmed = false, bool force_duty_cycle = false);
-    bool receive(Message& message, unsigned long timeout = 5000);
-    
-    // Callbacks
+
+    /**
+     * @brief Join a LoRaWAN network.
+     * 
+     * @param mode Join mode (OTAA or ABP)
+     * @param timeout Timeout in milliseconds
+     * @return true if join succeeded, false otherwise
+     */
+    bool join(JoinMode mode, unsigned long timeout = 10000);
+
+    /**
+     * @brief Encrypt a payload.
+     * 
+     * @param payload The payload to encrypt
+     * @param port The port number
+     * @return Encrypted payload
+     */
+    std::vector<uint8_t> encryptPayload(const std::vector<uint8_t>& payload, uint8_t port);
+
+    /**
+     * @brief Decrypt a payload.
+     * 
+     * @param payload The encrypted payload
+     * @param port The port number
+     * @return Decrypted payload
+     */
+    std::vector<uint8_t> decryptPayload(const std::vector<uint8_t>& payload, uint8_t port);
+
+    /**
+     * @brief Calculate the time on air for a payload.
+     * 
+     * @param payload_size Size of the payload in bytes
+     * @return Time on air in milliseconds
+     */
+    float calculateTimeOnAir(size_t payload_size);
+
+    /**
+     * @brief Check if duty cycle allows transmission.
+     * 
+     * @param frequency Frequency in MHz
+     * @param payload_size Size of the payload in bytes
+     * @return true if transmission is allowed, false otherwise
+     */
+    bool checkDutyCycle(float frequency, size_t payload_size);
+
+    /**
+     * @brief Get the duty cycle usage for a channel.
+     * 
+     * @param channel Channel index
+     * @return Duty cycle usage as a percentage
+     */
+    float getDutyCycleUsage(int channel);
+
+    /**
+     * @brief Reset the duty cycle usage.
+     */
+    void resetDutyCycle();
+
+    /**
+     * @brief Send a message.
+     * 
+     * @param data The payload to send
+     * @param port The port number
+     * @param confirmed Whether the message should be confirmed
+     * @param force_duty_cycle Whether to force transmission even if duty cycle limits are reached
+     * @return true if the message was sent successfully, false otherwise
+     */
+    bool send(const std::vector<uint8_t>& data, uint8_t port, bool confirmed = false, bool force_duty_cycle = false);
+
+    /**
+     * @brief Update the LoRaWAN state.
+     * 
+     * Should be called regularly to handle received messages and other events.
+     */
+    void update();
+
+    /**
+     * @brief Receive a message.
+     * 
+     * @param message Reference to a Message structure where the received message will be stored
+     * @param timeout Timeout in milliseconds
+     * @return true if a message was received, false otherwise
+     */
+    bool receive(Message& message, unsigned long timeout = 1000);
+
+    /**
+     * @brief Set a callback for received messages.
+     * 
+     * @param callback Function to call when a message is received
+     */
     void onReceive(std::function<void(const Message&)> callback);
-    void onJoin(std::function<void(bool success)> callback);
-    
-    // Configuración de red
-    void setDataRate(uint8_t dr);
-    void setTxPower(int8_t power);
+
+    /**
+     * @brief Set a callback for join events.
+     * 
+     * @param callback Function to call when a join event occurs
+     */
+    void onJoin(std::function<void(bool)> callback);
+
+    /**
+     * @brief Set the LoRaWAN region.
+     * 
+     * @param region The region to set
+     */
+    void setRegion(int region);
+
+    /**
+     * @brief Get the current LoRaWAN region.
+     * 
+     * @return The current region
+     */
+    int getRegion() const;
+
+    /**
+     * @brief Get the current frequency.
+     * 
+     * @return The current frequency in MHz
+     */
+    float getFrequency() const;
+
+    /**
+     * @brief Set the frequency.
+     * 
+     * @param freq_mhz The frequency in MHz
+     */
+    void setFrequency(float freq_mhz);
+
+    /**
+     * @brief Get the channel from a frequency.
+     * 
+     * @param freq_mhz The frequency in MHz
+     * @return The channel index, or -1 if not found
+     */
+    int getChannelFromFrequency(float freq_mhz) const;
+
+    /**
+     * @brief Get the frequency for a channel.
+     * 
+     * @param channel The channel index
+     * @return The frequency in MHz, or 0 if invalid
+     */
+    float getFrequencyFromChannel(int channel) const;
+
+    /**
+     * @brief Set the current channel.
+     * 
+     * @param channel The channel index
+     */
     void setChannel(uint8_t channel);
+
+    /**
+     * @brief Get the current channel.
+     * 
+     * @return The current channel index
+     */
     uint8_t getChannel() const;
-    
-    // Diagnóstico
+
+    /**
+     * @brief Enable or disable single channel mode.
+     * 
+     * @param enable Whether to enable single channel mode
+     * @param freq_mhz The frequency in MHz
+     * @param sf Spreading factor (7-12)
+     * @param bw Bandwidth in kHz (125, 250, or 500)
+     * @param cr Coding rate (5-8 for 4/5 to 4/8)
+     * @param power Transmission power in dBm
+     * @param preamble Preamble length
+     */
+    void setSingleChannel(bool enable, float freq_mhz = 868.1, int sf = 9, 
+                          int bw = 125, int cr = 5, int power = 14, int preamble = 8);
+
+    /**
+     * @brief Check if single channel mode is enabled.
+     * 
+     * @return true if single channel mode is enabled, false otherwise
+     */
+    bool getSingleChannel() const;
+
+    /**
+     * @brief Get the single channel frequency.
+     * 
+     * @return The single channel frequency in MHz
+     */
+    float getSingleChannelFrequency() const;
+
+    /**
+     * @brief Set the transmission power.
+     * 
+     * @param power The transmission power in dBm
+     */
+    void setTxPower(int8_t power);
+
+    /**
+     * @brief Get the RSSI (Received Signal Strength Indicator).
+     * 
+     * @return The RSSI in dBm
+     */
     int getRSSI() const;
+
+    /**
+     * @brief Get the SNR (Signal-to-Noise Ratio).
+     * 
+     * @return The SNR in dB
+     */
     int getSNR() const;
+
+    /**
+     * @brief Get the frame counter.
+     * 
+     * @return The current uplink frame counter
+     */
     uint32_t getFrameCounter() const;
+
+    /**
+     * @brief Set the frame counter.
+     * 
+     * @param counter The new frame counter value
+     */
     void setFrameCounter(uint32_t counter);
+
+    /**
+     * @brief Wake the radio from sleep mode.
+     */
+    void wake();
+
+    /**
+     * @brief Put the radio in sleep mode.
+     */
+    void sleep();
+
+    /**
+     * @brief Validate the session keys.
+     * 
+     * @return true if the keys are valid, false otherwise
+     */
+    bool validateKeys() const;
+
+    /**
+     * @brief Enable or disable ADR (Adaptive Data Rate).
+     * 
+     * @param enable Whether to enable ADR
+     */
+    void enableADR(bool enable);
+
+    /**
+     * @brief Check if ADR is enabled.
+     * 
+     * @return true if ADR is enabled, false otherwise
+     */
+    bool isADREnabled() const;
+
+    /**
+     * @brief Reset the LoRaWAN session.
+     * 
+     * Clears all session keys and counters.
+     */
+    void resetSession();
+
+    /**
+     * @brief Apply ADR settings.
+     * 
+     * @param dataRate The data rate index
+     * @param txPower The transmission power index
+     * @param channelMask The channel mask
+     */
+    void applyADRSettings(uint8_t dataRate, uint8_t txPower, const std::vector<uint8_t>& channelMask);
+
+    /**
+     * @brief Process MAC commands.
+     * 
+     * @param commands The MAC commands to process
+     * @param response The response MAC commands
+     */
+    void processMACCommands(const std::vector<uint8_t>& commands, std::vector<uint8_t>& response);
+
+    /**
+     * @brief Process LinkADRReq MAC command.
+     * 
+     * @param cmd The MAC command
+     * @param index The index in the command
+     * @param response The response MAC command
+     */
+    void processLinkADRReq(const std::vector<uint8_t>& cmd, size_t index, std::vector<uint8_t>& response);
+
+    /**
+     * @brief Send ADR statistics.
+     */
+    void sendADRStatistics();
+
+    /**
+     * @brief Update transmission parameters for ADR.
+     */
+    void updateTxParamsForADR();
+
+    /**
+     * @brief Set up receive windows.
+     */
+    void setupRxWindows();
+
+    /**
+     * @brief Open RX1 window.
+     */
+    void openRX1Window();
+
+    /**
+     * @brief Open RX2 window.
+     */
+    void openRX2Window();
+
+    /**
+     * @brief Update receive windows.
+     */
+    void updateRxWindows();
+
+    /**
+     * @brief Handle confirmations.
+     */
+    void handleConfirmation();
+
+    /**
+     * @brief Send an acknowledgment.
+     */
+    void sendAck();
+
+    /**
+     * @brief Reset the confirmation state.
+     */
+    void resetConfirmationState();
+
+    /**
+     * @brief Handle a received message.
+     * 
+     * @param payload The received payload
+     * @param msg Reference to a Message structure where the processed message will be stored
+     */
+    void handleReceivedMessage(const std::vector<uint8_t>& payload, Message& msg);
+
+    /**
+     * @brief Process a join accept message.
+     * 
+     * @param data The join accept message data
+     * @return true if the processing succeeded, false otherwise
+     */
+    bool processJoinAccept(const std::vector<uint8_t>& data);
+
+    /**
+     * @brief Request a link check.
+     */
     void requestLinkCheck();
 
-    // Control de energía
-    void sleep();
-    void wake();
-    
-    // Actualización (debe llamarse periódicamente)
-    void update();
-    
-    // Nuevos métodos para gestión de radio
-    void setRegion(int region);
-    int getRegion() const;
-    float getFrequency() const;
-    void setFrequency(float freq_mhz);
-    int getChannelFromFrequency(float freq_mhz) const;
-    float getFrequencyFromChannel(int channel) const;
-    void setSingleChannel(bool enable, float freq_mhz = 868.1, int sf = 9, int bw = 125, int cr = 5, int power = 14, int preamble = 8);
-    bool getSingleChannel() const;
-    float getSingleChannelFrequency() const;
-    
-    // Método para reiniciar completamente la sesión
-    void resetSession();
-    
-    // Métodos para gestión de duty cycle
-    float calculateTimeOnAir(size_t payload_size);
-    bool checkDutyCycle(float frequency, size_t payload_size);
-    float getDutyCycleUsage(int channel);
-    void resetDutyCycle();
-    
-    // Control de verbosidad
+    /**
+     * @brief Update the data rate from the spreading factor.
+     */
+    void updateDataRateFromSF();
+
+    /**
+     * @brief Set verbose mode.
+     * 
+     * @param verbose Whether to enable verbose mode
+     */
     static void setVerbose(bool verbose) { isVerbose = verbose; }
+
+    /**
+     * @brief Get verbose mode.
+     * 
+     * @return true if verbose mode is enabled, false otherwise
+     */
     static bool getVerbose() { return isVerbose; }
+
+private:
+    // Forward declaration of implementation structure
+    struct Impl;
+    std::unique_ptr<Impl> pimpl;
+
+    // Radio parameters for RX windows
+    int current_sf;
+    float current_bw;
+    int current_cr;
+    int current_preamble;
+    int current_power;
+    int current_channel;
+    int current_lna;
+    int current_sync_word;
+    uint8_t current_nbRep;
+
+    // RX Window parameters
+    uint8_t rx1DrOffset = 0;
+    uint8_t rx2DataRate = 0;
+
+    // LoRaWAN state and options
+    bool joined;
+    DeviceClass currentClass;
+    JoinMode joinMode;
+    bool adrEnabled;
+    uint8_t adrAckCounter;
+    std::vector<uint8_t> pendingMACResponses;
     
-    // ADR control
-    void enableADR(bool enable = true);
-    bool isADREnabled() const;
-    void applyADRSettings(uint8_t dataRate, uint8_t txPower, const std::vector<uint8_t>& channelMask);
+    // Confirmation state variables
+    ConfirmationState confirmState = NONE;
+    int confirmRetries = 0;
+    std::chrono::steady_clock::time_point lastConfirmAttempt;
+    std::vector<uint8_t> pendingAck;
+    uint8_t ackPort;
+    bool needsAck = false;
+    uint16_t lastFcntDown = 0;
+
+    // Other constants
+    static constexpr int MAX_CHANNELS = 16;
     
-    private:
+    // Channels and duty cycle tracking
+    float channelFrequencies[MAX_CHANNELS];
+    std::chrono::steady_clock::time_point lastChannelUse[MAX_CHANNELS];
+    float channelAirTime[MAX_CHANNELS];
+
+    // Region selection and constants
     int lora_region = REGION_EU868;
-    
-    // Atributos privados para gestión de radio
-    int current_channel = 0;
-    int current_sf = 9;
-    int current_bw = 125;
-    int current_cr = 5;
-    int current_power = 14;
-    int current_lna = 0x23;
-    int current_sync_word = 0x34;
-    int current_preamble = 8;
-    int current_dr = 0;
-    
-    // Support to one channel gateway
+
+    // Single channel mode parameters
     bool one_channel_gateway = false;
     float one_channel_freq = 868.1;
     int one_channel_sf = 9;
@@ -363,134 +647,85 @@ class LoRaWAN {
     int one_channel_cr = 5;
     int one_channel_power = 14;
     int one_channel_preamble = 8;
+
+    // Timing constants
+    static constexpr unsigned long RECEIVE_DELAY1 = 1000;
+    static constexpr unsigned long RECEIVE_DELAY2 = 2000;
+    static constexpr unsigned long WINDOW_DURATION = 500;
     
-    // Atributos privados para gestión de LoRaWAN
-    float duty_cycle[CHANNELS] = {0};
-    
-    // Atributos privados para gestión interna
-    struct Impl;
-    std::unique_ptr<Impl> pimpl;
+    // ADR constants
+    static constexpr uint8_t ADR_ACK_LIMIT = 64;
+    static constexpr uint8_t ADR_ACK_DELAY = 32;
+    static constexpr uint8_t MAX_RETRIES = 8;
+
     
     // Callbacks
-    std::function<void(const Message&)> receiveCallback;
-    std::function<void(bool)> joinCallback;
-    
-    // Estado
-    bool joined;
-    DeviceClass currentClass;
-    JoinMode joinMode;
-    
-    // Métodos privados de ayuda
-    bool processReceive();
-    void handleRxTimeout();
-    bool validateKeys() const;
-    void setupRxWindows();
-    void switchToClassC();
-    void updateDataRateFromSF(); // Actualiza current_dr basado en SF y BW
+    ReceiveCallback receiveCallback = nullptr;
+    JoinCallback joinCallback = nullptr;
 
-    // Nuevos métodos privados
-    bool processJoinAccept(const std::vector<uint8_t>& data);
-    bool verifyMIC(const std::vector<uint8_t>& data);
-    std::vector<uint8_t> encryptPayload(const std::vector<uint8_t>& payload, uint8_t port);
-    std::vector<uint8_t> decryptPayload(const std::vector<uint8_t>& payload, uint8_t port);
-    
-    // Variables para seguimiento de duty cycle
-    std::array<std::chrono::steady_clock::time_point, MAX_CHANNELS> lastChannelUse;
-    std::array<float, MAX_CHANNELS> channelAirTime;
-    std::array<float, MAX_CHANNELS> channelFrequencies;
-    
-    // Control de verbosidad para mensajes de depuración
-    static bool isVerbose;
-    
-    // Métodos para gestión de ventanas de recepción
-    void updateRxWindows();
-    void openRX1Window();
-    void openRX2Window();
-    
-    // ADR related variables
-    bool adrEnabled = false;
-    int adrAckCounter = 0;
-    static constexpr int ADR_ACK_LIMIT = 64;      // Enviar ADR ACK REQ después de estos paquetes sin respuesta
-    static constexpr int ADR_ACK_DELAY = 32;      // Reducir DR después de estos paquetes adicionales
-    
-    // MAC commands
-    static constexpr uint8_t MAC_LINK_CHECK_REQ = 0x02;
-    static constexpr uint8_t MAC_LINK_CHECK_ANS = 0x02;
-    static constexpr uint8_t MAC_LINK_ADR_REQ = 0x03;
-    static constexpr uint8_t MAC_LINK_ADR_ANS = 0x03;
-    static constexpr uint8_t MAC_DUTY_CYCLE_REQ = 0x04;
-    static constexpr uint8_t MAC_DUTY_CYCLE_ANS = 0x04;
-    static constexpr uint8_t MAC_RX_PARAM_SETUP_REQ = 0x05;
-    static constexpr uint8_t MAC_RX_PARAM_SETUP_ANS = 0x05;
-    static constexpr uint8_t MAC_DEV_STATUS_REQ = 0x06;
-    static constexpr uint8_t MAC_DEV_STATUS_ANS = 0x06;
-    static constexpr uint8_t MAC_NEW_CHANNEL_REQ = 0x07;
-    static constexpr uint8_t MAC_NEW_CHANNEL_ANS = 0x07;
-    static constexpr uint8_t MAC_RX_TIMING_SETUP_REQ = 0x08;
-    static constexpr uint8_t MAC_RX_TIMING_SETUP_ANS = 0x08;
-    static constexpr uint8_t MAC_TX_PARAM_SETUP_REQ = 0x09;
-    static constexpr uint8_t MAC_TX_PARAM_SETUP_ANS = 0x09;
-    
-    // Procesamiento de comandos MAC
-    void processMACCommands(const std::vector<uint8_t>& commands, std::vector<uint8_t>& response);
-    void processLinkADRReq(const std::vector<uint8_t>& cmd, size_t index, std::vector<uint8_t>& response);
-    void updateTxParamsForADR();
-    
-    // Almacenamiento para respuestas MAC pendientes
-    std::vector<uint8_t> pendingMACResponses;
-    
-    // Variables para ADR
-    int current_nbRep = 1; // Repeticiones de transmisión por defecto
-    uint8_t rx1DrOffset = 0; // Offset de data rate para RX1
-    uint8_t rx2DataRate = 0; // Data rate para RX2
-    
-    // Métodos adicionales para ADR
-    void sendADRStatistics();
-    
-    // Extensión de la implementación de Impl
-    struct ImplStats {
-        // Variables para estadísticas
-        std::deque<float> snrHistory;
-        std::deque<int> rssiHistory;
-        
-        float getAverageSnr() const {
-            if (snrHistory.empty()) return 0;
-            float sum = 0;
-            for (auto snr : snrHistory) sum += snr;
-            return sum / snrHistory.size();
-        }
-        
-        int getAverageRssi() const {
-            if (rssiHistory.empty()) return -120;
-            int sum = 0;
-            for (auto rssi : rssiHistory) sum += rssi;
-            return sum / rssiHistory.size();
-        }
-        
-        void addSnrSample(float snr) {
-            snrHistory.push_back(snr);
-            if (snrHistory.size() > 10) snrHistory.pop_front();
-        }
-        
-        void addRssiSample(int rssi) {
-            rssiHistory.push_back(rssi);
-            if (rssiHistory.size() > 10) rssiHistory.pop_front();
-        }
+    // Base frequencies for regions (MHz)
+    static constexpr float BASE_FREQ[REGIONS] = { 
+        868.1f,  // EU868
+        902.3f,  // US915
+        915.2f,  // AU915
+        433.175f // EU433
     };
-    
-    // Variables para gestión de confirmaciones
-    ConfirmationState confirmState = ConfirmationState::NONE;
-    int confirmRetries = 0;
-    static constexpr int MAX_RETRIES = 8;
-    std::chrono::steady_clock::time_point lastConfirmAttempt;
-    std::vector<uint8_t> pendingAck;
-    uint8_t ackPort = 0;
-    bool needsAck = false;
-    uint16_t lastFcntDown = 0;
-    
-    // Métodos para gestión de confirmaciones
-    void handleConfirmation();
-    void sendAck();
-    void resetConfirmationState();
-    void handleReceivedMessage(const std::vector<uint8_t>& payload, Message& msg);
+
+    // Channel step for regions (MHz)
+    static constexpr float CHANNEL_STEP[REGIONS] = {
+        0.2f,    // EU868
+        0.2f,    // US915
+        0.2f,    // AU915
+        0.2f     // EU433
+    };
+
+    // Maximum transmit power by region (dBm)
+    static constexpr int MAX_POWER[REGIONS] = {
+        14,      // EU868
+        30,      // US915
+        30,      // AU915
+        14       // EU433
+    };
+
+    // RX2 parameters for each region
+    static constexpr float RX2_FREQ[REGIONS] = {
+        869.525f, // EU868
+        923.3f,   // US915
+        923.3f,   // AU915
+        434.665f  // EU433
+    };
+
+    static constexpr int RX2_SF[REGIONS] = {
+        9,       // EU868
+        12,      // US915
+        12,      // AU915
+        9        // EU433
+    };
+
+    static constexpr float RX2_BW[REGIONS] = {
+        125.0f,  // EU868
+        500.0f,  // US915
+        500.0f,  // AU915
+        125.0f   // EU433
+    };
+
+    static constexpr int RX2_CR[REGIONS] = {
+        5,       // EU868
+        5,       // US915
+        5,       // AU915
+        5        // EU433
+    };
+
+    static constexpr int RX2_PREAMBLE[REGIONS] = {
+        8,       // EU868
+        8,       // US915
+        8,       // AU915
+        8        // EU433
+    };
+
+    // Static members
+    static bool isVerbose;
+
+    // Current data rate
+    uint8_t current_dr = 0;
 };

@@ -1,4 +1,3 @@
-
 /**
  * @file CH341SPI.hpp
  * @brief Header file for the CH341SPI class, which implements the SPIInterface for the CH341 USB to SPI adapter.
@@ -73,18 +72,41 @@ public:
     bool pinMode(uint8_t pin, uint8_t mode);
 
     /**
-     * @brief Sets the callback function for interrupts.
-     * @param callback The callback function to be called on an interrupt.
-     * @return True if the operation was successful, false otherwise.
+     * @brief Configure interrupt settings for a pin
+     * 
+     * @param pin The pin number
+     * @param enable True to enable the interrupt, false to disable it
+     * @return True if the operation was successful, false otherwise
      */
-    bool setInterruptCallback(InterruptCallback callback);
+    bool configureInterrupt(uint8_t pin, bool enable) override {
+        // CH341 doesn't support native interrupts, would need external handling
+        return false;
+    }
 
     /**
-     * @brief Enables or disables interrupts.
-     * @param enable Set to true to enable interrupts, false to disable.
-     * @return True if the operation was successful, false otherwise.
+     * @brief Set interrupt callback
+     * 
+     * @param callback Function to call when interrupt occurs
+     * @return True if successful, false otherwise
      */
-    bool enableInterrupt(bool enable);
+    bool setInterruptCallback(InterruptCallback callback) override;
+
+    /**
+     * @brief Enable or disable interrupts
+     * 
+     * @param enable True to enable interrupts, false to disable them
+     * @return True if successful, false otherwise
+     */
+    bool enableInterrupt(bool enable) override;
+
+    /**
+     * @brief Check if the device is active/connected
+     * 
+     * @return True if the device is active, false otherwise
+     */
+    bool isActive() const override {
+        return is_open;
+    }
 
     // Constants for CH341 pins
     static const uint8_t PIN_D0 = 0x01;
@@ -99,6 +121,7 @@ private:
     libusb_context *context; ///< Context for libusb.
     int device_index; ///< Index of the CH341 device.
     bool lsb_first; ///< Flag to indicate if LSB should be sent first.
+    bool is_open; ///< Flag to indicate whether the device is open and active
     uint8_t _gpio_direction; ///< Direction of GPIO pins.
     uint8_t _gpio_output; ///< Output state of GPIO pins.
     InterruptCallback interruptCallback; ///< Callback function for interrupts.

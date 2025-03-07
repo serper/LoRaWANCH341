@@ -21,6 +21,14 @@
 #include <thread>
 #include <atomic>
 #include <map>
+#include <fstream>
+#include <fcntl.h>
+
+#ifdef _WIN32
+#include <io.h>
+#else
+#include <unistd.h>
+#endif
 
 /**
  * @class LinuxSPI
@@ -95,23 +103,67 @@ class LinuxSPI : public SPIInterface {
     bool pinMode(uint8_t pin, uint8_t mode);
     
     /**
-     * @brief Sets the callback function for GPIO interrupts.
+     * @brief Configure interrupt settings for a GPIO pin
      * 
-     * @param callback The callback function to be called on an interrupt.
-     * @return true if the callback was successfully set, false otherwise.
+     * @param pin The pin number
+     * @param enable True to enable the interrupt, false to disable it
+     * @return True if the operation was successful, false otherwise
      */
-    bool setInterruptCallback(InterruptCallback callback);
+    bool configureInterrupt(uint8_t pin, bool enable) override {
+        // Basic implementation using sysfs
+        // In a real implementation, would use proper GPIO interrupts
+        std::string gpio_path = "/sys/class/gpio/gpio" + std::to_string(pin);
+        
+        // Check if GPIO exists
+        if (access(gpio_path.c_str(), F_OK) == -1) {
+            // Need to export
+            std::ofstream export_file("/sys/class/gpio/export");
+            if (!export_file.is_open()) {
+                return false;
+            }
+            export_file << pin;
+            export_file.close();
+        }
+        
+        // Configure edge for interrupt
+        std::string edge_path = gpio_path + "/edge";
+        std::ofstream edge_file(edge_path);
+        if (!edge_file.is_open()) {
+            return false;
+        }
+        edge_file << (enable ? "both" : "none");
+        edge_file.close();
+        
+        return true;
+    }
     
     /**
-     * @brief Enables or disables GPIO interrupts.
+     * @brief Set interrupt callback
      * 
-     * @param enable true to enable interrupts, false to disable.
-     * @return true if the operation was successful, false otherwise.
+     * @param callback Function to call when interrupt occurs
+     * @return True if successful, false otherwise
      */
-    bool enableInterrupt(bool enable);
+    bool setInterruptCallback(InterruptCallback callback) override;
     
+    /**
+     * @brief Enable or disable interrupts
+     * 
+     * @param enable True to enable interrupts, false to disable them
+     * @return True if successful, false otherwise
+     */
+    bool enableInterrupt(bool enable) override;
+    
+    /**
+     * @brief Check if the device is active/connected
+     * 
+     * @return True if the device is active, false otherwise
+     */
+    bool isActive() const override {
+        return fd >= 0;
+    }
+
 private:
-std::string device_path;
+    std::string device_path;
     uint32_t speed_hz;
     uint8_t spi_mode;
     int fd; // File descriptor para el dispositivo SPI
@@ -126,6 +178,8 @@ std::string device_path;
     std::atomic<bool> interrupt_running;
     std::thread interrupt_thread;
     int interrupt_pin;
+    InterruptCallback interrupt_callback;
+    bool interrupt_enabled = false;
     
     /**
      * @brief Exports a GPIO pin for use.

@@ -1977,7 +1977,7 @@ void LoRaWAN::applyADRSettings(uint8_t dataRate, uint8_t txPower, const std::vec
         default:
             // Generic mapping for other regions
             sf = dataRate <= 6 ? (12 - dataRate) : 7;
-            bw = dataRate == 6 ? 250.0f : 125.0f;
+            bw = dataRate == 6 ? 250.0 : 125.0;
     }
 
     // Determine power based on the region
