@@ -40,7 +40,7 @@ var searchData=
   ['reg_5frx_5fnb_5fbytes_37',['REG_RX_NB_BYTES',['../classRFM95.html#a7736176ee57772a2d7e92b20b2a56cca',1,'RFM95']]],
   ['reg_5fsync_5fword_38',['REG_SYNC_WORD',['../classRFM95.html#a6a798df934d418a43219838cc784de7d',1,'RFM95']]],
   ['reg_5fversion_39',['REG_VERSION',['../classRFM95.html#ac3b8502f941ca2e75c68859be5af26a8',1,'RFM95']]],
-  ['rfm_40',['rfm',['../LoRaWAN_8cpp.html#a10a127988aa4069013339d296ba1d750',1,'rfm:&#160;LoRaWAN.cpp'],['../structLoRaWAN_1_1Impl.html#a26f300b282f2b64f118392ff464275aa',1,'LoRaWAN::Impl::rfm']]],
+  ['rfm_40',['rfm',['../structLoRaWAN_1_1Impl.html#a26f300b282f2b64f118392ff464275aa',1,'LoRaWAN::Impl']]],
   ['root_41',['root',['../classConfigManager.html#a259e83827e97d2535dedcc5f6492fba0',1,'ConfigManager']]],
   ['rssihistory_42',['rssihistory',['../structLoRaWAN_1_1Impl.html#ad533a0fc9c16a445a44067d952b89df5',1,'LoRaWAN::Impl::rssiHistory'],['../classADRStats.html#a2d26cecee0d2aedb1ba35737a76adb0d',1,'ADRStats::rssiHistory']]],
   ['rx1droffset_43',['rx1DrOffset',['../classLoRaWAN.html#a3e120efb11596a56d6d97ebd1962451e',1,'LoRaWAN']]],
