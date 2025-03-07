@@ -1,5 +1,5 @@
 <map id="LoRaWAN::decryptPayload" name="LoRaWAN::decryptPayload">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,199,31"/>
+<area shape="rect" id="Node000001" title="Decrypt a payload." alt="" coords="5,5,199,31"/>
 <area shape="rect" id="Node000002" href="$classAESCMAC.html#af05c7a2b06dc8f316273aabaaef18d7c" title=" " alt="" coords="247,5,420,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,15,233,15,233,21,199,21"/>
 </map>

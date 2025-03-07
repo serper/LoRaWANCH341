@@ -87,7 +87,7 @@ Inheritance diagram for LinuxSPI:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLinuxSPI__inherit__graph.png" border="0" usemap="#aLinuxSPI_inherit__map" alt="Inheritance graph"/></div>
 <map name="aLinuxSPI_inherit__map" id="aLinuxSPI_inherit__map">
-<area shape="rect" title="Implementation of SPIInterface using Linux spidev." alt="" coords="5,359,176,924"/>
+<area shape="rect" title="Implementation of SPIInterface using Linux spidev." alt="" coords="5,359,176,1004"/>
 <area shape="rect" href="classSPIInterface.html" title="Abstract interface for SPI communication." alt="" coords="5,5,176,311"/>
 <area shape="poly" title=" " alt="" coords="93,324,93,358,88,358,88,324"/>
 </map>
@@ -97,7 +97,7 @@ Collaboration diagram for LinuxSPI:</div>
 <div class="dyncontent">
 <div class="center"><img src="classLinuxSPI__coll__graph.png" border="0" usemap="#aLinuxSPI_coll__map" alt="Collaboration graph"/></div>
 <map name="aLinuxSPI_coll__map" id="aLinuxSPI_coll__map">
-<area shape="rect" title="Implementation of SPIInterface using Linux spidev." alt="" coords="5,359,176,924"/>
+<area shape="rect" title="Implementation of SPIInterface using Linux spidev." alt="" coords="5,359,176,1004"/>
 <area shape="rect" href="classSPIInterface.html" title="Abstract interface for SPI communication." alt="" coords="5,5,176,311"/>
 <area shape="poly" title=" " alt="" coords="93,324,93,358,88,358,88,324"/>
 </map>
@@ -129,19 +129,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac50a6973c3a0f31002b778712a72cf69" id="r_ac50a6973c3a0f31002b778712a72cf69"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLinuxSPI.html#ac50a6973c3a0f31002b778712a72cf69">pinMode</a> (uint8_t pin, uint8_t mode)</td></tr>
 <tr class="memdesc:ac50a6973c3a0f31002b778712a72cf69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the mode of a GPIO pin.  <br /></td></tr>
 <tr class="separator:ac50a6973c3a0f31002b778712a72cf69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abaaa9ab97d0a775e165816cdc009548d" id="r_abaaa9ab97d0a775e165816cdc009548d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLinuxSPI.html#abaaa9ab97d0a775e165816cdc009548d">setInterruptCallback</a> (<a class="el" href="classSPIInterface.html#a8f87e37243f3345f1c1383439ada4554">InterruptCallback</a> callback)</td></tr>
-<tr class="memdesc:abaaa9ab97d0a775e165816cdc009548d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the callback function for GPIO interrupts.  <br /></td></tr>
-<tr class="separator:abaaa9ab97d0a775e165816cdc009548d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47b09d18147f2d9c96d72daee7e94013" id="r_a47b09d18147f2d9c96d72daee7e94013"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLinuxSPI.html#a47b09d18147f2d9c96d72daee7e94013">enableInterrupt</a> (bool enable)</td></tr>
-<tr class="memdesc:a47b09d18147f2d9c96d72daee7e94013"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables GPIO interrupts.  <br /></td></tr>
-<tr class="separator:a47b09d18147f2d9c96d72daee7e94013"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a409afdd29f1bc37b05fc0bb400876885" id="r_a409afdd29f1bc37b05fc0bb400876885"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLinuxSPI.html#a409afdd29f1bc37b05fc0bb400876885">configureInterrupt</a> (uint8_t pin, bool enable) override</td></tr>
+<tr class="memdesc:a409afdd29f1bc37b05fc0bb400876885"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure interrupt settings for a GPIO pin.  <br /></td></tr>
+<tr class="separator:a409afdd29f1bc37b05fc0bb400876885"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c5c99a372ab2bca5190d6abc0ea12fa" id="r_a9c5c99a372ab2bca5190d6abc0ea12fa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLinuxSPI.html#a9c5c99a372ab2bca5190d6abc0ea12fa">setInterruptCallback</a> (<a class="el" href="classSPIInterface.html#a8f87e37243f3345f1c1383439ada4554">InterruptCallback</a> callback) override</td></tr>
+<tr class="memdesc:a9c5c99a372ab2bca5190d6abc0ea12fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set interrupt callback.  <br /></td></tr>
+<tr class="separator:a9c5c99a372ab2bca5190d6abc0ea12fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a394ce1c0fb77e44cd9f39caa5ef4ffd1" id="r_a394ce1c0fb77e44cd9f39caa5ef4ffd1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLinuxSPI.html#a394ce1c0fb77e44cd9f39caa5ef4ffd1">enableInterrupt</a> (bool enable) override</td></tr>
+<tr class="memdesc:a394ce1c0fb77e44cd9f39caa5ef4ffd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable or disable interrupts.  <br /></td></tr>
+<tr class="separator:a394ce1c0fb77e44cd9f39caa5ef4ffd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ce8a2d166d32cb1f257038e04a4599f" id="r_a8ce8a2d166d32cb1f257038e04a4599f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLinuxSPI.html#a8ce8a2d166d32cb1f257038e04a4599f">isActive</a> () const override</td></tr>
+<tr class="memdesc:a8ce8a2d166d32cb1f257038e04a4599f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the device is active/connected.  <br /></td></tr>
+<tr class="separator:a8ce8a2d166d32cb1f257038e04a4599f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classSPIInterface"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classSPIInterface')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classSPIInterface.html">SPIInterface</a></td></tr>
 <tr class="memitem:a2fff518573cbe56dc28f9057a03ae07a inherit pub_methods_classSPIInterface" id="r_a2fff518573cbe56dc28f9057a03ae07a"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSPIInterface.html#a2fff518573cbe56dc28f9057a03ae07a">~SPIInterface</a> ()=default</td></tr>
 <tr class="separator:a2fff518573cbe56dc28f9057a03ae07a inherit pub_methods_classSPIInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3fd933e0e3e36e4f13941f0dde85caa4 inherit pub_methods_classSPIInterface" id="r_a3fd933e0e3e36e4f13941f0dde85caa4"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSPIInterface.html#a3fd933e0e3e36e4f13941f0dde85caa4">configureInterrupt</a> (uint8_t pin, bool enable)=0</td></tr>
-<tr class="separator:a3fd933e0e3e36e4f13941f0dde85caa4 inherit pub_methods_classSPIInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c067c36e1b1e77894057d5db261f64f inherit pub_methods_classSPIInterface" id="r_a0c067c36e1b1e77894057d5db261f64f"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSPIInterface.html#a0c067c36e1b1e77894057d5db261f64f">isActive</a> () const =0</td></tr>
-<tr class="separator:a0c067c36e1b1e77894057d5db261f64f inherit pub_methods_classSPIInterface"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -187,6 +189,10 @@ Private Attributes</h2></td></tr>
 <tr class="separator:ac237bb427fe6c081e87edca1482004bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1779752919f43d61ab810bfd0232bda3" id="r_a1779752919f43d61ab810bfd0232bda3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLinuxSPI.html#a1779752919f43d61ab810bfd0232bda3">interrupt_pin</a></td></tr>
 <tr class="separator:a1779752919f43d61ab810bfd0232bda3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace44b0b95b929b36520015ff2a92682e" id="r_ace44b0b95b929b36520015ff2a92682e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSPIInterface.html#a8f87e37243f3345f1c1383439ada4554">InterruptCallback</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLinuxSPI.html#ace44b0b95b929b36520015ff2a92682e">interrupt_callback</a></td></tr>
+<tr class="separator:ace44b0b95b929b36520015ff2a92682e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5c2057cb29c19b573e02242344a3127" id="r_af5c2057cb29c19b573e02242344a3127"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLinuxSPI.html#af5c2057cb29c19b573e02242344a3127">interrupt_enabled</a> = false</td></tr>
+<tr class="separator:af5c2057cb29c19b573e02242344a3127"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -287,7 +293,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="classLinuxSPI.html#a29e7826b096e43aa70db5c33ec40b1db" title="Closes the SPI device." alt="" coords="204,31,323,56"/>
 <area shape="poly" title=" " alt="" coords="156,41,190,41,190,46,156,46"/>
 <area shape="poly" title=" " alt="" coords="233,32,227,22,230,13,243,6,263,4,288,8,299,16,295,20,286,12,263,9,244,11,234,16,232,22,238,29"/>
-<area shape="rect" href="classLinuxSPI.html#a47b09d18147f2d9c96d72daee7e94013" title="Enables or disables GPIO interrupts." alt="" coords="371,5,556,31"/>
+<area shape="rect" href="classLinuxSPI.html#a394ce1c0fb77e44cd9f39caa5ef4ffd1" title="Enable or disable interrupts." alt="" coords="371,5,556,31"/>
 <area shape="poly" title=" " alt="" coords="322,33,357,29,358,34,323,39"/>
 <area shape="rect" href="classLinuxSPI.html#af17cb1cf95794f95409ea9c014c57520" title="Unexports a GPIO pin." alt="" coords="376,55,551,80"/>
 <area shape="poly" title=" " alt="" coords="323,48,363,53,362,58,322,53"/>
@@ -334,7 +340,7 @@ Here is the call graph for this function:</div>
 <map name="aclassLinuxSPI_a29e7826b096e43aa70db5c33ec40b1db_cgraph" id="aclassLinuxSPI_a29e7826b096e43aa70db5c33ec40b1db_cgraph">
 <area shape="rect" title="Closes the SPI device." alt="" coords="5,31,124,56"/>
 <area shape="poly" title=" " alt="" coords="32,32,25,22,28,12,42,6,65,4,93,8,104,17,100,21,90,13,65,9,43,11,32,16,30,22,36,29"/>
-<area shape="rect" href="classLinuxSPI.html#a47b09d18147f2d9c96d72daee7e94013" title="Enables or disables GPIO interrupts." alt="" coords="172,5,357,31"/>
+<area shape="rect" href="classLinuxSPI.html#a394ce1c0fb77e44cd9f39caa5ef4ffd1" title="Enable or disable interrupts." alt="" coords="172,5,357,31"/>
 <area shape="poly" title=" " alt="" coords="124,33,158,29,159,34,124,39"/>
 <area shape="rect" href="classLinuxSPI.html#af17cb1cf95794f95409ea9c014c57520" title="Unexports a GPIO pin." alt="" coords="177,55,352,80"/>
 <area shape="poly" title=" " alt="" coords="124,48,164,53,163,58,124,53"/>
@@ -358,6 +364,54 @@ Here is the caller graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="113,19,103,11,81,8,62,10,52,15,49,20,55,28,51,31,44,21,48,11,60,5,81,3,106,6,116,15"/>
 </map>
 </div>
+
+</div>
+</div>
+<a id="a409afdd29f1bc37b05fc0bb400876885" name="a409afdd29f1bc37b05fc0bb400876885"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a409afdd29f1bc37b05fc0bb400876885">&#9670;&#160;</a></span>configureInterrupt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool LinuxSPI::configureInterrupt </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>pin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>enable</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Configure interrupt settings for a GPIO pin. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pin</td><td>The pin number </td></tr>
+    <tr><td class="paramname">enable</td><td>True to enable the interrupt, false to disable it </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the operation was successful, false otherwise </dd></dl>
+
+<p>Implements <a class="el" href="classSPIInterface.html#a3fd933e0e3e36e4f13941f0dde85caa4">SPIInterface</a>.</p>
 
 </div>
 </div>
@@ -466,8 +520,8 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a id="a47b09d18147f2d9c96d72daee7e94013" name="a47b09d18147f2d9c96d72daee7e94013"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a47b09d18147f2d9c96d72daee7e94013">&#9670;&#160;</a></span>enableInterrupt()</h2>
+<a id="a394ce1c0fb77e44cd9f39caa5ef4ffd1" name="a394ce1c0fb77e44cd9f39caa5ef4ffd1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a394ce1c0fb77e44cd9f39caa5ef4ffd1">&#9670;&#160;</a></span>enableInterrupt()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -485,27 +539,27 @@ Here is the call graph for this function:</div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Enables or disables GPIO interrupts. </p>
+<p>Enable or disable interrupts. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">enable</td><td>true to enable interrupts, false to disable. </td></tr>
+    <tr><td class="paramname">enable</td><td>True to enable interrupts, false to disable them </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>true if the operation was successful, false otherwise. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True if successful, false otherwise </dd></dl>
 
 <p>Implements <a class="el" href="classSPIInterface.html#a2a303f8577d1368e59302c6d5542a970">SPIInterface</a>.</p>
 <div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classLinuxSPI_a47b09d18147f2d9c96d72daee7e94013_cgraph.png" border="0" usemap="#aclassLinuxSPI_a47b09d18147f2d9c96d72daee7e94013_cgraph" alt=""/></div>
-<map name="aclassLinuxSPI_a47b09d18147f2d9c96d72daee7e94013_cgraph" id="aclassLinuxSPI_a47b09d18147f2d9c96d72daee7e94013_cgraph">
-<area shape="rect" title="Enables or disables GPIO interrupts." alt="" coords="5,5,191,31"/>
+<div class="center"><img src="classLinuxSPI_a394ce1c0fb77e44cd9f39caa5ef4ffd1_cgraph.png" border="0" usemap="#aclassLinuxSPI_a394ce1c0fb77e44cd9f39caa5ef4ffd1_cgraph" alt=""/></div>
+<map name="aclassLinuxSPI_a394ce1c0fb77e44cd9f39caa5ef4ffd1_cgraph" id="aclassLinuxSPI_a394ce1c0fb77e44cd9f39caa5ef4ffd1_cgraph">
+<area shape="rect" title="Enable or disable interrupts." alt="" coords="5,5,191,31"/>
 <area shape="rect" href="classLinuxSPI.html#af5cb1ff04e423beaa3795d9365206e8d" title=" " alt="" coords="239,5,425,31"/>
 <area shape="poly" title=" " alt="" coords="191,15,225,15,225,21,191,21"/>
 <area shape="rect" href="classLinuxSPI.html#a7f8baa78666c5fbae5e1a160df04e5af" title="Reads the value of a GPIO pin." alt="" coords="473,5,656,31"/>
@@ -515,9 +569,9 @@ Here is the call graph for this function:</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classLinuxSPI_a47b09d18147f2d9c96d72daee7e94013_icgraph.png" border="0" usemap="#aclassLinuxSPI_a47b09d18147f2d9c96d72daee7e94013_icgraph" alt=""/></div>
-<map name="aclassLinuxSPI_a47b09d18147f2d9c96d72daee7e94013_icgraph" id="aclassLinuxSPI_a47b09d18147f2d9c96d72daee7e94013_icgraph">
-<area shape="rect" title="Enables or disables GPIO interrupts." alt="" coords="371,55,556,80"/>
+<div class="center"><img src="classLinuxSPI_a394ce1c0fb77e44cd9f39caa5ef4ffd1_icgraph.png" border="0" usemap="#aclassLinuxSPI_a394ce1c0fb77e44cd9f39caa5ef4ffd1_icgraph" alt=""/></div>
+<map name="aclassLinuxSPI_a394ce1c0fb77e44cd9f39caa5ef4ffd1_icgraph" id="aclassLinuxSPI_a394ce1c0fb77e44cd9f39caa5ef4ffd1_icgraph">
+<area shape="rect" title="Enable or disable interrupts." alt="" coords="371,55,556,80"/>
 <area shape="rect" href="classLinuxSPI.html#a29e7826b096e43aa70db5c33ec40b1db" title="Closes the SPI device." alt="" coords="204,55,323,80"/>
 <area shape="poly" title=" " alt="" coords="357,70,323,70,323,65,357,65"/>
 <area shape="poly" title=" " alt="" coords="295,44,286,36,263,33,244,35,234,40,232,46,238,53,233,56,227,46,230,37,243,30,263,28,288,32,299,40"/>
@@ -616,7 +670,7 @@ Here is the caller graph for this function:</div>
 <div class="center"><img src="classLinuxSPI_af5cb1ff04e423beaa3795d9365206e8d_icgraph.png" border="0" usemap="#aclassLinuxSPI_af5cb1ff04e423beaa3795d9365206e8d_icgraph" alt=""/></div>
 <map name="aclassLinuxSPI_af5cb1ff04e423beaa3795d9365206e8d_icgraph" id="aclassLinuxSPI_af5cb1ff04e423beaa3795d9365206e8d_icgraph">
 <area shape="rect" title=" " alt="" coords="604,55,791,80"/>
-<area shape="rect" href="classLinuxSPI.html#a47b09d18147f2d9c96d72daee7e94013" title="Enables or disables GPIO interrupts." alt="" coords="371,55,556,80"/>
+<area shape="rect" href="classLinuxSPI.html#a394ce1c0fb77e44cd9f39caa5ef4ffd1" title="Enable or disable interrupts." alt="" coords="371,55,556,80"/>
 <area shape="poly" title=" " alt="" coords="591,70,556,70,556,65,591,65"/>
 <area shape="rect" href="classLinuxSPI.html#a29e7826b096e43aa70db5c33ec40b1db" title="Closes the SPI device." alt="" coords="204,55,323,80"/>
 <area shape="poly" title=" " alt="" coords="357,70,323,70,323,65,357,65"/>
@@ -628,6 +682,36 @@ Here is the caller graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="113,19,103,11,81,8,62,10,52,15,49,20,55,28,51,31,44,21,48,11,60,5,81,3,106,6,116,15"/>
 </map>
 </div>
+
+</div>
+</div>
+<a id="a8ce8a2d166d32cb1f257038e04a4599f" name="a8ce8a2d166d32cb1f257038e04a4599f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ce8a2d166d32cb1f257038e04a4599f">&#9670;&#160;</a></span>isActive()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool LinuxSPI::isActive </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check if the device is active/connected. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if the device is active, false otherwise </dd></dl>
+
+<p>Implements <a class="el" href="classSPIInterface.html#a0c067c36e1b1e77894057d5db261f64f">SPIInterface</a>.</p>
 
 </div>
 </div>
@@ -668,7 +752,7 @@ Here is the call graph for this function:</div>
 <area shape="rect" href="classLinuxSPI.html#a29e7826b096e43aa70db5c33ec40b1db" title="Closes the SPI device." alt="" coords="171,31,289,56"/>
 <area shape="poly" title=" " alt="" coords="123,41,157,41,157,46,123,46"/>
 <area shape="poly" title=" " alt="" coords="202,32,196,22,200,13,211,6,230,4,253,7,262,16,259,20,250,12,230,9,213,11,204,16,202,22,207,29"/>
-<area shape="rect" href="classLinuxSPI.html#a47b09d18147f2d9c96d72daee7e94013" title="Enables or disables GPIO interrupts." alt="" coords="337,5,523,31"/>
+<area shape="rect" href="classLinuxSPI.html#a394ce1c0fb77e44cd9f39caa5ef4ffd1" title="Enable or disable interrupts." alt="" coords="337,5,523,31"/>
 <area shape="poly" title=" " alt="" coords="289,33,324,29,324,34,290,39"/>
 <area shape="rect" href="classLinuxSPI.html#af17cb1cf95794f95409ea9c014c57520" title="Unexports a GPIO pin." alt="" coords="343,55,517,80"/>
 <area shape="poly" title=" " alt="" coords="290,48,329,53,329,58,289,53"/>
@@ -792,7 +876,7 @@ Here is the caller graph for this function:</div>
 <area shape="poly" title=" " alt="" coords="825,35,776,29,777,24,825,29"/>
 <area shape="rect" href="classLinuxSPI.html#af5cb1ff04e423beaa3795d9365206e8d" title=" " alt="" coords="604,55,791,80"/>
 <area shape="poly" title=" " alt="" coords="825,57,791,60,791,55,825,51"/>
-<area shape="rect" href="classLinuxSPI.html#a47b09d18147f2d9c96d72daee7e94013" title="Enables or disables GPIO interrupts." alt="" coords="371,55,556,80"/>
+<area shape="rect" href="classLinuxSPI.html#a394ce1c0fb77e44cd9f39caa5ef4ffd1" title="Enable or disable interrupts." alt="" coords="371,55,556,80"/>
 <area shape="poly" title=" " alt="" coords="591,70,556,70,556,65,591,65"/>
 <area shape="rect" href="classLinuxSPI.html#a29e7826b096e43aa70db5c33ec40b1db" title="Closes the SPI device." alt="" coords="204,55,323,80"/>
 <area shape="poly" title=" " alt="" coords="357,70,323,70,323,65,357,65"/>
@@ -873,8 +957,8 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="abaaa9ab97d0a775e165816cdc009548d" name="abaaa9ab97d0a775e165816cdc009548d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abaaa9ab97d0a775e165816cdc009548d">&#9670;&#160;</a></span>setInterruptCallback()</h2>
+<a id="a9c5c99a372ab2bca5190d6abc0ea12fa" name="a9c5c99a372ab2bca5190d6abc0ea12fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c5c99a372ab2bca5190d6abc0ea12fa">&#9670;&#160;</a></span>setInterruptCallback()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -892,19 +976,19 @@ Here is the caller graph for this function:</div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Sets the callback function for GPIO interrupts. </p>
+<p>Set interrupt callback. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">callback</td><td>The callback function to be called on an interrupt. </td></tr>
+    <tr><td class="paramname">callback</td><td>Function to call when interrupt occurs </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>true if the callback was successfully set, false otherwise. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True if successful, false otherwise </dd></dl>
 
 <p>Implements <a class="el" href="classSPIInterface.html#a36a4155357fbfa843753eef1c6c74a61">SPIInterface</a>.</p>
 
@@ -1165,6 +1249,50 @@ Here is the caller graph for this function:</div>
       <table class="memname">
         <tr>
           <td class="memname">std::string LinuxSPI::gpio_unexport_path</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ace44b0b95b929b36520015ff2a92682e" name="ace44b0b95b929b36520015ff2a92682e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace44b0b95b929b36520015ff2a92682e">&#9670;&#160;</a></span>interrupt_callback</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSPIInterface.html#a8f87e37243f3345f1c1383439ada4554">InterruptCallback</a> LinuxSPI::interrupt_callback</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af5c2057cb29c19b573e02242344a3127" name="af5c2057cb29c19b573e02242344a3127"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5c2057cb29c19b573e02242344a3127">&#9670;&#160;</a></span>interrupt_enabled</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool LinuxSPI::interrupt_enabled = false</td>
         </tr>
       </table>
   </td>

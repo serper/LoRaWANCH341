@@ -1,27 +1,27 @@
 <map id="LoRaWAN::handleConfirmation" name="LoRaWAN::handleConfirmation">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,194,227,219"/>
-<area shape="rect" id="Node000002" href="$classLoRaWAN.html#a6018c7e0eb45303117ae19d75c51a4d6" title=" " alt="" coords="475,5,685,45"/>
+<area shape="rect" id="Node000001" title="Handle confirmations." alt="" coords="5,194,227,219"/>
+<area shape="rect" id="Node000002" href="$classLoRaWAN.html#a6018c7e0eb45303117ae19d75c51a4d6" title="Reset the confirmation state." alt="" coords="475,5,685,45"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,191,269,128,356,89,446,55,472,46,474,52,448,60,358,94,271,133,143,196"/>
-<area shape="rect" id="Node000003" href="$classLoRaWAN.html#a9033a02849fb520b17e9a51ec3b6680b" title=" " alt="" coords="275,219,399,245"/>
+<area shape="rect" id="Node000003" href="$classLoRaWAN.html#a8da108200713d46435d07666c3aae69a" title="Send a message." alt="" coords="275,219,399,245"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="227,217,261,221,261,226,227,222"/>
 <area shape="poly" id="edge15_Node000003_Node000002" title=" " alt="" coords="343,218,396,127,425,80,445,55,461,46,464,50,448,59,430,83,401,129,347,221"/>
 <area shape="rect" id="Node000004" href="$classAESCMAC.html#a200bc114e188255e7eb94bef34caa38a" title=" " alt="" coords="503,119,657,145"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="351,217,391,186,446,155,489,141,490,146,448,160,394,190,354,221"/>
-<area shape="rect" id="Node000008" href="$classLoRaWAN.html#afa737e87fce3b27f7454e16114e51443" title=" " alt="" coords="761,245,983,270"/>
+<area shape="rect" id="Node000008" href="$classLoRaWAN.html#afa737e87fce3b27f7454e16114e51443" title="Calculate the time on air for a payload." alt="" coords="761,245,983,270"/>
 <area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="399,232,748,249,747,254,399,238"/>
-<area shape="rect" id="Node000009" href="$classLoRaWAN.html#afd7f7596f542e549bf25fcb45ed590b0" title=" " alt="" coords="481,270,679,295"/>
+<area shape="rect" id="Node000009" href="$classLoRaWAN.html#afd7f7596f542e549bf25fcb45ed590b0" title="Check if duty cycle allows transmission." alt="" coords="481,270,679,295"/>
 <area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="399,242,506,265,505,270,398,247"/>
-<area shape="rect" id="Node000010" href="$classLoRaWAN.html#a91e611990a5fe95eb78d9145cac09e8b" title=" " alt="" coords="483,169,677,194"/>
+<area shape="rect" id="Node000010" href="$classLoRaWAN.html#a91e611990a5fe95eb78d9145cac09e8b" title="Encrypt a payload." alt="" coords="483,169,677,194"/>
 <area shape="poly" id="edge10_Node000003_Node000010" title=" " alt="" coords="398,217,505,194,506,199,399,222"/>
-<area shape="rect" id="Node000012" href="$classLoRaWAN.html#a90be4d7a0a1e77206ff7762ff2bb5191" title=" " alt="" coords="447,319,713,345"/>
+<area shape="rect" id="Node000012" href="$classLoRaWAN.html#a90be4d7a0a1e77206ff7762ff2bb5191" title="Get the channel from a frequency." alt="" coords="447,319,713,345"/>
 <area shape="poly" id="edge13_Node000003_Node000012" title=" " alt="" coords="354,243,394,275,448,306,469,313,467,318,446,310,391,279,351,247"/>
-<area shape="rect" id="Node000013" href="$classLoRaWAN.html#a66c307e19c7be19c672fe50491eada53" title=" " alt="" coords="469,369,691,394"/>
+<area shape="rect" id="Node000013" href="$classLoRaWAN.html#a66c307e19c7be19c672fe50491eada53" title="Get the duty cycle usage for a channel." alt="" coords="469,369,691,394"/>
 <area shape="poly" id="edge14_Node000003_Node000013" title=" " alt="" coords="347,243,385,299,414,330,448,355,461,361,458,366,445,360,410,334,381,302,343,246"/>
-<area shape="rect" id="Node000014" href="$classLoRaWAN.html#ae24f2719d6a9d84cce902c75d5857e2e" title=" " alt="" coords="477,418,683,443"/>
+<area shape="rect" id="Node000014" href="$classLoRaWAN.html#ae24f2719d6a9d84cce902c75d5857e2e" title="Set up receive windows." alt="" coords="477,418,683,443"/>
 <area shape="poly" id="edge16_Node000003_Node000014" title=" " alt="" coords="345,244,357,278,378,322,408,367,427,387,448,404,466,414,463,419,445,409,423,391,404,370,373,324,352,280,340,246"/>
-<area shape="rect" id="Node000015" href="$classLoRaWAN.html#abcd90de882ca6eae1fd3c7218a4fb35d" title=" " alt="" coords="456,467,704,493"/>
+<area shape="rect" id="Node000015" href="$classLoRaWAN.html#abcd90de882ca6eae1fd3c7218a4fb35d" title="Update the data rate from the spreading factor." alt="" coords="456,467,704,493"/>
 <area shape="poly" id="edge17_Node000003_Node000015" title=" " alt="" coords="343,245,352,286,371,344,403,404,423,431,448,454,455,458,452,463,445,458,420,435,398,407,366,346,347,288,338,246"/>
-<area shape="rect" id="Node000016" href="$classLoRaWAN.html#ad797f1d02c90e7bc1920b7cb9c1112d6" title=" " alt="" coords="455,70,705,95"/>
+<area shape="rect" id="Node000016" href="$classLoRaWAN.html#ad797f1d02c90e7bc1920b7cb9c1112d6" title="Update transmission parameters for ADR." alt="" coords="455,70,705,95"/>
 <area shape="poly" id="edge18_Node000003_Node000016" title=" " alt="" coords="343,218,381,162,410,130,445,104,458,98,461,103,448,109,414,134,385,165,347,221"/>
 <area shape="rect" id="Node000005" href="$classAESCMAC.html#af05c7a2b06dc8f316273aabaaef18d7c" title=" " alt="" coords="785,145,959,170"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="657,136,772,146,771,151,657,141"/>
@@ -31,6 +31,6 @@
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="975,105,1017,105,1017,111,975,111"/>
 <area shape="poly" id="edge9_Node000009_Node000008" title=" " alt="" coords="679,271,748,265,748,271,680,277"/>
 <area shape="poly" id="edge11_Node000010_Node000005" title=" " alt="" coords="677,171,771,163,772,168,677,176"/>
-<area shape="rect" id="Node000011" href="$classLoRaWAN.html#acb2b3e174c7cffe495d3bdcba0e83b42" title=" " alt="" coords="789,194,955,219"/>
+<area shape="rect" id="Node000011" href="$classLoRaWAN.html#acb2b3e174c7cffe495d3bdcba0e83b42" title="Get verbose mode." alt="" coords="789,194,955,219"/>
 <area shape="poly" id="edge12_Node000010_Node000011" title=" " alt="" coords="677,187,775,196,775,201,677,192"/>
 </map>

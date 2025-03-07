@@ -1,5 +1,5 @@
 <map id="CH341SPI" name="CH341SPI">
-<area shape="rect" id="Node000001" title="A class to interface with the CH341 USB to SPI adapter." alt="" coords="5,359,215,984"/>
+<area shape="rect" id="Node000001" title="A class to interface with the CH341 USB to SPI adapter." alt="" coords="5,359,215,1044"/>
 <area shape="rect" id="Node000002" href="$classSPIInterface.html" title="Abstract interface for SPI communication." alt="" coords="25,5,195,311"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,324,113,358,107,358,107,324"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,324,113,359,107,359,107,324"/>
 </map>

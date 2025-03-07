@@ -1,5 +1,5 @@
 <map id="LoRaWAN::resetSession" name="LoRaWAN::resetSession">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,181,31"/>
+<area shape="rect" id="Node000001" title="Reset the LoRaWAN session." alt="" coords="5,5,181,31"/>
 <area shape="rect" id="Node000002" href="$classSessionManager.html#ac4a8aca6e2ee6963df6e28489be1eabf" title=" " alt="" coords="229,5,448,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="182,15,216,15,216,21,182,21"/>
 </map>

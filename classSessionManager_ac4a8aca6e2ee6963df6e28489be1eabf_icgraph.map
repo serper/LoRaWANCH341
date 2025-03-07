@@ -1,6 +1,6 @@
 <map id="SessionManager::clearSession" name="SessionManager::clearSession">
 <area shape="rect" id="Node000001" title=" " alt="" coords="501,5,720,31"/>
-<area shape="rect" id="Node000002" href="$classLoRaWAN.html#a2660625aa37e6dced0aec051ea9a6b3f" title=" " alt="" coords="277,5,453,31"/>
+<area shape="rect" id="Node000002" href="$classLoRaWAN.html#a2660625aa37e6dced0aec051ea9a6b3f" title="Reset the LoRaWAN session." alt="" coords="277,5,453,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="488,21,454,21,454,15,488,15"/>
 <area shape="rect" id="Node000003" href="$main_8cpp.html#a381b6a60cc356b9e3cb8c08371e1c028" title=" " alt="" coords="108,5,229,31"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="264,21,229,21,229,15,264,15"/>

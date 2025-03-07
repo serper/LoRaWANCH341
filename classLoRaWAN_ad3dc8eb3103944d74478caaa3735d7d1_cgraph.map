@@ -1,7 +1,7 @@
 <map id="LoRaWAN::processMACCommands" name="LoRaWAN::processMACCommands">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,252,31"/>
-<area shape="rect" id="Node000002" href="$classLoRaWAN.html#aada1c8d8275c7c1a39dc9f4fda288a72" title=" " alt="" coords="300,5,523,31"/>
+<area shape="rect" id="Node000001" title="Process MAC commands." alt="" coords="5,5,252,31"/>
+<area shape="rect" id="Node000002" href="$classLoRaWAN.html#aada1c8d8275c7c1a39dc9f4fda288a72" title="Process LinkADRReq MAC command." alt="" coords="300,5,523,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="252,15,286,15,286,21,252,21"/>
-<area shape="rect" id="Node000003" href="$classLoRaWAN.html#abcd90de882ca6eae1fd3c7218a4fb35d" title=" " alt="" coords="571,5,819,31"/>
+<area shape="rect" id="Node000003" href="$classLoRaWAN.html#abcd90de882ca6eae1fd3c7218a4fb35d" title="Update the data rate from the spreading factor." alt="" coords="571,5,819,31"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="523,15,557,15,557,21,523,21"/>
 </map>

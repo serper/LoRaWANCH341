@@ -13,6 +13,5 @@ var searchData=
   ['dio4_5frx_5fdone_10',['DIO4_RX_DONE',['../classRFM95.html#a5658acd44e401b3faddbaad5602c274d',1,'RFM95']]],
   ['dio_5frx_5fpin_11',['DIO_RX_PIN',['../classRFM95.html#aed4fb5f4539cd33a35ddca34b4070594',1,'RFM95']]],
   ['dio_5ftx_5fpin_12',['DIO_TX_PIN',['../classRFM95.html#afcf7dba8d9091451eaa845c2fb9964d5',1,'RFM95']]],
-  ['downlinkcounter_13',['downlinkcounter',['../structSessionManager_1_1SessionData.html#a1d7bbce923174d1acc40d9d491b0385c',1,'SessionManager::SessionData::downlinkCounter'],['../structLoRaWAN_1_1Impl.html#a8dced349f109467ade50c7f64f284102',1,'LoRaWAN::Impl::downlinkCounter']]],
-  ['duty_5fcycle_14',['duty_cycle',['../classLoRaWAN.html#ada5db667786b828af0466cd6334f4503',1,'LoRaWAN::DUTY_CYCLE'],['../classLoRaWAN.html#ab9937cf46341278c2ee36833d505c3f8',1,'LoRaWAN::duty_cycle']]]
+  ['downlinkcounter_13',['downlinkcounter',['../structSessionManager_1_1SessionData.html#a1d7bbce923174d1acc40d9d491b0385c',1,'SessionManager::SessionData::downlinkCounter'],['../structLoRaWAN_1_1Impl.html#a8dced349f109467ade50c7f64f284102',1,'LoRaWAN::Impl::downlinkCounter']]]
 ];

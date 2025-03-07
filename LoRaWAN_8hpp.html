@@ -74,48 +74,47 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#define-members">Macros</a>  </div>
   <div class="headertitle"><div class="title">LoRaWAN.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;string&gt;</code><br />
-<code>#include &lt;functional&gt;</code><br />
-<code>#include &lt;cstdint&gt;</code><br />
+
+<p>Class declaration for <a class="el" href="classLoRaWAN.html" title="Class that provides LoRaWAN protocol implementation.">LoRaWAN</a> protocol communication.  
+<a href="#details">More...</a></p>
+<div class="textblock"><code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
-<code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;array&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
+<code>#include &lt;functional&gt;</code><br />
 <code>#include &lt;chrono&gt;</code><br />
 <code>#include &quot;<a class="el" href="SPIInterface_8hpp_source.html">SPIInterface.hpp</a>&quot;</code><br />
-<code>#include &lt;deque&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for LoRaWAN.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="LoRaWAN_8hpp__incl.png" border="0" usemap="#ainclude_2LoRaWAN_8hpp" alt=""/></div>
 <map name="ainclude_2LoRaWAN_8hpp" id="ainclude_2LoRaWAN_8hpp">
-<area shape="rect" title=" " alt="" coords="277,5,441,31"/>
-<area shape="rect" title=" " alt="" coords="5,152,64,177"/>
-<area shape="poly" title=" " alt="" coords="296,33,224,52,149,81,99,112,59,145,55,141,96,108,147,76,222,47,295,28"/>
-<area shape="rect" title=" " alt="" coords="89,152,175,177"/>
-<area shape="poly" title=" " alt="" coords="277,33,223,51,197,64,174,81,153,109,140,140,135,138,148,106,170,77,194,59,221,46,276,28"/>
-<area shape="rect" title=" " alt="" coords="200,152,267,177"/>
-<area shape="poly" title=" " alt="" coords="277,29,251,36,225,46,202,61,184,80,179,95,183,111,194,127,208,141,205,145,190,130,178,113,173,95,179,77,199,57,223,41,249,30,276,23"/>
-<area shape="rect" title=" " alt="" coords="291,152,354,177"/>
-<area shape="poly" title=" " alt="" coords="358,32,331,139,326,138,353,30"/>
-<area shape="rect" title=" " alt="" coords="379,152,456,177"/>
-<area shape="poly" title=" " alt="" coords="366,30,410,138,405,140,361,32"/>
-<area shape="rect" title=" " alt="" coords="447,79,503,104"/>
-<area shape="poly" title=" " alt="" coords="379,28,445,69,443,74,376,33"/>
-<area shape="rect" title=" " alt="" coords="527,79,593,104"/>
-<area shape="poly" title=" " alt="" coords="392,28,515,71,514,77,390,33"/>
-<area shape="rect" href="SPIInterface_8hpp.html" title=" " alt="" coords="193,79,321,104"/>
-<area shape="poly" title=" " alt="" coords="344,33,287,73,284,68,341,28"/>
-<area shape="rect" title=" " alt="" coords="618,79,681,104"/>
-<area shape="poly" title=" " alt="" coords="408,28,605,76,604,81,406,33"/>
-<area shape="poly" title=" " alt="" coords="222,107,78,152,76,147,221,101"/>
-<area shape="poly" title=" " alt="" coords="239,106,166,147,163,143,236,102"/>
-<area shape="poly" title=" " alt="" coords="256,105,244,140,239,138,251,103"/>
-<area shape="poly" title=" " alt="" coords="270,103,305,140,301,144,266,106"/>
-<area shape="poly" title=" " alt="" coords="284,102,380,144,378,149,282,106"/>
+<area shape="rect" title="Class declaration for LoRaWAN protocol communication." alt="" coords="247,5,411,31"/>
+<area shape="rect" title=" " alt="" coords="5,152,83,177"/>
+<area shape="poly" title=" " alt="" coords="268,33,202,52,136,81,96,111,64,143,60,140,92,107,133,76,201,47,266,28"/>
+<area shape="rect" title=" " alt="" coords="107,152,170,177"/>
+<area shape="poly" title=" " alt="" coords="248,30,197,48,174,62,154,80,146,93,141,108,139,138,133,138,136,107,141,91,150,77,170,58,195,43,246,25"/>
+<area shape="rect" title=" " alt="" coords="417,79,473,104"/>
+<area shape="poly" title=" " alt="" coords="349,28,416,69,413,74,347,33"/>
+<area shape="rect" title=" " alt="" coords="285,152,344,177"/>
+<area shape="poly" title=" " alt="" coords="331,31,320,139,315,138,325,31"/>
+<area shape="rect" title=" " alt="" coords="369,152,455,177"/>
+<area shape="poly" title=" " alt="" coords="338,30,401,139,396,141,334,32"/>
+<area shape="rect" title=" " alt="" coords="497,79,564,104"/>
+<area shape="poly" title=" " alt="" coords="363,28,486,71,484,77,361,33"/>
+<area shape="rect" href="SPIInterface_8hpp.html" title=" " alt="" coords="164,79,292,104"/>
+<area shape="poly" title=" " alt="" coords="315,33,257,73,254,68,312,28"/>
+<area shape="poly" title=" " alt="" coords="199,107,88,149,86,144,197,102"/>
+<area shape="poly" title=" " alt="" coords="215,106,166,145,162,141,212,102"/>
+<area shape="poly" title=" " alt="" coords="244,102,292,141,288,145,240,106"/>
+<area shape="poly" title=" " alt="" coords="259,102,370,144,368,149,257,107"/>
+<area shape="rect" title=" " alt="" coords="195,152,261,177"/>
+<area shape="poly" title=" " alt="" coords="231,104,231,138,225,138,225,104"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -123,7 +122,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="LoRaWAN_8hpp__dep__incl.png" border="0" usemap="#ainclude_2LoRaWAN_8hppdep" alt=""/></div>
 <map name="ainclude_2LoRaWAN_8hppdep" id="ainclude_2LoRaWAN_8hppdep">
-<area shape="rect" title=" " alt="" coords="184,5,348,31"/>
+<area shape="rect" title="Class declaration for LoRaWAN protocol communication." alt="" coords="184,5,348,31"/>
 <area shape="rect" href="LoRaWAN_8cpp.html" title="Implementation of the LoRaWAN protocol for communication with LoRaWAN networks." alt="" coords="5,79,140,104"/>
 <area shape="poly" title=" " alt="" coords="223,38,105,81,103,76,221,33"/>
 <area shape="rect" href="LoRaWAN__ADRStats_8cpp.html" title=" " alt="" coords="165,79,367,104"/>
@@ -138,12 +137,552 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classLoRaWAN.html">LoRaWAN</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class that provides <a class="el" href="classLoRaWAN.html" title="Class that provides LoRaWAN protocol implementation.">LoRaWAN</a> protocol implementation.  <a href="classLoRaWAN.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structLoRaWAN_1_1Message.html">LoRaWAN::Message</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Structure representing a <a class="el" href="classLoRaWAN.html" title="Class that provides LoRaWAN protocol implementation.">LoRaWAN</a> message.  <a href="structLoRaWAN_1_1Message.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structLoRaWAN_1_1ImplStats.html">LoRaWAN::ImplStats</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:a84c8f3ff05a29709396c8ea34d8e6682" id="r_a84c8f3ff05a29709396c8ea34d8e6682"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#a84c8f3ff05a29709396c8ea34d8e6682">MAC_LINK_CHECK_REQ</a>&#160;&#160;&#160;0x02</td></tr>
+<tr class="separator:a84c8f3ff05a29709396c8ea34d8e6682"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fada84419d4db700f89a7e46817ef4b" id="r_a3fada84419d4db700f89a7e46817ef4b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#a3fada84419d4db700f89a7e46817ef4b">MAC_LINK_ADR_REQ</a>&#160;&#160;&#160;0x03</td></tr>
+<tr class="separator:a3fada84419d4db700f89a7e46817ef4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1bb76681ac46ebb6cc1c8f67ba2e550c" id="r_a1bb76681ac46ebb6cc1c8f67ba2e550c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#a1bb76681ac46ebb6cc1c8f67ba2e550c">MAC_LINK_ADR_ANS</a>&#160;&#160;&#160;0x03</td></tr>
+<tr class="separator:a1bb76681ac46ebb6cc1c8f67ba2e550c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a240aaef529c5e81a677562c695ca5e0d" id="r_a240aaef529c5e81a677562c695ca5e0d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#a240aaef529c5e81a677562c695ca5e0d">MAC_DUTY_CYCLE_REQ</a>&#160;&#160;&#160;0x04</td></tr>
+<tr class="separator:a240aaef529c5e81a677562c695ca5e0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26a8536ed0dd9ab2f16af01fdde812e6" id="r_a26a8536ed0dd9ab2f16af01fdde812e6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#a26a8536ed0dd9ab2f16af01fdde812e6">MAC_DUTY_CYCLE_ANS</a>&#160;&#160;&#160;0x04</td></tr>
+<tr class="separator:a26a8536ed0dd9ab2f16af01fdde812e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfd96db3e1f8af1ddbf50982a6211d89" id="r_abfd96db3e1f8af1ddbf50982a6211d89"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#abfd96db3e1f8af1ddbf50982a6211d89">MAC_RX_PARAM_SETUP_REQ</a>&#160;&#160;&#160;0x05</td></tr>
+<tr class="separator:abfd96db3e1f8af1ddbf50982a6211d89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3f2d2200964b20a96731cfba77a30ed2" id="r_a3f2d2200964b20a96731cfba77a30ed2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#a3f2d2200964b20a96731cfba77a30ed2">MAC_RX_PARAM_SETUP_ANS</a>&#160;&#160;&#160;0x05</td></tr>
+<tr class="separator:a3f2d2200964b20a96731cfba77a30ed2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8968fcb36b571c7b624e855f0f71114" id="r_af8968fcb36b571c7b624e855f0f71114"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#af8968fcb36b571c7b624e855f0f71114">MAC_DEV_STATUS_REQ</a>&#160;&#160;&#160;0x06</td></tr>
+<tr class="separator:af8968fcb36b571c7b624e855f0f71114"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab95ef497bf499a4767ff98fef56c0719" id="r_ab95ef497bf499a4767ff98fef56c0719"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#ab95ef497bf499a4767ff98fef56c0719">MAC_DEV_STATUS_ANS</a>&#160;&#160;&#160;0x06</td></tr>
+<tr class="separator:ab95ef497bf499a4767ff98fef56c0719"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c26e7dbfa134d6db345c1e9f3e199d7" id="r_a3c26e7dbfa134d6db345c1e9f3e199d7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#a3c26e7dbfa134d6db345c1e9f3e199d7">MAC_NEW_CHANNEL_REQ</a>&#160;&#160;&#160;0x07</td></tr>
+<tr class="separator:a3c26e7dbfa134d6db345c1e9f3e199d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9f5565bc83a353fde7772190b265e9f" id="r_ae9f5565bc83a353fde7772190b265e9f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#ae9f5565bc83a353fde7772190b265e9f">MAC_NEW_CHANNEL_ANS</a>&#160;&#160;&#160;0x07</td></tr>
+<tr class="separator:ae9f5565bc83a353fde7772190b265e9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23937818eadf88a813273b7beb9aea70" id="r_a23937818eadf88a813273b7beb9aea70"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#a23937818eadf88a813273b7beb9aea70">MAC_RX_TIMING_SETUP_REQ</a>&#160;&#160;&#160;0x08</td></tr>
+<tr class="separator:a23937818eadf88a813273b7beb9aea70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93215832a6cc7c8f15c320fbcb035b2d" id="r_a93215832a6cc7c8f15c320fbcb035b2d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#a93215832a6cc7c8f15c320fbcb035b2d">MAC_RX_TIMING_SETUP_ANS</a>&#160;&#160;&#160;0x08</td></tr>
+<tr class="separator:a93215832a6cc7c8f15c320fbcb035b2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18ab40c19c0a4dc1da020f88ec9f4dbb" id="r_a18ab40c19c0a4dc1da020f88ec9f4dbb"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#a18ab40c19c0a4dc1da020f88ec9f4dbb">MAC_TX_PARAM_SETUP_REQ</a>&#160;&#160;&#160;0x09</td></tr>
+<tr class="separator:a18ab40c19c0a4dc1da020f88ec9f4dbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6b2da81cf841aa486a58e710f4680ad" id="r_ac6b2da81cf841aa486a58e710f4680ad"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#ac6b2da81cf841aa486a58e710f4680ad">MAC_TX_PARAM_SETUP_ANS</a>&#160;&#160;&#160;0x09</td></tr>
+<tr class="separator:ac6b2da81cf841aa486a58e710f4680ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac69edfb306a0846d860d8cb0712b0753" id="r_ac69edfb306a0846d860d8cb0712b0753"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#ac69edfb306a0846d860d8cb0712b0753">MAC_DL_CHANNEL_REQ</a>&#160;&#160;&#160;0x0A</td></tr>
+<tr class="separator:ac69edfb306a0846d860d8cb0712b0753"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63e48e2f602f6226a0b7b54d013f4932" id="r_a63e48e2f602f6226a0b7b54d013f4932"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#a63e48e2f602f6226a0b7b54d013f4932">MAC_DL_CHANNEL_ANS</a>&#160;&#160;&#160;0x0A</td></tr>
+<tr class="separator:a63e48e2f602f6226a0b7b54d013f4932"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad57e8bc177fb18b6545299c4d191c0e1" id="r_ad57e8bc177fb18b6545299c4d191c0e1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#ad57e8bc177fb18b6545299c4d191c0e1">MAC_REKEY_CONF</a>&#160;&#160;&#160;0x0B</td></tr>
+<tr class="separator:ad57e8bc177fb18b6545299c4d191c0e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9d9591f7e9a93704cca8df6d300b3f5" id="r_ae9d9591f7e9a93704cca8df6d300b3f5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#ae9d9591f7e9a93704cca8df6d300b3f5">MAC_ADR_PARAM_SETUP_REQ</a>&#160;&#160;&#160;0x0C</td></tr>
+<tr class="separator:ae9d9591f7e9a93704cca8df6d300b3f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a18f539981641d129db9ff98e492dce8c" id="r_a18f539981641d129db9ff98e492dce8c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#a18f539981641d129db9ff98e492dce8c">MAC_ADR_PARAM_SETUP_ANS</a>&#160;&#160;&#160;0x0C</td></tr>
+<tr class="separator:a18f539981641d129db9ff98e492dce8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca910da0a152a579598f48855f38bb57" id="r_aca910da0a152a579598f48855f38bb57"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#aca910da0a152a579598f48855f38bb57">MAC_DEVICE_TIME_REQ</a>&#160;&#160;&#160;0x0D</td></tr>
+<tr class="separator:aca910da0a152a579598f48855f38bb57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a804ab7e0fe753f45569ab33fb0b98ecf" id="r_a804ab7e0fe753f45569ab33fb0b98ecf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#a804ab7e0fe753f45569ab33fb0b98ecf">MAC_DEVICE_TIME_ANS</a>&#160;&#160;&#160;0x0D</td></tr>
+<tr class="separator:a804ab7e0fe753f45569ab33fb0b98ecf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94158f6e2149c226d79f087e55513447" id="r_a94158f6e2149c226d79f087e55513447"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#a94158f6e2149c226d79f087e55513447">MAC_REJOIN_PARAM_REQ</a>&#160;&#160;&#160;0x0E</td></tr>
+<tr class="separator:a94158f6e2149c226d79f087e55513447"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf54ae995b878796bfa402072829f77a" id="r_abf54ae995b878796bfa402072829f77a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#abf54ae995b878796bfa402072829f77a">MAC_REJOIN_PARAM_ANS</a>&#160;&#160;&#160;0x0E</td></tr>
+<tr class="separator:abf54ae995b878796bfa402072829f77a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f4c03835a836ee800514818bb62e896" id="r_a4f4c03835a836ee800514818bb62e896"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#a4f4c03835a836ee800514818bb62e896">MAC_PING_SLOT_INFO_REQ</a>&#160;&#160;&#160;0x10</td></tr>
+<tr class="separator:a4f4c03835a836ee800514818bb62e896"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7bb3a3e25f06bab8e457b693fac978a" id="r_af7bb3a3e25f06bab8e457b693fac978a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#af7bb3a3e25f06bab8e457b693fac978a">MAC_PING_SLOT_INFO_ANS</a>&#160;&#160;&#160;0x10</td></tr>
+<tr class="separator:af7bb3a3e25f06bab8e457b693fac978a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acbb73a261808ed7220fb1c243b329436" id="r_acbb73a261808ed7220fb1c243b329436"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#acbb73a261808ed7220fb1c243b329436">MAC_PING_SLOT_CHANNEL_REQ</a>&#160;&#160;&#160;0x11</td></tr>
+<tr class="separator:acbb73a261808ed7220fb1c243b329436"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40c3724f16aee50cb3ba1726fac25cb9" id="r_a40c3724f16aee50cb3ba1726fac25cb9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#a40c3724f16aee50cb3ba1726fac25cb9">MAC_PING_SLOT_FREQ_ANS</a>&#160;&#160;&#160;0x11</td></tr>
+<tr class="separator:a40c3724f16aee50cb3ba1726fac25cb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a1fb7ec9b17e732644ec65f827ad0c1" id="r_a3a1fb7ec9b17e732644ec65f827ad0c1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#a3a1fb7ec9b17e732644ec65f827ad0c1">MAC_BEACON_TIMING_REQ</a>&#160;&#160;&#160;0x12</td></tr>
+<tr class="separator:a3a1fb7ec9b17e732644ec65f827ad0c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b1e3a46b1b5e6c31d126fa823ae8a58" id="r_a0b1e3a46b1b5e6c31d126fa823ae8a58"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#a0b1e3a46b1b5e6c31d126fa823ae8a58">MAC_BEACON_TIMING_ANS</a>&#160;&#160;&#160;0x12</td></tr>
+<tr class="separator:a0b1e3a46b1b5e6c31d126fa823ae8a58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04d13e4f1b2ae4f9c9098389e510022a" id="r_a04d13e4f1b2ae4f9c9098389e510022a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#a04d13e4f1b2ae4f9c9098389e510022a">MAC_BEACON_FREQ_REQ</a>&#160;&#160;&#160;0x13</td></tr>
+<tr class="separator:a04d13e4f1b2ae4f9c9098389e510022a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ca44498a671ddac365c9ae153d8e7c4" id="r_a4ca44498a671ddac365c9ae153d8e7c4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#a4ca44498a671ddac365c9ae153d8e7c4">MAC_BEACON_FREQ_ANS</a>&#160;&#160;&#160;0x13</td></tr>
+<tr class="separator:a4ca44498a671ddac365c9ae153d8e7c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c8b0cdf899fbc53f24fdc841ac35e9a" id="r_a9c8b0cdf899fbc53f24fdc841ac35e9a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="LoRaWAN_8hpp.html#a9c8b0cdf899fbc53f24fdc841ac35e9a">MAC_LINK_CHECK_ANS</a>&#160;&#160;&#160;0x02</td></tr>
+<tr class="separator:a9c8b0cdf899fbc53f24fdc841ac35e9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Class declaration for <a class="el" href="classLoRaWAN.html" title="Class that provides LoRaWAN protocol implementation.">LoRaWAN</a> protocol communication. </p>
+<p>This header file defines the <a class="el" href="classLoRaWAN.html" title="Class that provides LoRaWAN protocol implementation.">LoRaWAN</a> class, which provides a complete implementation of the <a class="el" href="classLoRaWAN.html" title="Class that provides LoRaWAN protocol implementation.">LoRaWAN</a> protocol for communication with <a class="el" href="classLoRaWAN.html" title="Class that provides LoRaWAN protocol implementation.">LoRaWAN</a> networks.</p>
+<p>The class supports both Over-The-Air Activation (OTAA) and Activation By Personalization (ABP), Class A and Class C device operation, and provides a comprehensive set of methods for sending and receiving messages, managing MAC commands, and controlling radio parameters.</p>
+<dl class="section author"><dt>Author</dt><dd>Sergio Pérez </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>2023/03/08 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>1.0</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="LoRaWAN_8cpp.html" title="Implementation of the LoRaWAN protocol for communication with LoRaWAN networks.">LoRaWAN.cpp</a> for the implementation </dd></dl>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a18f539981641d129db9ff98e492dce8c" name="a18f539981641d129db9ff98e492dce8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18f539981641d129db9ff98e492dce8c">&#9670;&#160;</a></span>MAC_ADR_PARAM_SETUP_ANS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_ADR_PARAM_SETUP_ANS&#160;&#160;&#160;0x0C</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae9d9591f7e9a93704cca8df6d300b3f5" name="ae9d9591f7e9a93704cca8df6d300b3f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9d9591f7e9a93704cca8df6d300b3f5">&#9670;&#160;</a></span>MAC_ADR_PARAM_SETUP_REQ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_ADR_PARAM_SETUP_REQ&#160;&#160;&#160;0x0C</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4ca44498a671ddac365c9ae153d8e7c4" name="a4ca44498a671ddac365c9ae153d8e7c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ca44498a671ddac365c9ae153d8e7c4">&#9670;&#160;</a></span>MAC_BEACON_FREQ_ANS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_BEACON_FREQ_ANS&#160;&#160;&#160;0x13</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a04d13e4f1b2ae4f9c9098389e510022a" name="a04d13e4f1b2ae4f9c9098389e510022a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04d13e4f1b2ae4f9c9098389e510022a">&#9670;&#160;</a></span>MAC_BEACON_FREQ_REQ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_BEACON_FREQ_REQ&#160;&#160;&#160;0x13</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a0b1e3a46b1b5e6c31d126fa823ae8a58" name="a0b1e3a46b1b5e6c31d126fa823ae8a58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0b1e3a46b1b5e6c31d126fa823ae8a58">&#9670;&#160;</a></span>MAC_BEACON_TIMING_ANS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_BEACON_TIMING_ANS&#160;&#160;&#160;0x12</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3a1fb7ec9b17e732644ec65f827ad0c1" name="a3a1fb7ec9b17e732644ec65f827ad0c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a1fb7ec9b17e732644ec65f827ad0c1">&#9670;&#160;</a></span>MAC_BEACON_TIMING_REQ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_BEACON_TIMING_REQ&#160;&#160;&#160;0x12</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab95ef497bf499a4767ff98fef56c0719" name="ab95ef497bf499a4767ff98fef56c0719"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab95ef497bf499a4767ff98fef56c0719">&#9670;&#160;</a></span>MAC_DEV_STATUS_ANS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_DEV_STATUS_ANS&#160;&#160;&#160;0x06</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af8968fcb36b571c7b624e855f0f71114" name="af8968fcb36b571c7b624e855f0f71114"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8968fcb36b571c7b624e855f0f71114">&#9670;&#160;</a></span>MAC_DEV_STATUS_REQ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_DEV_STATUS_REQ&#160;&#160;&#160;0x06</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a804ab7e0fe753f45569ab33fb0b98ecf" name="a804ab7e0fe753f45569ab33fb0b98ecf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a804ab7e0fe753f45569ab33fb0b98ecf">&#9670;&#160;</a></span>MAC_DEVICE_TIME_ANS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_DEVICE_TIME_ANS&#160;&#160;&#160;0x0D</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aca910da0a152a579598f48855f38bb57" name="aca910da0a152a579598f48855f38bb57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca910da0a152a579598f48855f38bb57">&#9670;&#160;</a></span>MAC_DEVICE_TIME_REQ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_DEVICE_TIME_REQ&#160;&#160;&#160;0x0D</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a63e48e2f602f6226a0b7b54d013f4932" name="a63e48e2f602f6226a0b7b54d013f4932"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63e48e2f602f6226a0b7b54d013f4932">&#9670;&#160;</a></span>MAC_DL_CHANNEL_ANS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_DL_CHANNEL_ANS&#160;&#160;&#160;0x0A</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac69edfb306a0846d860d8cb0712b0753" name="ac69edfb306a0846d860d8cb0712b0753"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac69edfb306a0846d860d8cb0712b0753">&#9670;&#160;</a></span>MAC_DL_CHANNEL_REQ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_DL_CHANNEL_REQ&#160;&#160;&#160;0x0A</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a26a8536ed0dd9ab2f16af01fdde812e6" name="a26a8536ed0dd9ab2f16af01fdde812e6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26a8536ed0dd9ab2f16af01fdde812e6">&#9670;&#160;</a></span>MAC_DUTY_CYCLE_ANS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_DUTY_CYCLE_ANS&#160;&#160;&#160;0x04</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a240aaef529c5e81a677562c695ca5e0d" name="a240aaef529c5e81a677562c695ca5e0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a240aaef529c5e81a677562c695ca5e0d">&#9670;&#160;</a></span>MAC_DUTY_CYCLE_REQ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_DUTY_CYCLE_REQ&#160;&#160;&#160;0x04</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1bb76681ac46ebb6cc1c8f67ba2e550c" name="a1bb76681ac46ebb6cc1c8f67ba2e550c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1bb76681ac46ebb6cc1c8f67ba2e550c">&#9670;&#160;</a></span>MAC_LINK_ADR_ANS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_LINK_ADR_ANS&#160;&#160;&#160;0x03</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3fada84419d4db700f89a7e46817ef4b" name="a3fada84419d4db700f89a7e46817ef4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3fada84419d4db700f89a7e46817ef4b">&#9670;&#160;</a></span>MAC_LINK_ADR_REQ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_LINK_ADR_REQ&#160;&#160;&#160;0x03</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9c8b0cdf899fbc53f24fdc841ac35e9a" name="a9c8b0cdf899fbc53f24fdc841ac35e9a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c8b0cdf899fbc53f24fdc841ac35e9a">&#9670;&#160;</a></span>MAC_LINK_CHECK_ANS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_LINK_CHECK_ANS&#160;&#160;&#160;0x02</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a84c8f3ff05a29709396c8ea34d8e6682" name="a84c8f3ff05a29709396c8ea34d8e6682"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84c8f3ff05a29709396c8ea34d8e6682">&#9670;&#160;</a></span>MAC_LINK_CHECK_REQ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_LINK_CHECK_REQ&#160;&#160;&#160;0x02</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae9f5565bc83a353fde7772190b265e9f" name="ae9f5565bc83a353fde7772190b265e9f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9f5565bc83a353fde7772190b265e9f">&#9670;&#160;</a></span>MAC_NEW_CHANNEL_ANS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_NEW_CHANNEL_ANS&#160;&#160;&#160;0x07</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3c26e7dbfa134d6db345c1e9f3e199d7" name="a3c26e7dbfa134d6db345c1e9f3e199d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c26e7dbfa134d6db345c1e9f3e199d7">&#9670;&#160;</a></span>MAC_NEW_CHANNEL_REQ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_NEW_CHANNEL_REQ&#160;&#160;&#160;0x07</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acbb73a261808ed7220fb1c243b329436" name="acbb73a261808ed7220fb1c243b329436"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acbb73a261808ed7220fb1c243b329436">&#9670;&#160;</a></span>MAC_PING_SLOT_CHANNEL_REQ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_PING_SLOT_CHANNEL_REQ&#160;&#160;&#160;0x11</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a40c3724f16aee50cb3ba1726fac25cb9" name="a40c3724f16aee50cb3ba1726fac25cb9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40c3724f16aee50cb3ba1726fac25cb9">&#9670;&#160;</a></span>MAC_PING_SLOT_FREQ_ANS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_PING_SLOT_FREQ_ANS&#160;&#160;&#160;0x11</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af7bb3a3e25f06bab8e457b693fac978a" name="af7bb3a3e25f06bab8e457b693fac978a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7bb3a3e25f06bab8e457b693fac978a">&#9670;&#160;</a></span>MAC_PING_SLOT_INFO_ANS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_PING_SLOT_INFO_ANS&#160;&#160;&#160;0x10</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a4f4c03835a836ee800514818bb62e896" name="a4f4c03835a836ee800514818bb62e896"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f4c03835a836ee800514818bb62e896">&#9670;&#160;</a></span>MAC_PING_SLOT_INFO_REQ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_PING_SLOT_INFO_REQ&#160;&#160;&#160;0x10</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abf54ae995b878796bfa402072829f77a" name="abf54ae995b878796bfa402072829f77a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf54ae995b878796bfa402072829f77a">&#9670;&#160;</a></span>MAC_REJOIN_PARAM_ANS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_REJOIN_PARAM_ANS&#160;&#160;&#160;0x0E</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a94158f6e2149c226d79f087e55513447" name="a94158f6e2149c226d79f087e55513447"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94158f6e2149c226d79f087e55513447">&#9670;&#160;</a></span>MAC_REJOIN_PARAM_REQ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_REJOIN_PARAM_REQ&#160;&#160;&#160;0x0E</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad57e8bc177fb18b6545299c4d191c0e1" name="ad57e8bc177fb18b6545299c4d191c0e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad57e8bc177fb18b6545299c4d191c0e1">&#9670;&#160;</a></span>MAC_REKEY_CONF</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_REKEY_CONF&#160;&#160;&#160;0x0B</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3f2d2200964b20a96731cfba77a30ed2" name="a3f2d2200964b20a96731cfba77a30ed2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f2d2200964b20a96731cfba77a30ed2">&#9670;&#160;</a></span>MAC_RX_PARAM_SETUP_ANS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_RX_PARAM_SETUP_ANS&#160;&#160;&#160;0x05</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abfd96db3e1f8af1ddbf50982a6211d89" name="abfd96db3e1f8af1ddbf50982a6211d89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abfd96db3e1f8af1ddbf50982a6211d89">&#9670;&#160;</a></span>MAC_RX_PARAM_SETUP_REQ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_RX_PARAM_SETUP_REQ&#160;&#160;&#160;0x05</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a93215832a6cc7c8f15c320fbcb035b2d" name="a93215832a6cc7c8f15c320fbcb035b2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93215832a6cc7c8f15c320fbcb035b2d">&#9670;&#160;</a></span>MAC_RX_TIMING_SETUP_ANS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_RX_TIMING_SETUP_ANS&#160;&#160;&#160;0x08</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a23937818eadf88a813273b7beb9aea70" name="a23937818eadf88a813273b7beb9aea70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23937818eadf88a813273b7beb9aea70">&#9670;&#160;</a></span>MAC_RX_TIMING_SETUP_REQ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_RX_TIMING_SETUP_REQ&#160;&#160;&#160;0x08</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac6b2da81cf841aa486a58e710f4680ad" name="ac6b2da81cf841aa486a58e710f4680ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6b2da81cf841aa486a58e710f4680ad">&#9670;&#160;</a></span>MAC_TX_PARAM_SETUP_ANS</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_TX_PARAM_SETUP_ANS&#160;&#160;&#160;0x09</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a18ab40c19c0a4dc1da020f88ec9f4dbb" name="a18ab40c19c0a4dc1da020f88ec9f4dbb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a18ab40c19c0a4dc1da020f88ec9f4dbb">&#9670;&#160;</a></span>MAC_TX_PARAM_SETUP_REQ</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define MAC_TX_PARAM_SETUP_REQ&#160;&#160;&#160;0x09</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

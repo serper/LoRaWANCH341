@@ -1,7 +1,7 @@
 <map id="LinuxSPI::close" name="LinuxSPI::close">
 <area shape="rect" id="Node000001" title="Closes the SPI device." alt="" coords="5,31,124,56"/>
 <area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="32,32,25,22,28,12,42,6,65,4,93,8,104,17,100,21,90,13,65,9,43,11,32,16,30,22,36,29"/>
-<area shape="rect" id="Node000002" href="$classLinuxSPI.html#a47b09d18147f2d9c96d72daee7e94013" title="Enables or disables GPIO interrupts." alt="" coords="172,5,357,31"/>
+<area shape="rect" id="Node000002" href="$classLinuxSPI.html#a394ce1c0fb77e44cd9f39caa5ef4ffd1" title="Enable or disable interrupts." alt="" coords="172,5,357,31"/>
 <area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="124,33,158,29,159,34,124,39"/>
 <area shape="rect" id="Node000005" href="$classLinuxSPI.html#af17cb1cf95794f95409ea9c014c57520" title="Unexports a GPIO pin." alt="" coords="177,55,352,80"/>
 <area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="124,48,164,53,163,58,124,53"/>

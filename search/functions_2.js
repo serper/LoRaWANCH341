@@ -17,7 +17,7 @@ var searchData=
   ['close_14',['close',['../classCH341SPI.html#a0d9b9a35f501d451d2900c9830cf0463',1,'CH341SPI::close()'],['../classLinuxSPI.html#a29e7826b096e43aa70db5c33ec40b1db',1,'LinuxSPI::close()'],['../classSPIInterface.html#a99494cefce1076e2f45791aa9eb4d69f',1,'SPIInterface::close()']]],
   ['configmanager_15',['ConfigManager',['../classConfigManager.html#a9d13b60bd70944320d22721edfd32818',1,'ConfigManager']]],
   ['configstream_16',['configStream',['../classCH341SPI.html#a6d389ee2510c94ad255a0c2bfc51d684',1,'CH341SPI']]],
-  ['configureinterrupt_17',['configureInterrupt',['../classSPIInterface.html#a3fd933e0e3e36e4f13941f0dde85caa4',1,'SPIInterface']]],
+  ['configureinterrupt_17',['configureinterrupt',['../classCH341SPI.html#ab8ce72f96ffbf40ee580a8bc7c49b235',1,'CH341SPI::configureInterrupt()'],['../classLinuxSPI.html#a409afdd29f1bc37b05fc0bb400876885',1,'LinuxSPI::configureInterrupt()'],['../classSPIInterface.html#a3fd933e0e3e36e4f13941f0dde85caa4',1,'SPIInterface::configureInterrupt()']]],
   ['createch341spi_18',['createCH341SPI',['../classSPIFactory.html#a135a7cbc8771df59615672d0e1b097b4',1,'SPIFactory']]],
   ['createlinuxspi_19',['createLinuxSPI',['../classSPIFactory.html#a468e0f1ca079388de1315fba7cdebd5b',1,'SPIFactory']]],
   ['createspiinterface_20',['createSPIInterface',['../classSPIFactory.html#a3314232a2f9a7dc636a8060cd87a77dc',1,'SPIFactory']]]

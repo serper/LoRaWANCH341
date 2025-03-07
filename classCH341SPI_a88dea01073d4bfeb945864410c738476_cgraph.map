@@ -1,5 +1,5 @@
 <map id="CH341SPI::enableInterrupt" name="CH341SPI::enableInterrupt">
-<area shape="rect" id="Node000001" title="Enables or disables interrupts." alt="" coords="5,13,199,38"/>
+<area shape="rect" id="Node000001" title="Enable or disable interrupts." alt="" coords="5,13,199,38"/>
 <area shape="rect" id="Node000002" href="$classCH341SPI.html#a72a4813940d10de7dde65cc5ec12516a" title="Thread function for monitoring interrupts." alt="" coords="247,5,465,45"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,23,233,23,233,28,199,28"/>
 </map>

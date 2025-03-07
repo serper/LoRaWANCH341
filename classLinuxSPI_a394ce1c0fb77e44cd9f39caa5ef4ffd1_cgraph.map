@@ -1,5 +1,5 @@
 <map id="LinuxSPI::enableInterrupt" name="LinuxSPI::enableInterrupt">
-<area shape="rect" id="Node000001" title="Enables or disables GPIO interrupts." alt="" coords="5,5,191,31"/>
+<area shape="rect" id="Node000001" title="Enable or disable interrupts." alt="" coords="5,5,191,31"/>
 <area shape="rect" id="Node000002" href="$classLinuxSPI.html#af5cb1ff04e423beaa3795d9365206e8d" title=" " alt="" coords="239,5,425,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="191,15,225,15,225,21,191,21"/>
 <area shape="rect" id="Node000003" href="$classLinuxSPI.html#a7f8baa78666c5fbae5e1a160df04e5af" title="Reads the value of a GPIO pin." alt="" coords="473,5,656,31"/>

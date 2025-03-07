@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['join_0',['join',['../classLoRaWAN.html#a031ba58c88d31d4094c5d271582f0699',1,'LoRaWAN']]]
+  ['join_0',['join',['../classLoRaWAN.html#a8c73745337aa973a55723faf2a500bde',1,'LoRaWAN']]]
 ];

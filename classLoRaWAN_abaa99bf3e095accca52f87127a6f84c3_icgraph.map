@@ -1,10 +1,10 @@
 <map id="LoRaWAN::decryptPayload" name="LoRaWAN::decryptPayload">
-<area shape="rect" id="Node000001" title=" " alt="" coords="597,56,791,81"/>
-<area shape="rect" id="Node000002" href="$classLoRaWAN.html#a4ffe621956e52129345a7ee3c734d549" title=" " alt="" coords="295,5,549,31"/>
+<area shape="rect" id="Node000001" title="Decrypt a payload." alt="" coords="597,56,791,81"/>
+<area shape="rect" id="Node000002" href="$classLoRaWAN.html#a4ffe621956e52129345a7ee3c734d549" title="Handle a received message." alt="" coords="295,5,549,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="611,56,490,33,491,28,612,51"/>
-<area shape="rect" id="Node000003" href="$classLoRaWAN.html#a7d9b2dcd0f04847a0cdb28842da17664" title=" " alt="" coords="108,31,247,56"/>
+<area shape="rect" id="Node000003" href="$classLoRaWAN.html#a7d9b2dcd0f04847a0cdb28842da17664" title="Update the LoRaWAN state." alt="" coords="108,31,247,56"/>
 <area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="584,66,247,49,247,44,584,61"/>
-<area shape="rect" id="Node000005" href="$classLoRaWAN.html#abefe0be1bfd0aad0ab0a528e4ef4b3d5" title=" " alt="" coords="351,107,493,132"/>
+<area shape="rect" id="Node000005" href="$classLoRaWAN.html#a99864e561f64fccd96bcc56823f2c288" title="Receive a message." alt="" coords="351,107,493,132"/>
 <area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="612,87,491,109,490,104,611,81"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="286,35,247,39,247,34,286,29"/>
 <area shape="rect" id="Node000004" href="$main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,31,60,56"/>

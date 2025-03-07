@@ -1,6 +1,6 @@
 <map id="LoRaWAN::validateKeys" name="LoRaWAN::validateKeys">
-<area shape="rect" id="Node000001" title=" " alt="" coords="443,5,620,31"/>
-<area shape="rect" id="Node000002" href="$classLoRaWAN.html#a031ba58c88d31d4094c5d271582f0699" title=" " alt="" coords="277,5,395,31"/>
+<area shape="rect" id="Node000001" title="Validate the session keys." alt="" coords="443,5,620,31"/>
+<area shape="rect" id="Node000002" href="$classLoRaWAN.html#a8c73745337aa973a55723faf2a500bde" title="Join a LoRaWAN network." alt="" coords="277,5,395,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="429,21,395,21,395,15,429,15"/>
 <area shape="rect" id="Node000003" href="$main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,5,60,31"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="264,21,60,21,60,15,264,15"/>
