@@ -95,6 +95,8 @@ Hardware Requirements</h1>
 <li>RFM95W, SX1276, or compatible LoRa module</li>
 <li>Any USB-capable device running Linux or Windows</li>
 </ul>
+<p>You can use this library with a reference board design that is available at: <a href="https://oshwlab.com/serper/lora-usb-adapter">https://oshwlab.com/serper/lora-usb-adapter</a></p>
+<p>This design provides a complete USB-to-LoRa adapter using the CH341 chip and <a class="el" href="classRFM95.html" title="Class for handling RFM95 LoRa module.">RFM95</a> module, allowing for easy integration with this software library.</p>
 <h1><a class="anchor" id="autotoc_md3"></a>
 Dependencies</h1>
 <ul>
@@ -160,14 +162,14 @@ CH341 SPI Interface</h3>
 <div class="line"><span class="keyword">auto</span> spi_interface = <a class="code hl_function" href="classSPIFactory.html#a135a7cbc8771df59615672d0e1b097b4">SPIFactory::createCH341SPI</a>(device_index, <span class="keyword">true</span>);</div>
 <div class="line"><a class="code hl_class" href="classLoRaWAN.html">LoRaWAN</a> lorawan(std::move(spi_interface));</div>
 <div class="ttc" id="aclassLoRaWAN_html"><div class="ttname"><a href="classLoRaWAN.html">LoRaWAN</a></div><div class="ttdoc">Class that provides LoRaWAN protocol implementation.</div><div class="ttdef"><b>Definition</b> LoRaWAN.hpp:74</div></div>
-<div class="ttc" id="aclassSPIFactory_html_a135a7cbc8771df59615672d0e1b097b4"><div class="ttname"><a href="classSPIFactory.html#a135a7cbc8771df59615672d0e1b097b4">SPIFactory::createCH341SPI</a></div><div class="ttdeci">static std::unique_ptr&lt; SPIInterface &gt; createCH341SPI(int device_index=0, bool lsb_first=false)</div><div class="ttdef"><b>Definition</b> SPIFactory.cpp:5</div></div>
+<div class="ttc" id="aclassSPIFactory_html_a135a7cbc8771df59615672d0e1b097b4"><div class="ttname"><a href="classSPIFactory.html#a135a7cbc8771df59615672d0e1b097b4">SPIFactory::createCH341SPI</a></div><div class="ttdeci">static std::unique_ptr&lt; SPIInterface &gt; createCH341SPI(int device_index=0, bool lsb_first=false)</div><div class="ttdef"><b>Definition</b> SPIFactory.cpp:6</div></div>
 </div><!-- fragment --><p> or more easy </p><div class="fragment"><div class="line"><a class="code hl_class" href="classLoRaWAN.html">LoRaWAN</a> lorawan();</div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md11"></a>
 Native Linux SPI Interface</h3>
 <div class="fragment"><div class="line"><span class="comment">// Create SPI interface using native Linux SPI</span></div>
 <div class="line"><span class="keyword">auto</span> spi_interface = <a class="code hl_function" href="classSPIFactory.html#a468e0f1ca079388de1315fba7cdebd5b">SPIFactory::createLinuxSPI</a>(spi_device, spi_speed);</div>
 <div class="line"><a class="code hl_class" href="classLoRaWAN.html">LoRaWAN</a> lorawan(std::move(spi_interface));</div>
-<div class="ttc" id="aclassSPIFactory_html_a468e0f1ca079388de1315fba7cdebd5b"><div class="ttname"><a href="classSPIFactory.html#a468e0f1ca079388de1315fba7cdebd5b">SPIFactory::createLinuxSPI</a></div><div class="ttdeci">static std::unique_ptr&lt; SPIInterface &gt; createLinuxSPI(const std::string &amp;device=std::string(&quot;/dev/spidev0.0&quot;), uint32_t speed=1000000, uint8_t mode=0)</div><div class="ttdef"><b>Definition</b> SPIFactory.cpp:9</div></div>
+<div class="ttc" id="aclassSPIFactory_html_a468e0f1ca079388de1315fba7cdebd5b"><div class="ttname"><a href="classSPIFactory.html#a468e0f1ca079388de1315fba7cdebd5b">SPIFactory::createLinuxSPI</a></div><div class="ttdeci">static std::unique_ptr&lt; SPIInterface &gt; createLinuxSPI(const std::string &amp;device=std::string(&quot;/dev/spidev0.0&quot;), uint32_t speed=1000000, uint8_t mode=0)</div><div class="ttdef"><b>Definition</b> SPIFactory.cpp:10</div></div>
 </div><!-- fragment --><p>The <code><a class="el" href="classSPIFactory.html" title="Factory class for creating SPI interfaces.">SPIFactory</a></code> class provides factory methods to create appropriate SPI interfaces based on your hardware configuration. Choose the implementation that matches your setup.</p>
 <h2><a class="anchor" id="autotoc_md12"></a>
 Parameters</h2>
@@ -228,7 +230,12 @@ Documentation</h1>
 <li>UML diagrams of class relationships</li>
 <li>Call graphs for complex functions</li>
 </ul>
-<p>You can also generate the documentation locally by installing Doxygen and running: </p>
+<h1><a class="anchor" id="autotoc_md20"></a>
+License</h1>
+<p>This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.</p>
+<h1><a class="anchor" id="autotoc_md21"></a>
+Contributing</h1>
+<p>Contributions are welcome! Please feel free to submit a Pull Request. </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->

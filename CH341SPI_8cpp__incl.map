@@ -6,7 +6,7 @@
 <area shape="poly" id="edge17_Node000001_Node000004" title=" " alt="" coords="352,23,276,32,191,54,148,70,109,92,73,120,44,153,38,167,34,182,34,212,29,212,29,181,33,165,40,151,70,116,106,88,146,66,189,48,275,27,352,18"/>
 <area shape="rect" id="Node000010" title=" " alt="" coords="375,152,439,177"/>
 <area shape="poly" id="edge16_Node000001_Node000010" title=" " alt="" coords="421,31,412,139,407,138,416,31"/>
-<area shape="rect" id="Node000011" href="$CH341Config_8hpp.html" title=" " alt="" coords="464,152,599,177"/>
+<area shape="rect" id="Node000011" href="$CH341Config_8hpp.html" title="Configuration constants for the CH341 USB to SPI adapter." alt="" coords="464,152,599,177"/>
 <area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="427,30,446,63,472,102,509,141,506,145,468,106,441,66,423,32"/>
 <area shape="rect" id="Node000012" title=" " alt="" coords="482,79,562,104"/>
 <area shape="poly" id="edge14_Node000001_Node000012" title=" " alt="" coords="437,28,495,68,492,73,434,33"/>
