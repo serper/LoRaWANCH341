@@ -1,4 +1,3 @@
-
 /**
  * @file RFM95.cpp
  * @brief Implementation of the RFM95 LoRa module interface.
@@ -26,21 +25,18 @@
 #include <thread>
 #include <algorithm>
 
-// Constructor que recibe cualquier implementación de SPIInterface
 RFM95::RFM95(std::unique_ptr<SPIInterface> spi_interface)
     : spi(std::move(spi_interface))
 {
     // ...initialization code...
 }
 
-// Constructor para mantener compatibilidad con código existente
 RFM95::RFM95(int device_index)
     : spi(SPIFactory::createCH341SPI(device_index))
 {
     // ...initialization code...
 }
 
-// Destructor
 RFM95::~RFM95()
 {
     end();
@@ -104,7 +100,7 @@ void RFM95::setFrequency(float freq_mhz)
 {
     uint32_t frf = static_cast<uint32_t>((freq_mhz * 524288.0) / 32.0);
 
-    // Escribir los tres bytes
+    // Write the three bytes
     writeRegister(REG_FRF_MSB, (frf >> 16) & 0xFF);
     writeRegister(REG_FRF_MID, (frf >> 8) & 0xFF);
     writeRegister(REG_FRF_LSB, frf & 0xFF);
@@ -112,15 +108,15 @@ void RFM95::setFrequency(float freq_mhz)
 
 float RFM95::getFrequency()
 {
-    // Leer los tres bytes de los registros
+    // Read the three bytes from the registers
     uint32_t msb = static_cast<uint32_t>(readRegister(REG_FRF_MSB));
     uint32_t mid = static_cast<uint32_t>(readRegister(REG_FRF_MID));
     uint32_t lsb = static_cast<uint32_t>(readRegister(REG_FRF_LSB));
 
-    // Combinar los bytes para formar el valor FRF
+    // Combine the bytes to form the FRF value
     uint32_t frf = (msb << 16) | (mid << 8) | lsb;
 
-    // Calcular la frecuencia usando la fórmula de la hoja de datos
+    // Calculate the frequency using the formula from the datasheet
     float freq_mhz = (frf * 32.0) / 524288.0;
 
     return freq_mhz;
@@ -525,30 +521,30 @@ std::vector<uint8_t> RFM95::receive(float timeout, bool invert_iq)
 
 void RFM95::setContinuousReceive()
 {
-    // Poner el módulo en standby primero
+    // Put the module in standby mode first
     standbyMode();
     
-    // Configurar FIFO RX
+    // Configure FIFO RX
     writeRegister(REG_FIFO_ADDR_PTR, readRegister(REG_FIFO_RX_BASE_ADDR));
     
-    // Configurar DIO para recepción
+    // Configure DIO for reception
     uint8_t dio_mapping = readRegister(REG_DIO_MAPPING_1);
-    dio_mapping &= 0x3F;  // Limpiar bits DIO0 (bits 6-7)
+    dio_mapping &= 0x3F;  // Clear DIO0 bits (bits 6-7)
     dio_mapping |= DIO0_RX_DONE;  // DIO0 = 0 (RX_DONE)
     writeRegister(REG_DIO_MAPPING_1, dio_mapping);
     
-    // Limpiar flags de interrupción
+    // Clear interrupt flags
     clearIRQFlags();
     
-    // Cambiar a modo RX_CONTINUOUS
+    // Change to RX_CONTINUOUS mode
     uint8_t opmode = readRegister(REG_OP_MODE);
-    opmode = (opmode & 0xF8) | MODE_RX_CONTINUOUS;  // Modos: 1=STDBY, 5=RXCONT, 3=TX
+    opmode = (opmode & 0xF8) | MODE_RX_CONTINUOUS;  // Modes: 1=STDBY, 5=RXCONT, 3=TX
     writeRegister(REG_OP_MODE, opmode);
     
-    // Debug: verificamos que el modo se haya cambiado correctamente
+    // Debug: verify that the mode was changed correctly
     opmode = readRegister(REG_OP_MODE);
     if ((opmode & 0x07) != MODE_RX_CONTINUOUS) {
-        std::cerr << "Error: No se pudo cambiar a modo RX_CONTINUOUS" << std::endl;
+        std::cerr << "Error: Could not change to RX_CONTINUOUS mode" << std::endl;
     }
 }
 
@@ -658,7 +654,7 @@ void RFM95::setDIOMapping(uint8_t _dio3, uint8_t _dio4)
     dio_map2 = (dio_map2 & 0x3F) | (_dio4 & 0xC0);
     writeRegister(REG_DIO_MAPPING_2, dio_map2);
 
-    // Habilitar interrupciones
+    // Enable interrupts
     writeRegister(REG_IRQ_FLAGS_MASK, 0x00); // IRQ mask
     writeRegister(REG_IRQ_FLAGS, 0xFF);      // Clear flags
 }
@@ -687,7 +683,7 @@ bool RFM95::calibrateTemperature(float actual_temp)
     }
     catch (const std::exception &e)
     {
-        std::cerr << "Error en calibración de temperatura: " << e.what() << std::endl;
+        std::cerr << "Error in temperature calibration: " << e.what() << std::endl;
         return false;
     }
 }
@@ -720,7 +716,7 @@ float RFM95::readTemperature()
     }
     catch (const std::exception &e)
     {
-        std::cerr << "Error leyendo temperatura: " << e.what() << std::endl;
+        std::cerr << "Error reading temperature: " << e.what() << std::endl;
         return 0.0f;
     }
 }

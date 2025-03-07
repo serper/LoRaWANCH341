@@ -23,6 +23,11 @@ This project provides a C++ implementation of the LoRaWAN protocol using the CH3
 - RFM95W, SX1276, or compatible LoRa module
 - Any USB-capable device running Linux or Windows
 
+You can use this library with a reference board design that is available at:
+[https://oshwlab.com/serper/lora-usb-adapter](https://oshwlab.com/serper/lora-usb-adapter)
+
+This design provides a complete USB-to-LoRa adapter using the CH341 chip and RFM95 module, allowing for easy integration with this software library.
+
 ## Dependencies
 
 - libusb-1.0
@@ -151,4 +156,10 @@ The documentation includes:
 - UML diagrams of class relationships
 - Call graphs for complex functions
 
-You can also generate the documentation locally by installing Doxygen and running:
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.

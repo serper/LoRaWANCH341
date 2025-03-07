@@ -35,33 +35,33 @@ LinuxSPI::~LinuxSPI() {
 
 bool LinuxSPI::open() {
 #ifdef __linux__
-    // Abrir el dispositivo SPI
+    // Open SPI device
     fd = ::open(device_path.c_str(), O_RDWR);
     if (fd < 0) {
-        std::cerr << "Error: No se pudo abrir dispositivo SPI: " << device_path << std::endl;
+        std::cerr << "Error: Could not open SPI device: " << device_path << std::endl;
         return false;
     }
 
-    // Configurar modo SPI
+    // Configure SPI mode
     if (ioctl(fd, SPI_IOC_WR_MODE, &spi_mode) < 0) {
-        std::cerr << "Error: No se pudo configurar modo SPI" << std::endl;
+        std::cerr << "Error: Could not configure SPI mode" << std::endl;
         ::close(fd);
         fd = -1;
         return false;
     }
 
-    // Configurar bits por palabra (8 bits)
+    // Configure bits per word (8 bits)
     uint8_t bits = 8;
     if (ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &bits) < 0) {
-        std::cerr << "Error: No se pudo configurar bits por palabra" << std::endl;
+        std::cerr << "Error: Could not configure bits per word" << std::endl;
         ::close(fd);
         fd = -1;
         return false;
     }
 
-    // Configurar velocidad SPI
+    // Configure SPI speed
     if (ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &speed_hz) < 0) {
-        std::cerr << "Error: No se pudo configurar velocidad SPI" << std::endl;
+        std::cerr << "Error: Could not configure SPI speed" << std::endl;
         ::close(fd);
         fd = -1;
         return false;
@@ -75,17 +75,17 @@ bool LinuxSPI::open() {
 }
 
 void LinuxSPI::close() {
-    // Desactivar interrupciones
+    // Disable interrupts
     enableInterrupt(false);
 
 #ifdef __linux__
-    // Cerrar el dispositivo SPI
+    // Close SPI device
     if (fd >= 0) {
         ::close(fd);
         fd = -1;
     }
 
-    // Liberar todos los pines GPIO usados
+    // Unexport all used GPIO pins
     for (const auto& pin_entry : gpio_pin_paths) {
         unexportGPIO(pin_entry.first);
     }
@@ -104,14 +104,14 @@ std::vector<uint8_t> LinuxSPI::transfer(const std::vector<uint8_t>& write_data, 
         return {};
     }
 
-    // Preparar buffer de salida
+    // Prepare output buffer
     std::vector<uint8_t> tx_buffer(total_length, 0);
     std::copy(write_data.begin(), write_data.end(), tx_buffer.begin());
 
-    // Preparar buffer de entrada
+    // Prepare input buffer
     std::vector<uint8_t> rx_buffer(total_length, 0);
 
-    // Configurar estructura de transferencia SPI
+    // Configure SPI transfer structure
     struct spi_ioc_transfer tr = {
         .tx_buf = (unsigned long)tx_buffer.data(),
         .rx_buf = (unsigned long)rx_buffer.data(),
@@ -125,16 +125,16 @@ std::vector<uint8_t> LinuxSPI::transfer(const std::vector<uint8_t>& write_data, 
         .pad = 0
     };
 
-    // Realizar transferencia SPI
+    // Execute SPI transfer
     if (ioctl(fd, SPI_IOC_MESSAGE(1), &tr) < 0) {
-        std::cerr << "Error: Fallo en transferencia SPI" << std::endl;
+        std::cerr << "Error: SPI transfer failed" << std::endl;
         return {};
     }
 
-    // Devolver los datos recibidos
+    // Return received data
     return rx_buffer;
 #else
-    // En plataformas no Linux, devolvemos un vector vacío
+    // On non-Linux platforms, return an empty vector
     std::cerr << "Error: Linux SPI not supported on this platform" << std::endl;
     return {};
 #endif
@@ -144,17 +144,23 @@ bool LinuxSPI::exportGPIO(uint8_t pin) {
 #ifdef __linux__
     std::ofstream exportFile(gpio_export_path);
     if (!exportFile.is_open()) {
-        std::cerr << "Error: No se puede abrir archivo de exportación GPIO" << std::endl;
+        std::cerr << "Error: Unable to open GPIO export file" << std::endl;
         return false;
     }
 
     exportFile << pin;
     exportFile.close();
 
-    // Esperar un momento para que el sistema cree los archivos
+    // Wait a moment for the system to create the files
     usleep(100000); // 100ms
 
-    // Crear la ruta del pin
+    exportFile << pin;
+    exportFile.close();
+
+
+    usleep(100000); // 100ms
+
+
     std::stringstream ss;
     ss << "/sys/class/gpio/gpio" << static_cast<int>(pin);
     gpio_pin_paths[pin] = ss.str();
@@ -169,14 +175,14 @@ bool LinuxSPI::unexportGPIO(uint8_t pin) {
 #ifdef __linux__
     std::ofstream unexportFile(gpio_unexport_path);
     if (!unexportFile.is_open()) {
-        std::cerr << "Error: No se puede abrir archivo de desexportación GPIO" << std::endl;
+        std::cerr << "Error: Unable to open GPIO unexport file" << std::endl;
         return false;
     }
 
     unexportFile << pin;
     unexportFile.close();
 
-    // Eliminar la ruta del pin del mapa
+    // Remove pin's path from the map
     gpio_pin_paths.erase(pin);
 
     return true;
@@ -187,18 +193,19 @@ bool LinuxSPI::unexportGPIO(uint8_t pin) {
 
 bool LinuxSPI::setGPIODirection(uint8_t pin, const std::string& direction) {
 #ifdef __linux__
-    // Verificar si el pin está exportado
+    // Verify if pin is exported
     if (gpio_pin_paths.find(pin) == gpio_pin_paths.end()) {
         if (!exportGPIO(pin)) {
             return false;
         }
     }
 
-    // Abrir archivo de dirección
+    // Open direction file
     std::string direction_path = gpio_pin_paths[pin] + "/direction";
     std::ofstream directionFile(direction_path);
     if (!directionFile.is_open()) {
-        std::cerr << "Error: No se puede abrir archivo de dirección GPIO para pin " << static_cast<int>(pin) << std::endl;
+        std::cerr << "Error: Unable to open GPIO direction file for pin " 
+                  << static_cast<int>(pin) << std::endl;
         return false;
     }
 
@@ -213,17 +220,17 @@ bool LinuxSPI::setGPIODirection(uint8_t pin, const std::string& direction) {
 
 bool LinuxSPI::writeGPIOValue(uint8_t pin, bool value) {
 #ifdef __linux__
-    // Verificar si el pin está exportado
+    // Verify if pin is exported
     if (gpio_pin_paths.find(pin) == gpio_pin_paths.end()) {
-        std::cerr << "Error: Pin " << static_cast<int>(pin) << " no exportado" << std::endl;
+        std::cerr << "Error: Pin " << static_cast<int>(pin) << " not exported" << std::endl;
         return false;
     }
 
-    // Abrir archivo de valor
+    // Open value file
     std::string value_path = gpio_pin_paths[pin] + "/value";
     std::ofstream valueFile(value_path);
     if (!valueFile.is_open()) {
-        std::cerr << "Error: No se puede abrir archivo de valor GPIO para pin " << static_cast<int>(pin) << std::endl;
+        std::cerr << "Error: Unable to open GPIO value file for pin " << static_cast<int>(pin) << std::endl;
         return false;
     }
 
@@ -238,17 +245,17 @@ bool LinuxSPI::writeGPIOValue(uint8_t pin, bool value) {
 
 bool LinuxSPI::readGPIOValue(uint8_t pin) {
 #ifdef __linux__
-    // Verificar si el pin está exportado
+    // Verify if pin is exported
     if (gpio_pin_paths.find(pin) == gpio_pin_paths.end()) {
-        std::cerr << "Error: Pin " << static_cast<int>(pin) << " no exportado" << std::endl;
+        std::cerr << "Error: Pin " << static_cast<int>(pin) << " not exported" << std::endl;
         return false;
     }
 
-    // Abrir archivo de valor
+    // Open value file
     std::string value_path = gpio_pin_paths[pin] + "/value";
     std::ifstream valueFile(value_path);
     if (!valueFile.is_open()) {
-        std::cerr << "Error: No se puede abrir archivo de valor GPIO para pin " << static_cast<int>(pin) << std::endl;
+        std::cerr << "Error: Unable to open GPIO value file for pin " << static_cast<int>(pin) << std::endl;
         return false;
     }
 
@@ -280,12 +287,12 @@ bool LinuxSPI::pinMode(uint8_t pin, uint8_t mode) {
             direction = "out";
             break;
         case INPUT_PULLUP:
-            // En Linux, los pull-up se configuran diferente
-            // aquí simulamos configurando como entrada normal
+            // In Linux, pull-ups are configured differently
+            // here we simulate configuring as a normal input
             direction = "in";
             break;
         default:
-            std::cerr << "Error: Modo de pin no válido" << std::endl;
+            std::cerr << "Error: Invalid pin mode" << std::endl;
             return false;
     }
 
@@ -300,34 +307,34 @@ bool LinuxSPI::setInterruptCallback(InterruptCallback callback) {
 bool LinuxSPI::enableInterrupt(bool enable) {
 #ifdef __linux__
     if (enable && !interrupt_running) {
-        // Verificamos que tenemos una callback y un pin configurado
+        // Verify that we have a callback and a pin configured
         if (!interruptCallback || interrupt_pin < 0) {
-            std::cerr << "Error: Callback o pin de interrupción no configurado" << std::endl;
+            std::cerr << "Error: Callback or interrupt pin not configured" << std::endl;
             return false;
         }
 
-        // Verificamos que el pin esté configurado como entrada
+        // Verify that the pin is configured as input
         if (gpio_pin_paths.find(interrupt_pin) == gpio_pin_paths.end()) {
-            std::cerr << "Error: Pin de interrupción no configurado como GPIO" << std::endl;
+            std::cerr << "Error: Interrupt pin not configured as GPIO" << std::endl;
             return false;
         }
 
-        // Configurar edge para interrupciones
+        // Configure edge for interrupts
         std::string edge_path = gpio_pin_paths[interrupt_pin] + "/edge";
         std::ofstream edgeFile(edge_path);
         if (!edgeFile.is_open()) {
-            std::cerr << "Error: No se puede configurar edge para interrupciones" << std::endl;
+            std::cerr << "Error: Unable to configure edge for interrupts" << std::endl;
             return false;
         }
-        edgeFile << "rising";  // Podríamos hacerlo configurable
+        edgeFile << "rising";  // Could be configurable
         edgeFile.close();
 
-        // Iniciar hilo de monitoreo
+        // Start monitoring thread
         interrupt_running = true;
         interrupt_thread = std::thread(&LinuxSPI::interruptThread, this);
         return true;
     } else if (!enable && interrupt_running) {
-        // Detener hilo de monitoreo
+        // Stop monitoring thread
         interrupt_running = false;
         if (interrupt_thread.joinable()) {
             interrupt_thread.join();
@@ -335,7 +342,7 @@ bool LinuxSPI::enableInterrupt(bool enable) {
         return true;
     }
     
-    return true;  // Si ya estaba en el estado deseado
+    return true;  // If already in the desired state
 #else
     return false;
 #endif
@@ -346,20 +353,20 @@ void LinuxSPI::interruptThread() {
     std::string value_path = gpio_pin_paths[interrupt_pin] + "/value";
     
     while (interrupt_running) {
-        // Aquí idealmente usaríamos poll() o epoll() para esperar interrupciones
-        // de forma eficiente, pero por simplicidad usamos polling
+        // Ideally, we would use poll() or epoll() to wait for interrupts
+        // efficiently, but for simplicity, we use polling
         
         if (readGPIOValue(interrupt_pin)) {
-            // Llamar a la callback
+            // Call the callback
             if (interruptCallback) {
                 interruptCallback();
             }
             
-            // Esperar un poco para evitar rebotes
+            // Wait a bit to avoid bouncing
             usleep(50000);  // 50ms
         }
         
-        // Esperar un tiempo corto antes de volver a verificar
+        // Wait a short time before checking again
         usleep(10000);  // 10ms
     }
 #endif

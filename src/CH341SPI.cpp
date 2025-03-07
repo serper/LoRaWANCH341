@@ -1,4 +1,3 @@
-
 /**
  * @file CH341SPI.cpp
  * @brief Implementation of the CH341SPI class for SPI communication using the CH341 USB-SPI adapter.
@@ -259,7 +258,7 @@ bool CH341SPI::enablePins(bool enable)
 
 uint8_t CH341SPI::swapBits(uint8_t byte)
 {
-    // Implementación directa del algoritmo de intercambio bit a bit
+    // Bit swapping algorithm implementation
     uint8_t result = 0;
     for (int i = 0; i < 8; i++)
     {
@@ -299,10 +298,10 @@ std::vector<uint8_t> CH341SPI::transfer(const std::vector<uint8_t> &write_data, 
             return result;
         }
 
-        // Transferir byte a byte, como en la implementación Python
+        // Transfer byte by byte, as in the Python implementation
         for (size_t i = 0; i < write_data.size(); i++)
         {
-            // Enviar un byte a la vez
+            // Send one byte at a time
             uint8_t cmd[2] = {CH341Config::CMD_SPI_STREAM, lsb_first ? swapBits(write_data[i]) : write_data[i]};
 
             ret = libusb_bulk_transfer(device, CH341Config::BULK_WRITE_EP,
@@ -315,7 +314,7 @@ std::vector<uint8_t> CH341SPI::transfer(const std::vector<uint8_t> &write_data, 
                 return result;
             }
 
-            // Leer la respuesta para este byte
+            // Read the response for this byte
             uint8_t response_byte;
             ret = libusb_bulk_transfer(device, CH341Config::BULK_READ_EP,
                                        &response_byte, 1, &transferred,
@@ -327,13 +326,14 @@ std::vector<uint8_t> CH341SPI::transfer(const std::vector<uint8_t> &write_data, 
                 return result;
             }
 
-            // Descartar este byte de respuesta (echo del comando)
+            // Discard this response byte (echo of command byte)
+            // This is a workaround for the CH341 SPI adapter
         }
 
-        // Ahora leer los bytes solicitados
+        // Now read the requested bytes
         for (size_t i = 0; i < read_length; i++)
         {
-            // Enviar byte dummy (0xFF)
+            // Send dummy byte (0xFF)
             uint8_t cmd[2] = {CH341Config::CMD_SPI_STREAM, 0xFF};
 
             ret = libusb_bulk_transfer(device, CH341Config::BULK_WRITE_EP,
@@ -358,7 +358,7 @@ std::vector<uint8_t> CH341SPI::transfer(const std::vector<uint8_t> &write_data, 
                 return result;
             }
 
-            // Procesar y añadir a los resultados
+            // Process and send the response byte
             result.push_back(lsb_first ? swapBits(response_byte) : response_byte);
         }
 
@@ -391,7 +391,7 @@ bool CH341SPI::digitalWrite(uint8_t pin, bool value)
     if (!device)
         return false;
 
-    // Asegurarse de que el pin está configurado como salida
+    // Ensure the pin is configured as output
     _gpio_direction |= pin;
 
     if (value)
@@ -403,7 +403,7 @@ bool CH341SPI::digitalWrite(uint8_t pin, bool value)
         _gpio_output &= ~pin; // Set the pin low
     }
 
-    // Enviar el comando GPIO al CH341
+    // Send the GPIO command to the CH341
     uint8_t cmd[4] = {
         CH341Config::CMD_UIO_STREAM,
         static_cast<uint8_t>(CH341Config::CMD_UIO_STM_OUT | _gpio_output),
@@ -423,10 +423,10 @@ bool CH341SPI::digitalRead(uint8_t pin)
     if (!device)
         return false;
 
-    // Asegurar que el pin está configurado como entrada
+    // Ensure the pin is configured as input
     _gpio_direction &= ~pin;
 
-    // Enviar el comando para configurar la dirección
+    // Send the command to configure the direction
     uint8_t dir_cmd[3] = {
         CH341Config::CMD_UIO_STREAM,
         static_cast<uint8_t>(CH341Config::CMD_UIO_STM_DIR | _gpio_direction),
@@ -441,10 +441,11 @@ bool CH341SPI::digitalRead(uint8_t pin)
     if (ret != 0)
         return false;
 
-    // Comando para leer el estado de los pines
+    // Command to read the state of the pins
     uint8_t read_cmd[2] = {
-        CH341Config::CMD_UIO_STREAM | 0x80, // Comando de lectura
-        CH341Config::CMD_UIO_STM_END};
+        CH341Config::CMD_UIO_STREAM | 0x80, // Command for reading
+        CH341Config::CMD_UIO_STM_END
+    };
 
     ret = libusb_bulk_transfer(device, CH341Config::BULK_WRITE_EP,
                                read_cmd, sizeof(read_cmd), &transferred,
@@ -453,7 +454,7 @@ bool CH341SPI::digitalRead(uint8_t pin)
     if (ret != 0)
         return false;
 
-    // Leer la respuesta
+    // Read the response
     uint8_t gpio_value;
     ret = libusb_bulk_transfer(device, CH341Config::BULK_READ_EP,
                                &gpio_value, 1, &transferred,
@@ -462,7 +463,7 @@ bool CH341SPI::digitalRead(uint8_t pin)
     if (ret != 0 || transferred != 1)
         return false;
 
-    // Verificar si el pin específico está alto
+    // Verify if the specific pin is high
     return (gpio_value & pin) != 0;
 }
 
@@ -473,14 +474,14 @@ bool CH341SPI::pinMode(uint8_t pin, uint8_t mode)
 
     if (mode == OUTPUT)
     {
-        _gpio_direction |= pin; // Configurar como salida
+        _gpio_direction |= pin; // Configure as output
     }
     else
     {
-        _gpio_direction &= ~pin; // Configurar como entrada
+        _gpio_direction &= ~pin; // Configure as input
     }
 
-    // Enviar el comando para configurar la dirección
+    // Send the command to configure the direction
     uint8_t cmd[3] = {
         static_cast<uint8_t>(CH341Config::CMD_UIO_STREAM),
         static_cast<uint8_t>(CH341Config::CMD_UIO_STM_DIR | _gpio_direction),
@@ -506,7 +507,7 @@ bool CH341SPI::enableInterrupt(bool enable)
     {
         interruptEnabled = true;
         threadRunning = true;
-        // Crear un nuevo hilo que monitoree el pin INT#
+        // Create a new thread to monitor the INT# pin
         interruptThread = std::thread(&CH341SPI::interruptMonitoringThread, this);
         return true;
     }
@@ -525,37 +526,37 @@ bool CH341SPI::enableInterrupt(bool enable)
 
 void CH341SPI::interruptMonitoringThread()
 {
-    // Vector para almacenar el estado del registro de interrupciones
+    // Vector to store the state of the interrupt register
     uint8_t cmd[2] = {CH341Config::CMD_UIO_STREAM | 0x80, CH341Config::CMD_UIO_STM_END};
 
     while (threadRunning)
     {
         if (device)
         {
-            // Leer el estado del pin INT# (pin 7)
+            // Read the state of the INT# pin (pin 7)
             int transferred = 0;
 
-            // Enviar comando para leer los pines
+            // Send command to read the pins
             libusb_bulk_transfer(device, CH341Config::BULK_WRITE_EP,
                                  cmd, sizeof(cmd), &transferred,
                                  CH341Config::USB_TIMEOUT);
 
-            // Leer la respuesta
+            // Read the response
             uint8_t pinState;
             if (libusb_bulk_transfer(device, CH341Config::BULK_READ_EP,
                                      &pinState, 1, &transferred,
                                      CH341Config::USB_TIMEOUT) == 0)
             {
 
-                // Comprobar si el bit correspondiente a INT# está activo (pin 7 = bit 6)
-                // Nota: Puede necesitar ajustar esta lógica según cómo esté conectado
-                bool interruptTriggered = ((pinState & 0x40) == 0); // Activo a nivel bajo
+                // Check if the corresponding bit for INT# is active (pin 7 = bit 6)
+                // Note: You may need to adjust this logic based on how it's connected
+                bool interruptTriggered = ((pinState & 0x40) == 0); // Active low
 
                 static bool lastState = false;
-                // Detectar cambio de estado (flanco descendente)
+                // Detect state change (falling edge)
                 if (interruptTriggered && !lastState)
                 {
-                    // Llamar al callback si está configurado
+                    // Call the callback if set
                     if (interruptCallback)
                     {
                         interruptCallback();
@@ -565,7 +566,7 @@ void CH341SPI::interruptMonitoringThread()
             }
         }
 
-        // Dormir un tiempo corto para no saturar el bus
+        // Sleep for a short time to avoid saturating the bus
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }
