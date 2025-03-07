@@ -150,7 +150,7 @@
 #include <deque>
 #include <bitset>
 
-#if (defined(RFM_USE_CH341) || !defined(RFM_USE_LINUX_SPI))
+#if defined(RFM_USE_CH341)
 // With CH341SPI
 auto ch341_spi = SPIFactory::createCH341SPI(0, true);
 auto rfm = RFM95(std::move(ch341_spi));
